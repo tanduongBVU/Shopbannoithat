@@ -5,39 +5,3 @@
 }
 
 
-<nav class="navbar">
-    <div class="nav-container">
-
-        <!-- Logo -->
-        <a class="logo" asp-controller="Product" asp-action="Index">
-            CareHouse
-        </a>
-
-        <!-- Menu trái -->
-        <div class="nav-links">
-
-            <a asp-controller="Product" asp-action="Create">Thêm sản phẩm</a>
-            <a asp-controller="Category" asp-action="Index">Danh sách loại sản phẩm</a>
-            <a asp-controller="Category" asp-action="Create">Thêm loại sản phẩm</a>
-            <a asp-controller="Product" asp-action="ProductByCategory">Hàng mới về</a>
-            <a asp-controller="Cart" asp-action="Index">Giỏ hàng</a>
-            <div class="container mt-2">
-                <a class="btn btn-primary" asp-controller="Admin" asp-action="CreateRole">
-                    Tạo Role
-                </a>
-
-                <a class="btn btn-primary" asp-controller="Admin" asp-action="ListRoles">
-                    Danh sách Role
-                </a>
-
-                <a class="btn btn-primary" asp-controller="Admin" asp-action="ListUsers">
-                    Danh sách người dùng
-                </a>
-            </div>
-
-        </div>
-
-        
-
-    </div>
-</nav>
