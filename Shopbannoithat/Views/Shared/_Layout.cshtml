@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/Shopbannoithat.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
+    @* <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Shopbannoithat</a>
@@ -44,6 +44,25 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false) *@
+
+   
+
+    @await Html.PartialAsync("_Header")
+    <div class="container-fluid">
+        <div class="row">
+            <!-- MENU BÊN TRÁI -->
+            <div class="col-md-3 col-lg-2 bg-light p-3">
+                @await Component.InvokeAsync("CategoryMenu")
+            </div>
+
+            <!-- NỘI DUNG CHÍNH -->
+            <div class="col-md-9 col-lg-10 p-4">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    
 </body>
 </html>
