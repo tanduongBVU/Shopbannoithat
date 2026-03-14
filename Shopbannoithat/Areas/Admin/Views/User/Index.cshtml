@@ -1,0 +1,42 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Quản lý tài khoản</h2>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Email</td>
+                <td>@item.Role</td>
+
+                <td>
+                    <a asp-area="Admin"
+                       asp-controller="User"
+                       asp-action="ChangeRole"
+                       asp-route-id="@item.Id"
+                       class="btn btn-warning">
+                        Phân quyền
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>

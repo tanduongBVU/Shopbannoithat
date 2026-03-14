@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+<body>
+
+    <div class="d-flex">
+
+        <!-- SIDEBAR -->
+        <div class="bg-dark text-white p-3" style="width:250px; min-height:100vh">
+
+            <h4>ADMIN</h4>
+            <hr>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="Dashboard"
+                       asp-action="Index">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="Product"
+                       asp-action="Index">
+                        Quản lý sản phẩm
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                <a class="nav-link text-white" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                    Loại sản phẩm
+                </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="Order"
+                       asp-action="Index">
+                        Quản lý đơn hàng
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/">
+                        Về trang chủ
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="User"
+                       asp-action="Index">
+                        Quản lý tài khoản
+                    </a>
+                </li>
+
+
+            </ul>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="flex-grow-1 p-4">
+
+            @RenderBody()
+
+        </div>
+
+    </div>
+
+</body>
+</html>

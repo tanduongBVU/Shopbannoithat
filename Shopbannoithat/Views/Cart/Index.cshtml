@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model List<Shopbannoithat.Models.CartItem>
+
+<h2>Giỏ hàng</h2>
+
+<table class="table">
+    <tr>
+        <th>Ảnh</th>
+        <th>Tên</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img src="@item.Image" width="80" />
+            </td>
+
+            <td>@item.ProductName</td>
+
+            <td>@item.Price.ToString("N0") VNĐ</td>
+
+            <td>@item.Quantity</td>
+
+            <td>
+                <a asp-action="Remove"
+                   asp-route-id="@item.ProductId"
+                   class="btn btn-danger">
+                    Xóa
+                </a>
+            </td>
+
+        </tr>
+    }
+
+</table>
+
+<a asp-controller="Order"
+   asp-action="Checkout"
+   class="btn btn-success">
+    Thanh toán
+</a>

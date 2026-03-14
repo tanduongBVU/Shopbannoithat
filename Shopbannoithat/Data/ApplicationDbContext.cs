@@ -10,7 +10,7 @@ namespace Shopbannoithat.Data
             : base(options)
         {
         }
-
+        public DbSet<User> Users { get; set; }
         // Bảng của website
         public DbSet<Product> Products { get; set; }
 
