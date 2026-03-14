@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Shopbannoithat.Data;
 using Shopbannoithat.Models;
@@ -17,38 +18,47 @@ namespace Shopbannoithat.Controllers
         // Hiển thị giỏ hàng
         public IActionResult Index()
         {
-            var cart = GetCart();
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            if (email == null)
+                return RedirectToAction("Login", "Auth");
+
+            var cart = _context.Carts
+                .Include(x => x.Product)
+                .Where(x => x.UserEmail == email)
+                .ToList();
+
             return View(cart);
         }
 
         // Thêm sản phẩm
         public IActionResult Add(int id)
         {
-            var product = _context.Products.Find(id);
+            var email = HttpContext.Session.GetString("UserEmail");
 
-            if (product == null) return NotFound();
+            if (email == null)
+                return RedirectToAction("Login", "Auth");
 
-            var cart = GetCart();
+            var cart = _context.Carts
+                .FirstOrDefault(x => x.ProductId == id && x.UserEmail == email);
 
-            var item = cart.FirstOrDefault(x => x.ProductId == id);
-
-            if (item != null)
+            if (cart != null)
             {
-                item.Quantity++;
+                cart.Quantity++;
             }
             else
             {
-                cart.Add(new CartItem
+                cart = new Cart
                 {
-                    ProductId = product.Id,
-                    ProductName = product.Name,
-                    Price = product.Price,
-                    Image = product.Image,
+                    ProductId = id,
+                    UserEmail = email,
                     Quantity = 1
-                });
+                };
+
+                _context.Carts.Add(cart);
             }
 
-            SaveCart(cart);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -56,33 +66,18 @@ namespace Shopbannoithat.Controllers
         // Xóa sản phẩm
         public IActionResult Remove(int id)
         {
-            var cart = GetCart();
+            var email = HttpContext.Session.GetString("UserEmail");
 
-            cart.RemoveAll(x => x.ProductId == id);
+            var cart = _context.Carts
+                .FirstOrDefault(x => x.ProductId == id && x.UserEmail == email);
 
-            SaveCart(cart);
-
-            return RedirectToAction("Index");
-        }
-
-        // Lấy giỏ hàng từ session
-        private List<CartItem> GetCart()
-        {
-            var session = HttpContext.Session.GetString("Cart");
-
-            if (session != null)
+            if (cart != null)
             {
-                return JsonConvert.DeserializeObject<List<CartItem>>(session);
+                _context.Carts.Remove(cart);
+                _context.SaveChanges();
             }
 
-            return new List<CartItem>();
-        }
-
-        // Lưu giỏ hàng
-        private void SaveCart(List<CartItem> cart)
-        {
-            HttpContext.Session.SetString("Cart",
-                JsonConvert.SerializeObject(cart));
+            return RedirectToAction("Index");
         }
     }
 }

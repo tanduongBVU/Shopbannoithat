@@ -4,7 +4,7 @@
 @{
 }
 
-@model List<Shopbannoithat.Models.CartItem>
+@model List<Shopbannoithat.Models.Cart>
 
 <h2>Giỏ hàng</h2>
 
@@ -20,15 +20,22 @@
     @foreach (var item in Model)
     {
         <tr>
+
             <td>
-                <img src="@item.Image" width="80" />
+                <img src="@item.Product.Image" width="80" />
             </td>
 
-            <td>@item.ProductName</td>
+            <td>
+                @item.Product.Name
+            </td>
 
-            <td>@item.Price.ToString("N0") VNĐ</td>
+            <td>
+                @item.Product.Price?.ToString("N0") VNĐ
+            </td>
 
-            <td>@item.Quantity</td>
+            <td>
+                @item.Quantity
+            </td>
 
             <td>
                 <a asp-action="Remove"

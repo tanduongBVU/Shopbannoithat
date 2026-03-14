@@ -5,37 +5,34 @@ using Shopbannoithat.Models;
 namespace Shopbannoithat.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class RoleController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CategoryController(ApplicationDbContext context)
+        public RoleController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public IActionResult Index()
         {
-            var categories = _context.Categories.ToList();
-            return View(categories);
+            var roles = _context.Roles.ToList();
+            return View(roles);
         }
 
-        // GET Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST Create
         [HttpPost]
-        public IActionResult Create(Category category)
+        public IActionResult Create(Role role)
         {
             if (!ModelState.IsValid)
             {
-                return View(category);
+                return View(role);
             }
-
-            _context.Categories.Add(category);
+            _context.Roles.Add(role);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
@@ -43,32 +40,28 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
         public IActionResult Edit(int id)
         {
-            var category = _context.Categories.Find(id);
-            return View(category);
+            var role = _context.Roles.Find(id);
+            return View(role);
         }
 
         [HttpPost]
-        public IActionResult Edit(Category category)
+        public IActionResult Edit(Role role)
         {
-
             if (!ModelState.IsValid)
             {
-                return View(category);
+                return View(role);
             }
-            _context.Categories.Update(category);
+            _context.Roles.Update(role);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
         }
         public IActionResult Delete(int id)
         {
-            var category = _context.Categories.Find(id);
+            var role = _context.Roles.Find(id);
 
-            if (category != null)
-            {
-                _context.Categories.Remove(category);
-                _context.SaveChanges();
-            }
+            _context.Roles.Remove(role);
+            _context.SaveChanges();
 
             return RedirectToAction("Index");
         }

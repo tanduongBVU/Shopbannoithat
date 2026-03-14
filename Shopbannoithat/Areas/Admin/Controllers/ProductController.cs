@@ -33,23 +33,31 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Product product, IFormFile imageFile)
         {
-            if (imageFile != null)
+            if (imageFile == null)
             {
-                string fileName = Path.GetFileName(imageFile.FileName);
-
-                string path = Path.Combine(
-                    Directory.GetCurrentDirectory(),
-                    "wwwroot/images",
-                    fileName
-                );
-
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    imageFile.CopyTo(stream);
-                }
-
-                product.Image = fileName;
+                ModelState.AddModelError("Image", "Vui lòng chọn hình ảnh");
             }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = _context.Categories.ToList();
+                return View(product);
+            }
+
+            string fileName = Path.GetFileName(imageFile.FileName);
+
+            string path = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot/images",
+                fileName
+            );
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                imageFile.CopyTo(stream);
+            }
+
+            product.Image = fileName;
 
             _context.Products.Add(product);
             _context.SaveChanges();
@@ -69,6 +77,12 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Product product)
         {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = _context.Categories.ToList();
+                return View(product);
+            }
+
             _context.Products.Update(product);
             _context.SaveChanges();
 

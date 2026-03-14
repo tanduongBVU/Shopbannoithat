@@ -47,14 +47,6 @@
                 </a>
                 </li>
                 
-                <li class="nav-item">
-                    <a class="nav-link text-white"
-                       asp-area="Admin"
-                       asp-controller="Order"
-                       asp-action="Index">
-                        Quản lý đơn hàng
-                    </a>
-                </li>
 
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/">
@@ -71,7 +63,25 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="Role"
+                       asp-action="Index">
 
+                        Quản lý quyền
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="Coupon"
+                       asp-action="Index">
+
+                        Quản lý mã giảm giá
+                    </a>
+                </li>
             </ul>
 
         </div>
@@ -84,6 +94,6 @@
         </div>
 
     </div>
-
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

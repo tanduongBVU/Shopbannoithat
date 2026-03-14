@@ -1,0 +1,39 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@model Shopbannoithat.Models.Coupon
+
+<h2>Tạo mã giảm giá</h2>
+
+<form asp-action="Create">
+
+    <div class="mb-3">
+        <label>Mã giảm giá</label>
+        <input asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Giảm (%)</label>
+        <input asp-for="Discount" class="form-control" />
+        <span asp-validation-for="Discount" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Hạn sử dụng</label>
+        <input asp-for="ExpiryDate" type="date" class="form-control" />
+        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Trạng thái</label>
+        <input asp-for="IsActive" type="checkbox" />
+    </div>
+
+    <button class="btn btn-success">Tạo</button>
+
+</form>

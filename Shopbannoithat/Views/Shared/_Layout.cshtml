@@ -78,10 +78,41 @@
                 </form>
 
                 <!-- Menu phải -->
+                @{
+                    var email = Context.Session.GetString("UserEmail");
+                    var role = Context.Session.GetString("UserRole");
+                }
+
                 <ul class="navbar-nav">
 
-                    @if (Context.Session.GetString("UserEmail") != null)
+                    @if (email != null)
                     {
+                        @* Nếu là Admin *@
+                        if (role == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-warning"
+                                   asp-area="Admin"
+                                   asp-controller="Dashboard"
+                                   asp-action="Index">
+                                    <i class="bi bi-speedometer2"></i> Admin
+                                </a>
+                            </li>
+                        }
+
+                        @* STAFF *@
+                        if (role == "Staff")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-info"
+                                   asp-area="Staff"
+                                   asp-controller="Order"
+                                   asp-action="Index">
+                                    <i class="bi bi-clipboard-check"></i> Staff
+                                </a>
+                            </li>
+                        }
+
                         <li class="nav-item">
                             <a class="nav-link text-danger"
                                asp-controller="Auth"

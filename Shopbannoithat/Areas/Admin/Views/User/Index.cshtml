@@ -33,6 +33,12 @@
                        class="btn btn-warning">
                         Phân quyền
                     </a>
+
+                    <a asp-action="Delete" asp-route-id="@item.Id"
+                       class="btn btn-danger"
+                       onclick="return confirm('Bạn có chắc muốn xóa tài khoản này?')">
+                        Xóa
+                    </a>
                 </td>
             </tr>
         }
