@@ -27,7 +27,7 @@
             <td>@c.Id</td>
             <td>@c.Code</td>
             <td>@c.Discount %</td>
-            <td>@c.ExpiryDate.ToShortDateString()</td>
+            <td>@c.ExpiryDate?.ToShortDateString()</td>
 
             <td>
                 @(c.IsActive ? "Đang dùng" : "Đã tắt")

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Shopbannoithat.Data;
 using Shopbannoithat.Models;
+using System.Data;
 
 namespace Shopbannoithat.Areas.Admin.Controllers
 {
@@ -28,6 +29,10 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Coupon coupon)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(coupon);
+            }
             _context.Coupons.Add(coupon);
             _context.SaveChanges();
 

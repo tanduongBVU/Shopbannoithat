@@ -30,6 +30,11 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
+
             _context.Categories.Add(category);
             _context.SaveChanges();
 
@@ -45,6 +50,11 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Category category)
         {
+
+            if (!ModelState.IsValid)
+            {
+                return View(category);
+            }
             _context.Categories.Update(category);
             _context.SaveChanges();
 

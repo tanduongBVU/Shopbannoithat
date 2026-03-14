@@ -28,6 +28,10 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(Role role)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(role);
+            }
             _context.Roles.Add(role);
             _context.SaveChanges();
 
@@ -43,6 +47,10 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(Role role)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(role);
+            }
             _context.Roles.Update(role);
             _context.SaveChanges();
 
