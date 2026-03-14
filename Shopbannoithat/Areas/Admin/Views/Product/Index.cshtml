@@ -18,7 +18,9 @@
             <th>Tên</th>
             <th>Giá</th>
             <th>Loại</th>
+            <th>Mô tả</th>
             <th>Số lượng</th>
+            
             <th>Chức năng</th>
         </tr>
     </thead>
@@ -36,7 +38,7 @@
                 <td>@item.Price.ToString("N0")</td>
 
                 <td>@item.Category?.Name</td>
-
+                <td>@item.Description</td>
                 <td>@item.Quantity</td>
 
                 <td>

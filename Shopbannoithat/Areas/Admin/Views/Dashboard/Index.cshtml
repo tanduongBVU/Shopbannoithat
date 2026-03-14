@@ -7,32 +7,51 @@
 
 
 
-<h2>Dashboard Admin</h2>
+@model Shopbannoithat.Models.DashboardViewModel
 
-<div class="row mt-4">
+<h2>Admin Dashboard</h2>
+
+<div class="row">
 
     <div class="col-md-4">
-        <div class="card bg-primary text-white">
-            <div class="card-body">
-                Tổng sản phẩm
-            </div>
+        <div class="card bg-success text-white p-3">
+            <h4>Tổng doanh thu</h4>
+            <h3>@Model.TotalRevenue.ToString("N0") VNĐ</h3>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card bg-success text-white">
-            <div class="card-body">
-                Tổng đơn hàng
-            </div>
+        <div class="card bg-primary text-white p-3">
+            <h4>Tổng đơn hàng</h4>
+            <h3>@Model.TotalOrders</h3>
         </div>
     </div>
 
     <div class="col-md-4">
-        <div class="card bg-warning text-white">
-            <div class="card-body">
-                Tổng khách hàng
-            </div>
+        <div class="card bg-warning text-white p-3">
+            <h4>Tổng sản phẩm</h4>
+            <h3>@Model.TotalProducts</h3>
         </div>
     </div>
 
 </div>
+
+<hr />
+
+<h3>Sản phẩm bán chạy</h3>
+
+<table class="table">
+    <tr>
+        <th>Sản phẩm</th>
+        <th>Đã bán</th>
+    </tr>
+
+    @foreach (var p in Model.TopProducts)
+    {
+        <tr>
+            <td>@p.ProductName</td>
+            <td>@p.TotalSold</td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,47 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@model List<Shopbannoithat.Models.Coupon>
+
+<h2>Quản lý mã giảm giá</h2>
+
+<a asp-action="Create" class="btn btn-primary">Thêm mã</a>
+
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Mã</th>
+        <th>Giảm (%)</th>
+        <th>Hạn</th>
+        <th>Trạng thái</th>
+        <th></th>
+    </tr>
+
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td>@c.Id</td>
+            <td>@c.Code</td>
+            <td>@c.Discount %</td>
+            <td>@c.ExpiryDate.ToShortDateString()</td>
+
+            <td>
+                @(c.IsActive ? "Đang dùng" : "Đã tắt")
+            </td>
+
+            <td>
+                <a asp-action="Toggle" asp-route-id="@c.Id" class="btn btn-warning">
+                    Bật / Tắt
+                </a>
+
+                <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-danger">
+                    Xóa
+                </a>
+            </td>
+        </tr>
+    }
+</table>

@@ -11,6 +11,8 @@ namespace Shopbannoithat.Data
         {
         }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Role> Roles { get; set; }
         // Bảng của website
         public DbSet<Product> Products { get; set; }
 
@@ -20,5 +22,7 @@ namespace Shopbannoithat.Data
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Cart> Carts { get; set; }
+
+        public DbSet<Coupon> Coupons { get; set; }
     }
 }

@@ -1,0 +1,22 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model Shopbannoithat.Models.Role
+
+<h2>Sửa quyền</h2>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Tên quyền</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <button class="btn btn-success">Lưu</button>
+
+</form>

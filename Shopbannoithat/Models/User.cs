@@ -12,6 +12,7 @@ namespace Shopbannoithat.Models
         [Required]
         public string Password { get; set; }
 
+        public int RoleId { get; set; }
         public string Role { get; set; } // Admin / Staff / Customer
     }
 }

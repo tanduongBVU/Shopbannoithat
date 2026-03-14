@@ -1,0 +1,65 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@model Shopbannoithat.Models.Product
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Sửa sản phẩm</h2>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Tên sản phẩm</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Giá</label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Hình ảnh</label>
+        <input asp-for="Image" class="form-control" />
+    </div>
+    <!-- DANH MỤC -->
+    <div class="mb-3">
+        <label>Danh mục</label>
+
+        <select name="CategoryId" class="form-control">
+            @foreach (var c in ViewBag.Categories)
+            {
+                <option value="@c.Id" selected="@(c.Id == Model.CategoryId)">
+                    @c.Name
+                </option>
+            }
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Số lượng</label>
+        <input asp-for="Quantity" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Mô tả</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+
+    <button class="btn btn-success">
+        Lưu
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Quay lại
+    </a>
+
+</form>

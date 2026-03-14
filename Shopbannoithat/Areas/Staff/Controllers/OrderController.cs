@@ -9,7 +9,8 @@ namespace Shopbannoithat.Areas.Staff.Controllers
         {
             var role = HttpContext.Session.GetString("UserRole");
 
-            if (role != "Staff")
+            // chưa đăng nhập hoặc không phải Staff
+            if (string.IsNullOrEmpty(role) || role != "Staff")
             {
                 return RedirectToAction("Login", "Auth", new { area = "" });
             }
