@@ -1,24 +1,31 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Shopbannoithat</title>
+    <title>@ViewData["Title"] - ShopNoiThat</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Shopbannoithat.styles.css" asp-append-version="true" />
+
+    <!-- Icon -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
+
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
         <div class="container">
 
             <!-- Logo -->
             <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
-                ShopNoiThat
+                🪑 ShopNoiThat
             </a>
 
-            <!-- Button mobile -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainMenu">
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -29,86 +36,99 @@
 
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="Index">
-                            Trang chủ
+                            <i class="bi bi-house"></i> Trang chủ
                         </a>
-                    </li>
-
-                    <!-- Dropdown sản phẩm -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                            Sản phẩm
-                        </a>
-
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Sofa</a></li>
-                            <li><a class="dropdown-item" href="#">Bàn</a></li>
-                            <li><a class="dropdown-item" href="#">Ghế</a></li>
-                            <li><a class="dropdown-item" href="#">Tủ</a></li>
-                            <li><a class="dropdown-item" href="#">Giường</a></li>
-                        </ul>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Product" asp-action="Index">
-                            Tất cả sản phẩm
+                            <i class="bi bi-grid"></i> Sản phẩm
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Wishlist" asp-action="Index">
-                            Wishlist
+                            <i class="bi bi-heart"></i> Wishlist
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Cart" asp-action="Index">
-                            Giỏ hàng
+                            <i class="bi bi-cart"></i> Giỏ hàng
                         </a>
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Order" asp-action="Index">
-                            Đơn hàng
+                            <i class="bi bi-bag"></i> Đơn hàng
                         </a>
                     </li>
 
                 </ul>
 
+                <!-- Search -->
+                <form class="d-flex me-3" asp-controller="Product" asp-action="Search">
+                    <input class="form-control me-2"
+                           type="search"
+                           name="keyword"
+                           placeholder="Tìm sản phẩm...">
+                    <button class="btn btn-light">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+
                 <!-- Menu phải -->
                 <ul class="navbar-nav">
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">
-                            Đăng nhập
-                        </a>
-                    </li>
+                    @if (Context.Session.GetString("UserEmail") != null)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-danger"
+                               asp-controller="Auth"
+                               asp-action="Logout">
+                                <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Auth"
+                               asp-action="Login">
+                                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                            </a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a class="btn btn-login ms-2" asp-area="Identity" asp-page="/Account/Register">
-                            Đăng ký
-                        </a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Auth"
+                               asp-action="Register">
+                                <i class="bi bi-person-plus"></i> Đăng ký
+                            </a>
+                        </li>
+                    }
 
                 </ul>
 
             </div>
         </div>
     </nav>
-    <div class="container-fluid p-0">
+
+    <div class="container mt-3">
         <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Shopbannoithat - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted mt-4">
+        <div class="container text-center">
+            © 2026 - ShopNoiThat
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>
