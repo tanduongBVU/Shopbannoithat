@@ -33,12 +33,13 @@
 
                     <div class="mt-auto">
 
-                        <a asp-controller="Product"
-                           asp-action="Detail"
-                           asp-route-id="@item.Id"
-                           class="btn btn-primary btn-sm">
-                            Xem chi tiết
-                        </a>
+                         <a asp-controller="Product"
+                                   asp-action="Details"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-info">
+                                Xem chi tiết
+                         </a>
+                        
 
                         @if (Context.Session.GetString("UserEmail") != null)
                         {
@@ -58,6 +59,11 @@
                             </a>
                         }
 
+                            <button class="btn btn-danger addWishlist"
+                                    data-id="@item.Id">
+                                ❤ Wishlist
+                            </button>
+
                     </div>
 
                 </div>
@@ -66,5 +72,22 @@
 
         </div>
     }
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+
+            $(".addWishlist").click(function () {
+
+            var productId = $(this).data("id");
+
+            $.post("/Wishlist/Add/" + productId, function (data) {
+
+            $("#wishlist-count").text(data.count);
+
+            });
+
+            });
+
+        </script>
 
 </div>

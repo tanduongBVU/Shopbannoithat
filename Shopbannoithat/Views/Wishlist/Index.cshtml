@@ -1,0 +1,44 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model List<Shopbannoithat.Models.WishlistItem>
+
+<h2>Wishlist</h2>
+
+<div class="row">
+
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3 mb-4">
+
+            <div class="card h-100 shadow-sm">
+
+                <img src="~/images/@item.Image" class="card-img-top" />
+
+                <div class="card-body text-center">
+
+                    <h5 class="card-title">@item.Name</h5>
+
+                    <p class="text-danger fw-bold">
+                        @item.Price.ToString("N0") VNĐ
+                    </p>
+
+                    <!-- Button thêm vào giỏ hàng -->
+                    <a asp-controller="Cart"
+                           asp-action="AddToCart"
+                           asp-route-id="@item.ProductId"
+                           class="btn btn-success btn-sm">
+                        Thêm vào giỏ hàng
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>

@@ -4,12 +4,82 @@
 @{
 }
 
-<h2>Thanh toán</h2>
+@model List<Shopbannoithat.Models.Cart>
 
-<p>Đặt hàng thành công!</p>
+<h2>Trang Thanh Toán</h2>
 
-<a asp-controller="Home"
-   asp-action="Index"
-   class="btn btn-primary">
-    Về trang chủ
-</a>
+<form asp-action="PlaceOrder" method="post">
+
+    <h4>Thông tin giao hàng</h4>
+
+    <div class="mb-3">
+        <label>Tên người nhận</label>
+        <input name="Name" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Địa chỉ</label>
+        <input name="Address1" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Địa chỉ bổ sung</label>
+        <input name="Address2" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Thành phố</label>
+        <input name="City" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Mã Zip</label>
+        <input name="Zip" class="form-control" />
+    </div>
+
+    <hr />
+
+    <h4>Sản phẩm đặt mua</h4>
+
+    <table class="table">
+
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tổng</th>
+        </tr>
+
+        @{
+            decimal total = 0;
+        }
+
+        @foreach (var item in Model)
+        {
+            var price = item.Product.Price ?? 0;
+            var sum = price * item.Quantity;
+            total += sum;
+
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@price.ToString("N0") VNĐ</td>
+                <td>@item.Quantity</td>
+                <td>@sum.ToString("N0") VNĐ</td>
+            </tr>
+        }
+
+    </table>
+
+    <h3>Tổng tiền: @total.ToString("N0") VNĐ</h3>
+
+    <button type="submit" class="btn btn-success">
+        Xác nhận đặt hàng
+    </button>
+
+    <a asp-controller="Cart"
+           asp-action="Index"
+           class="btn btn-secondary">
+        Quay lại giỏ hàng
+    </a>
+
+</form>

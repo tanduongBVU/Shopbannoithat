@@ -9,49 +9,93 @@
 <h2>Giỏ hàng</h2>
 
 <table class="table">
-    <tr>
-        <th>Ảnh</th>
-        <th>Tên</th>
-        <th>Giá</th>
-        <th>Số lượng</th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
+    <thead>
         <tr>
-
-            <td>
-                <img src="@item.Product.Image" width="80" />
-            </td>
-
-            <td>
-                @item.Product.Name
-            </td>
-
-            <td>
-                @item.Product.Price?.ToString("N0") VNĐ
-            </td>
-
-            <td>
-                @item.Quantity
-            </td>
-
-            <td>
-                <a asp-action="Remove"
-                   asp-route-id="@item.ProductId"
-                   class="btn btn-danger">
-                    Xóa
-                </a>
-            </td>
-
+            <th>Ảnh</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th></th>
         </tr>
-    }
+    </thead>
+
+    <tbody>
+
+        @{
+            decimal total = 0;
+        }
+
+        @foreach (var item in Model)
+        {
+            var price = item.Product.Price ?? 0;
+            var thanhTien = price * item.Quantity;
+            total += thanhTien;
+
+            <tr>
+
+                <td>
+                    <img src="@item.Product.Image" width="80" />
+                </td>
+
+                <td>
+                    @item.Product.Name
+                </td>
+
+                <td>
+                    @price.ToString("N0") VNĐ
+                </td>
+
+                <td>
+                    @item.Quantity
+                </td>
+
+                <td>
+                    @thanhTien.ToString("N0") VNĐ
+                </td>
+
+                <td>
+                    <a asp-action="Remove"
+                           asp-route-id="@item.ProductId"
+                           class="btn btn-danger">
+                        Xóa
+                    </a>
+                </td>
+
+                <td>
+
+                    <a asp-action="Decrease"
+                       asp-route-id="@item.ProductId"
+                       class="btn btn-sm btn-secondary">-</a>
+
+                    @item.Quantity
+
+                    <a asp-action="Increase"
+                       asp-route-id="@item.ProductId"
+                       class="btn btn-sm btn-secondary">+</a>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
 
 </table>
 
+<h4>Tổng tiền: <span class="text-danger">@total.ToString("N0") VNĐ</span></h4>
+
+<br />
+
+<a asp-controller="Product"
+       asp-action="Index"
+       class="btn btn-secondary">
+    Tiếp tục mua sắm
+</a>
+
 <a asp-controller="Order"
-   asp-action="Checkout"
-   class="btn btn-success">
+       asp-action="Checkout"
+       class="btn btn-success">
     Thanh toán
 </a>

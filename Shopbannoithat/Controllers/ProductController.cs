@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shopbannoithat.Data;
 
 namespace Shopbannoithat.Controllers
@@ -16,6 +17,25 @@ namespace Shopbannoithat.Controllers
         {
             var products = _context.Products.ToList();
             return View(products);
+        }
+
+        //Xem chi tiết sản phẩm
+        public async Task<IActionResult> Details(int id)
+        {
+            if (id == 0)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
         }
     }
 }
