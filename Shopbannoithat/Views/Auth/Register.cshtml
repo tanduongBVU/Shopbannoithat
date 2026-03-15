@@ -12,6 +12,7 @@
 <form method="post">
 
     <div class="mb-3">
+        <label>Email</label>
         <input asp-for="Email" class="form-control" placeholder="Email" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
@@ -19,12 +20,14 @@
         <label>Số điện thoại</label>
         <input asp-for="Phone" class="form-control" />
     </div>
+    <label>Mật khẩu</label>
     <div class="mb-3">
         <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
+        <label>Xác nhận mật khẩu</label>
         <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>

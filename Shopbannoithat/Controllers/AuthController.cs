@@ -91,5 +91,31 @@ namespace Shopbannoithat.Controllers
             HttpContext.Session.Clear();   // xóa session
             return RedirectToAction("Login", "Auth");  // quay về trang login
         }
+
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ForgotPassword(string email, string phone, string newPassword)
+        {
+            var user = _context.Users
+                .FirstOrDefault(x => x.Email == email && x.Phone == phone);
+
+            if (user == null)
+            {
+                ViewBag.Error = "Email hoặc số điện thoại không đúng";
+                return View();
+            }
+
+            user.Password = newPassword;
+
+            _context.SaveChanges();
+
+            TempData["Success"] = "Đổi mật khẩu thành công";
+            return RedirectToAction("Login");
+        }
     }
 }

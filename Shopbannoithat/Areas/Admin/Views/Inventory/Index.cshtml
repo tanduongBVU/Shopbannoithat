@@ -1,0 +1,68 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model List<Shopbannoithat.Models.Product>
+
+<h2>Quản lý kho</h2>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Tồn kho</th>
+            <th>Nhập / Xuất</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.Name</td>
+
+                <td>@item.Price?.ToString("N0") VNĐ</td>
+
+                <td>
+
+                    @if (item.Quantity < 5)
+                    {
+                        <span class="text-danger">@item.Quantity (Sắp hết)</span>
+                    }
+                    else
+                    {
+                        <span>@item.Quantity</span>
+                    }
+
+                </td>
+
+                <td>
+
+                    <a asp-action="UpdateStock"
+                       asp-route-id="@item.Id"
+                       asp-route-quantity="10"
+                       class="btn btn-success btn-sm">
+                        Nhập +10
+                    </a>
+
+                    <a asp-action="UpdateStock"
+                       asp-route-id="@item.Id"
+                       asp-route-quantity="-1"
+                       class="btn btn-danger btn-sm">
+                        Xuất -1
+                    </a>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>

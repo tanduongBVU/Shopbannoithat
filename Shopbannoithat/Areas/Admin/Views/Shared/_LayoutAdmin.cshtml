@@ -42,16 +42,18 @@
                 </li>
 
                 <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                    Loại sản phẩm
-                </a>
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="Order"
+                       asp-action="Index">
+                        Quản lý đơn hàng
+                    </a>
                 </li>
-                
 
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/">
-                        Về trang chủ
-                    </a>
+                <a class="nav-link text-white" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                    Quản lý loại sản phẩm
+                </a>
                 </li>
 
                 <li class="nav-item">
@@ -83,12 +85,27 @@
                     </a>
                 </li>
 
+                <li>
+                    <a class="nav-link text-white"
+                       asp-area="Admin"
+                       asp-controller="Inventory"
+                       asp-action="Index">
+                        Quản lý kho
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link text-white"
                            asp-area="Admin"
                            asp-controller="Chat"
                            asp-action="Index">
                         <i class="bi bi-chat-dots"></i> Chat khách hàng
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/">
+                        Về trang chủ
                     </a>
                 </li>
             </ul>
