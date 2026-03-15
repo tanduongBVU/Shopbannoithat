@@ -1,0 +1,121 @@
+﻿@model List<string>
+@{
+    ViewData["Title"] = "Quản lý chat";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="d-flex" style="height: 75vh;">
+
+    <!-- Danh sách khách -->
+    <div class="border-end pe-3 me-3" style="width: 260px; overflow-y: auto;">
+        <h6 class="fw-bold mb-3"><i class="bi bi-people"></i> Khách hàng</h6>
+        @if (!Model.Any())
+        {
+            <p class="text-muted small">Chưa có tin nhắn nào</p>
+        }
+        @foreach (var customer in Model)
+        {
+            <div class="customer-item p-2 rounded mb-1"
+                 style="cursor:pointer; background:#f8f9fa;"
+                 onclick="loadChat('@customer')">
+                <i class="bi bi-person-circle me-1"></i>
+                <small>@customer</small>
+            </div>
+        }
+    </div>
+
+    <!-- Khung chat -->
+    <div class="flex-fill d-flex flex-column">
+        <div id="chat-header" class="fw-bold mb-2 text-muted">
+            ← Chọn khách để xem tin nhắn
+        </div>
+
+        <div id="chat-messages"
+             class="flex-fill border rounded p-3 mb-2"
+             style="overflow-y:auto; background:#fafafa;">
+        </div>
+
+        <div class="input-group" id="reply-box" style="display:none !important;">
+            <input type="text" id="reply-input" class="form-control"
+                   placeholder="Nhập tin nhắn trả lời..." />
+            <button class="btn btn-primary" onclick="sendReply()">
+                <i class="bi bi-send"></i> Gửi
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        let currentCustomer = null;
+        const myEmail = "@Context.Session.GetString("UserEmail")";
+        const myRole = "@Context.Session.GetString("UserRole")";
+
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chatHub")
+        .withAutomaticReconnect()
+        .build();
+
+        connection.on("ReceiveMessage", function (senderEmail, senderRole, message, customerEmail, time) {
+        // Nếu đang xem đúng cuộc chat này thì hiện lên
+        if (customerEmail === currentCustomer) {
+        appendMessage(senderEmail, senderRole, message, time);
+        }
+        });
+
+        connection.start().catch(err => console.error(err));
+
+        function loadChat(customerEmail) {
+        currentCustomer = customerEmail;
+        document.getElementById("chat-header").innerHTML =
+        `<i class="bi bi-chat-dots text-primary"></i> Chat với: <strong>${customerEmail}</strong>`;
+        document.getElementById("reply-box").style.display = "flex !important";
+        document.getElementById("reply-box").removeAttribute("style");
+
+        const box = document.getElementById("chat-messages");
+        box.innerHTML = '<div class="text-muted small">Đang tải...</div>';
+
+        fetch(`/Admin/Chat/GetHistory?customerEmail=${encodeURIComponent(customerEmail)}`)
+        .then(r => r.json())
+        .then(msgs => {
+        box.innerHTML = "";
+        msgs.forEach(m => appendMessage(m.senderEmail, m.senderRole, m.message, m.sentAt));
+        box.scrollTop = box.scrollHeight;
+        });
+
+        // Highlight khách đang chọn
+        document.querySelectorAll(".customer-item").forEach(el => el.classList.remove("bg-primary", "text-white"));
+        event.currentTarget.classList.add("bg-primary", "text-white");
+        }
+
+        function appendMessage(senderEmail, senderRole, message, time) {
+        const box = document.getElementById("chat-messages");
+        const isMe = (senderRole === "Admin" || senderRole === "Staff");
+        const div = document.createElement("div");
+        div.className = `d-flex mb-2 ${isMe ? "justify-content-end" : "justify-content-start"}`;
+        div.innerHTML = `
+        <div style="max-width:70%">
+        <div class="small text-muted mb-1">${isMe ? "Bạn" : senderEmail} · ${time}</div>
+        <div class="rounded px-3 py-2" style="background:${isMe ? "#0d6efd" : "#e9ecef"}; color:${isMe ? "#fff" : "#000"}">
+        ${message}
+        </div>
+        </div>`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+        }
+
+        function sendReply() {
+        const input = document.getElementById("reply-input");
+        const msg = input.value.trim();
+        if (!msg || !currentCustomer) return;
+        connection.invoke("ReplyToCustomer", currentCustomer, msg)
+        .catch(err => console.error(err));
+        input.value = "";
+        }
+
+        document.getElementById("reply-input").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") sendReply();
+        });
+    </script>
+}

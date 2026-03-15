@@ -19,7 +19,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 builder.Services.AddSession();
-
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -37,6 +37,7 @@ app.UseSession();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<Shopbannoithat.Hubs.ChatHub>("/chatHub");
 
 // Cấu hình route cho area
 app.MapControllerRoute(
