@@ -23,7 +23,7 @@ namespace Shopbannoithat.Models
 
         [Required(ErrorMessage = "Vui lòng nhập số lượng")]
         [Range(0, 100000, ErrorMessage = "Số lượng không hợp lệ")]
-        public int? Quantity { get; set; }
+        public int Quantity { get; set; }
 
         [Required(ErrorMessage = "Vui lòng chọn loại sản phẩm")]
         public int? CategoryId { get; set; }

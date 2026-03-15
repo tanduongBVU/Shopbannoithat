@@ -31,11 +31,34 @@
                         Quản lý đơn hàng
                     </a>
                 </li>
-
-                <li class="nav-item">
+                <li>
                     <a class="nav-link text-white"
-                       asp-controller="Home"
+                        asp-area="Staff"
+                       asp-controller="Inventory"
                        asp-action="Index">
+                        Quản lý kho
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link text-white"
+                       asp-area="Staff"
+                       asp-controller="Product"
+                       asp-action="Index">
+                        Xem sản phẩm
+                    </a>
+                </li>
+
+                <li>
+                    <a class="nav-link text-white"
+                       asp-area="Staff"
+                       asp-controller="Customer"
+                       asp-action="Index">
+                        Tư vấn khách hàng
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/">
                         Về trang chủ
                     </a>
                 </li>

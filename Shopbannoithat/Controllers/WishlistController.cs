@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Shopbannoithat.Data;
 using Shopbannoithat.Models;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace Shopbannoithat.Controllers
@@ -16,47 +18,77 @@ namespace Shopbannoithat.Controllers
 
         public IActionResult Add(int id)
         {
+            var userId = HttpContext.Session.GetString("UserEmail");
+
+            if (userId == null)
+                return Json(new { success = false });
+
             var product = _context.Products.Find(id);
 
-            var wishlist = HttpContext.Session.GetString("wishlist");
+            var exist = _context.Wishlists
+                .FirstOrDefault(w => w.ProductId == id && w.UserId == userId);
 
-            List<WishlistItem> items;
-
-            if (wishlist == null)
+            if (exist == null)
             {
-                items = new List<WishlistItem>();
-            }
-            else
-            {
-                items = JsonSerializer.Deserialize<List<WishlistItem>>(wishlist);
-            }
-
-            if (!items.Any(p => p.ProductId == id))
-            {
-                items.Add(new WishlistItem
+                var item = new WishlistItem
                 {
                     ProductId = product.Id,
+                    UserId = userId,
                     Name = product.Name,
-                    Price = (decimal)product.Price,
+                    Price = product.Price ?? 0,
                     Image = product.Image
-                });
+                };
+
+                _context.Wishlists.Add(item);
+                _context.SaveChanges();
             }
 
-            HttpContext.Session.SetString("wishlist", JsonSerializer.Serialize(items));
+            var count = _context.Wishlists.Count(w => w.UserId == userId);
 
-            return Json(new { count = items.Count });
+            return Json(new { success = true, count = count });
         }
 
         public IActionResult Index()
         {
-            var wishlist = HttpContext.Session.GetString("wishlist");
+            var userId = HttpContext.Session.GetString("UserEmail");
 
-            if (wishlist == null)
-                return View(new List<WishlistItem>());
+            if (userId == null)
+                return RedirectToAction("Login", "Auth");
 
-            var items = JsonSerializer.Deserialize<List<WishlistItem>>(wishlist);
+            var items = _context.Wishlists
+                .Include(w => w.Product)   // thêm dòng này
+                .Where(w => w.UserId == userId)
+                .ToList();
 
             return View(items);
+        }
+
+        public IActionResult Count()
+        {
+            var userId = HttpContext.Session.GetString("UserEmail");
+
+            if (userId == null)
+                return Json(0);
+
+            var count = _context.Wishlists.Count(w => w.UserId == userId);
+
+            return Json(count);
+        }
+
+        public IActionResult Remove(int id)
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            var item = _context.Wishlists
+                .FirstOrDefault(x => x.ProductId == id && x.UserId == email);
+
+            if (item != null)
+            {
+                _context.Wishlists.Remove(item);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

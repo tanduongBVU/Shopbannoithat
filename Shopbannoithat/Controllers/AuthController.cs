@@ -73,6 +73,7 @@ namespace Shopbannoithat.Controllers
                 {
                     Email = model.Email,
                     Password = model.Password,
+                    Phone = model.Phone,
                     Role = "Customer"
                 };
 

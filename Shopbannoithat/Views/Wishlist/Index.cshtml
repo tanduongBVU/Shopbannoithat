@@ -27,11 +27,26 @@
                     </p>
 
                     <!-- Button thêm vào giỏ hàng -->
-                    <a asp-controller="Cart"
-                           asp-action="AddToCart"
+                    @if (item.Product.Quantity > 0)
+                    {
+                        <a asp-controller="Cart"
+                           asp-action="Add"
                            asp-route-id="@item.ProductId"
                            class="btn btn-success btn-sm">
-                        Thêm vào giỏ hàng
+                            Thêm vào giỏ hàng
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-danger btn-sm" disabled>
+                            Hết hàng
+                        </button>
+                    }
+
+                    <a asp-action="Remove"
+                       asp-route-id="@item.ProductId"
+                       class="btn btn-danger btn-sm">
+                        🗑
                     </a>
 
                 </div>

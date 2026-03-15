@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+@model Shopbannoithat.Models.Order
+
+<h2>Chi tiết đơn hàng</h2>
+
+<p><b>Mã đơn:</b> #ORD-@Model.Id</p>
+<p><b>Khách hàng:</b> @Model.Name</p>
+<p><b>Địa chỉ:</b> @Model.Address1</p>
+<p><b>Thành phố:</b> @Model.City</p>
+<p><b>Ngày đặt:</b> @Model.OrderDate</p>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Tổng</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @foreach (var item in Model.OrderDetails)
+        {
+            <tr>
+
+                <td>@item.Product.Name</td>
+
+                <td>@item.Price.ToString("N0") VNĐ</td>
+
+                <td>@item.Quantity</td>
+
+                <td>@((item.Price * item.Quantity).ToString("N0")) VNĐ</td>
+
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+<h4 class="text-danger">
+    Tổng tiền: @Model.TotalPrice.ToString("N0") VNĐ
+</h4>
+
+<a asp-action="Index" class="btn btn-secondary">
+    Quay lại
+</a>

@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model Shopbannoithat.Models.Product
+
+<h2>Chi tiết sản phẩm</h2>
+
+<div class="card" style="width:400px">
+
+    <img src="~/images/@Model.Image" class="card-img-top" />
+
+    <div class="card-body">
+
+        <h4>@Model.Name</h4>
+
+        <p><b>Giá:</b> @Model.Price?.ToString("N0") VNĐ</p>
+
+        <p><b>Tồn kho:</b> @Model.Quantity</p>
+
+        <p><b>Mô tả:</b> @Model.Description</p>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Quay lại
+        </a>
+
+    </div>
+
+</div>

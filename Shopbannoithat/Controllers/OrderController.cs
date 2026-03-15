@@ -55,6 +55,17 @@ namespace Shopbannoithat.Controllers
 
             foreach (var item in cartItems)
             {
+                // TRỪ TỒN KHO
+                if (item.Product.Quantity >= item.Quantity)
+                {
+                    item.Product.Quantity -= item.Quantity;
+                }
+                else
+                {
+                    TempData["Error"] = $"Sản phẩm {item.Product.Name} không đủ hàng.";
+                    return RedirectToAction("Checkout");
+                }
+
                 order.OrderDetails.Add(new OrderDetail
                 {
                     ProductId = item.ProductId,
@@ -79,6 +90,36 @@ namespace Shopbannoithat.Controllers
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Product)
                 .FirstOrDefault(o => o.Id == id);
+
+            return View(order);
+        }
+
+        //Trang danh sách đơn hàng của người dùng
+        public IActionResult Index()
+        {
+            var email = HttpContext.Session.GetString("UserEmail");
+
+            if (email == null)
+                return RedirectToAction("Login", "Auth");
+
+            var orders = _context.Orders
+                .Where(o => o.UserId == email)
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
+
+            return View(orders);
+        }
+
+        //Xem chi tiết đơn hàng
+        public IActionResult Detail(int id)
+        {
+            var order = _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(d => d.Product)
+                .FirstOrDefault(o => o.Id == id);
+
+            if (order == null)
+                return NotFound();
 
             return View(order);
         }

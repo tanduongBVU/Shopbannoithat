@@ -29,8 +29,10 @@ namespace Shopbannoithat.Models
         [Required(ErrorMessage = "Please enter a city name")]
         public string City { get; set; }
 
-        public string Zip { get; set; }
+        
 
         public DateTime OrderPlaced { get; set; }
+
+        
     }
 }

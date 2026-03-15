@@ -1,10 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Shopbannoithat.Data;
+using System;
 
 namespace Shopbannoithat.Areas.Staff.Controllers
 {
     [Area("Staff")]
     public class OrderController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public OrderController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             var role = HttpContext.Session.GetString("UserRole");
@@ -15,7 +25,46 @@ namespace Shopbannoithat.Areas.Staff.Controllers
                 return RedirectToAction("Login", "Auth", new { area = "" });
             }
 
-            return View();
+            var orders = _context.Orders
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
+
+            return View(orders);
+        }
+
+        public IActionResult UpdateStatus(int id, string status)
+        {
+            var order = _context.Orders.Find(id);
+
+            if (order != null)
+            {
+                order.Status = status;
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Detail(int id)
+        {
+            var role = HttpContext.Session.GetString("UserRole");
+
+            if (string.IsNullOrEmpty(role) || role != "Staff")
+            {
+                return RedirectToAction("Login", "Auth", new { area = "" });
+            }
+
+            var order = _context.Orders
+                .Include(o => o.OrderDetails)
+                .ThenInclude(d => d.Product)
+                .FirstOrDefault(o => o.Id == id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
         }
     }
 }
