@@ -100,5 +100,19 @@ namespace Shopbannoithat.Controllers
 
             return RedirectToAction("Index");
         }
+
+        // Trả về danh sách ProductId đã wishlist của user
+        public IActionResult GetUserWishlist()
+        {
+            var userId = HttpContext.Session.GetString("UserEmail");
+            if (userId == null) return Json(new List<int>());
+
+            var ids = _context.Wishlists
+                .Where(w => w.UserId == userId)
+                .Select(w => w.ProductId)
+                .ToList();
+
+            return Json(ids);
+        }
     }
 }

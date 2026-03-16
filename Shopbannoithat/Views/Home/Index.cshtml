@@ -68,7 +68,7 @@
                                     {
                                         @if (item.Quantity > 0)
                                         {
-                                            <a href="/Cart/Add/@item.Id" class="btn-cart">🛒 Thêm vào giỏ</a>
+                                            <a href="/Cart/Add/@item.Id" class="btn-cart"> Thêm vào giỏ</a>
                                         }
                                         else
                                         {
@@ -435,24 +435,25 @@
             color: #fff;
         }
 
-    .btn-cart {
-        flex: 1;
-        display: block;
-        text-align: center;
-        background-color: #b85c2a;
-        color: #fff;
-        border-radius: 6px;
-        padding: 7px 0;
-        font-size: 0.82rem;
-        font-weight: 500;
-        text-decoration: none;
-        transition: background-color 0.2s;
-    }
-
-        .btn-cart:hover {
-            background-color: #e07030;
-            color: #fff;
-        }
+   .btn-cart {
+    flex: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 8px 10px;
+    background: #e05c2a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+.btn-cart:hover { background: #c44e22; color: #fff; }
 
     .btn-soldout {
         flex: 1;
@@ -467,34 +468,26 @@
         cursor: not-allowed;
     }
 
-    .btn-wishlist {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 36px;
-        height: 36px;
-        flex-shrink: 0;
-        background: #fff;
-        border: 1.5px solid #e0d5cc;
-        border-radius: 6px;
-        color: #c0a090;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        padding: 0;
-    }
-
-        .btn-wishlist:hover {
-            background: #fff0f0;
-            border-color: #e74c3c;
-            color: #e74c3c;
-        }
-
-        .btn-wishlist.active {
-            background: #fff0f0;
-            border-color: #e74c3c;
-            color: #e74c3c;
-        }
+   .btn-wishlist {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+    text-decoration: none;
+    padding: 0;
+    font-size: 15px;
+}
+.btn-wishlist:hover { color: #e05c2a; transform: scale(1.12); }
+.btn-wishlist.active { color: #e05c2a; }
 
     
 </style>

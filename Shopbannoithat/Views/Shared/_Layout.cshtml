@@ -46,29 +46,19 @@
                         </a>
                     </li>
 
-                   @*  <li class="nav-item">
-                        <a class="nav-link" asp-controller="Wishlist" asp-action="Index">
-                            <i class="bi bi-heart"></i> Wishlist
-                            (<span id="wishlist-count">0</span>)
-                        </a>
-                    </li> *@
+                  
                     <li class="nav-item position-relative">
-
                         <a class="nav-link" asp-controller="Wishlist" asp-action="Index">
                             <i class="bi bi-heart"></i> Wishlist
+                            <span id="wishlist-count"
+                                  class="badge bg-danger rounded-pill">0</span>
                         </a>
-
-                        <span id="wishlist-count"
-                              class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
-                            0
-                        </span>
-
                     </li>
 
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Cart" asp-action="Index">
                             <i class="bi bi-cart"></i> Giỏ hàng
-                            <span class="badge bg-danger" id="cart-count">0</span>
+                            <span class="badge bg-danger rounded-pill" id="cart-count">0</span>
                         </a>
                     </li>
 
@@ -168,11 +158,182 @@
 
 
 
-    <footer class="border-top footer text-muted mt-4">
-        <div class="container text-center">
-            © 2026 - ShopNoiThat
+   <footer class="site-footer mt-5">
+    <div class="container">
+        <div class="row g-4 py-5">
+
+            <!-- Cột 1: Logo + giới thiệu -->
+            <div class="col-md-4">
+                <div class="footer-brand mb-3">🪑 ShopNoiThat</div>
+                <p class="footer-desc">
+                    Chuyên cung cấp nội thất cao cấp, hiện đại cho không gian sống
+                    của bạn. Chất lượng tốt — Giá hợp lý — Giao hàng toàn quốc.
+                </p>
+                <div class="footer-social mt-3 d-flex gap-2">
+                    <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-tiktok"></i></a>
+                    <a href="#" class="social-btn"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+
+            <!-- Cột 2: Danh mục -->
+            <div class="col-md-2">
+                <h6 class="footer-heading">Danh mục</h6>
+                <ul class="footer-links">
+                    <li><a href="/Product">Tất cả sản phẩm</a></li>
+                    <li><a href="/Product">Phòng khách</a></li>
+                    <li><a href="/Product">Phòng ngủ</a></li>
+                    <li><a href="/Product">Phòng bếp</a></li>
+                    <li><a href="/Product">Phòng làm việc</a></li>
+                </ul>
+            </div>
+
+           
+
+            <!-- Cột 3: Liên hệ -->
+            <div class="col-md-4">
+                <h6 class="footer-heading">Liên hệ</h6>
+                <ul class="footer-contact">
+                    <li>
+                        <i class="bi bi-geo-alt-fill"></i>
+                        123 Đường Nội Thất, Quận 1, TP.HCM
+                    </li>
+                    <li>
+                        <i class="bi bi-telephone-fill"></i>
+                        0903 884 358
+                    </li>
+                    <li>
+                        <i class="bi bi-envelope-fill"></i>
+                        support@shopnoithat.vn
+                    </li>
+                    <li>
+                        <i class="bi bi-clock-fill"></i>
+                        Thứ 2 – Thứ 7: 8:00 – 21:00
+                    </li>
+                </ul>
+            </div>
+
         </div>
-    </footer>
+
+        <!-- Bottom bar -->
+        <div class="footer-bottom">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    © 2026 ShopNoiThat. All rights reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end mt-2 mt-md-0">
+                   <span class="pay-badge">VISA</span>
+                    <span class="pay-badge">Mastercard</span>
+                    <span class="pay-badge">MoMo</span>
+                    <span class="pay-badge">ZaloPay</span>
+                    <span class="pay-badge">COD</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .pay-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #c8bfb5;
+    margin-left: 4px;
+    letter-spacing: 0.5px;
+}
+
+    .site-footer {
+        background: #1e1510;
+        color: #c8bfb5;
+        font-size: 0.88rem;
+    }
+    .footer-brand {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.5px;
+    }
+    .footer-desc {
+        color: #a89888;
+        line-height: 1.7;
+        font-size: 0.87rem;
+    }
+    .social-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        color: #c8bfb5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-size: 15px;
+        transition: background 0.2s, color 0.2s;
+    }
+    .social-btn:hover {
+        background: #e05c2a;
+        color: #fff;
+    }
+    .footer-heading {
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e05c2a;
+        display: inline-block;
+    }
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .footer-links li {
+        margin-bottom: 8px;
+    }
+    .footer-links a {
+        color: #a89888;
+        text-decoration: none;
+        transition: color 0.2s;
+        font-size: 0.87rem;
+    }
+    .footer-links a:hover {
+        color: #e05c2a;
+        padding-left: 4px;
+    }
+    .footer-contact {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .footer-contact li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+        color: #a89888;
+        font-size: 0.87rem;
+        line-height: 1.5;
+    }
+    .footer-contact i {
+        color: #e05c2a;
+        font-size: 14px;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+    .footer-bottom {
+        border-top: 1px solid rgba(255,255,255,0.08);
+        padding: 16px 0;
+        color: #7a6a5a;
+        font-size: 0.83rem;
+    }
+</style>
 
    
 
