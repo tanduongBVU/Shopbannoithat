@@ -29,5 +29,8 @@ namespace Shopbannoithat.Models
         public int? CategoryId { get; set; }
 
         public Category? Category { get; set; }
+
+        // Thêm mới
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

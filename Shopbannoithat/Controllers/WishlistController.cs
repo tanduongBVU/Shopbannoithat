@@ -28,8 +28,11 @@ namespace Shopbannoithat.Controllers
             var exist = _context.Wishlists
                 .FirstOrDefault(w => w.ProductId == id && w.UserId == userId);
 
+            bool isAdded;
+
             if (exist == null)
             {
+                // Chưa có → thêm vào
                 var item = new WishlistItem
                 {
                     ProductId = product.Id,
@@ -38,14 +41,21 @@ namespace Shopbannoithat.Controllers
                     Price = product.Price ?? 0,
                     Image = product.Image
                 };
-
                 _context.Wishlists.Add(item);
-                _context.SaveChanges();
+                isAdded = true;
             }
+            else
+            {
+                // Đã có → xóa ra
+                _context.Wishlists.Remove(exist);
+                isAdded = false;
+            }
+
+            _context.SaveChanges();
 
             var count = _context.Wishlists.Count(w => w.UserId == userId);
 
-            return Json(new { success = true, count = count });
+            return Json(new { success = true, count = count, isAdded = isAdded });
         }
 
         public IActionResult Index()
