@@ -8,50 +8,178 @@
 
 
 @model Shopbannoithat.Models.DashboardViewModel
+<div class="dashboard-container">
 
-<h2>Admin Dashboard</h2>
+    <h2 class="dashboard-title">Admin Dashboard</h2>
 
-<div class="row">
+    <div class="row">
 
-    <div class="col-md-4">
-        <div class="card bg-success text-white p-3">
-            <h4>Tổng doanh thu</h4>
-            <h3>@Model.TotalRevenue.ToString("N0") VNĐ</h3>
+        <div class="col-md-4">
+            <div class="dashboard-card revenue">
+                <div class="card-icon">💰</div>
+                <div>
+                    <h4>Tổng doanh thu</h4>
+                    <h2>@Model.TotalRevenue.ToString("N0") VNĐ</h2>
+                </div>
+            </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="dashboard-card orders">
+                <div class="card-icon">📦</div>
+                <div>
+                    <h4>Tổng đơn hàng</h4>
+                    <h2>@Model.TotalOrders</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="dashboard-card products">
+                <div class="card-icon">🛒</div>
+                <div>
+                    <h4>Tổng sản phẩm</h4>
+                    <h2>@Model.TotalProducts</h2>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="col-md-4">
-        <div class="card bg-primary text-white p-3">
-            <h4>Tổng đơn hàng</h4>
-            <h3>@Model.TotalOrders</h3>
-        </div>
-    </div>
+    <div class="dashboard-box">
 
-    <div class="col-md-4">
-        <div class="card bg-warning text-white p-3">
-            <h4>Tổng sản phẩm</h4>
-            <h3>@Model.TotalProducts</h3>
-        </div>
+        <h3>Sản phẩm bán chạy</h3>
+
+        <table class="table table-hover">
+
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Đã bán</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var p in Model.TopProducts)
+                {
+                    <tr>
+                        <td>@p.ProductName</td>
+                        <td><span class="badge-sale">@p.TotalSold</span></td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
     </div>
 
 </div>
+<style>
+    /* ===== Dashboard container ===== */
 
-<hr />
-
-<h3>Sản phẩm bán chạy</h3>
-
-<table class="table">
-    <tr>
-        <th>Sản phẩm</th>
-        <th>Đã bán</th>
-    </tr>
-
-    @foreach (var p in Model.TopProducts)
-    {
-        <tr>
-            <td>@p.ProductName</td>
-            <td>@p.TotalSold</td>
-        </tr>
+    .dashboard-container {
+        padding: 20px;
     }
 
-</table>
+    /* ===== Title ===== */
+
+    .dashboard-title {
+        font-weight: 700;
+        margin-bottom: 30px;
+        color: #2c3e50;
+    }
+
+    /* ===== Card ===== */
+
+    .dashboard-card {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border-radius: 15px;
+        padding: 25px;
+        color: white;
+        transition: 0.3s;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        }
+
+    /* ===== Icon ===== */
+
+    .card-icon {
+        font-size: 40px;
+    }
+
+    /* ===== Card text ===== */
+
+    .dashboard-card h4 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .dashboard-card h2 {
+        margin: 5px 0 0;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    /* ===== Card colors ===== */
+
+    .revenue {
+        background: linear-gradient(135deg,#16a085,#27ae60);
+    }
+
+    .orders {
+        background: linear-gradient(135deg,#2980b9,#3498db);
+    }
+
+    .products {
+        background: linear-gradient(135deg,#f39c12,#f1c40f);
+    }
+
+    /* ===== Box ===== */
+
+    .dashboard-box {
+        margin-top: 30px;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    /* ===== Table ===== */
+
+    .table thead {
+        background: #2c3e50;
+        color: white;
+    }
+
+    .table th {
+        padding: 15px;
+    }
+
+    .table td {
+        padding: 14px;
+    }
+
+    /* ===== Badge ===== */
+
+    .badge-sale {
+        background: #27ae60;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    /* ===== Hover row ===== */
+
+    .table tbody tr:hover {
+        background: #f6f8fa;
+    }
+</style>
