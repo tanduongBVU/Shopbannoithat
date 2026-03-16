@@ -30,7 +30,7 @@ namespace Shopbannoithat.Controllers
             {
                 HttpContext.Session.SetString("UserRole", user.Role);
                 HttpContext.Session.SetString("UserEmail", user.Email);
-
+                HttpContext.Session.SetString("UserName", user.Email);
                 // chuyển trang theo role
                 if (user.Role == "Admin")
                 {

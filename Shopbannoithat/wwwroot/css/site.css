@@ -49,6 +49,13 @@ body {
         background: #a71d1d;
     }
 
+.navbar-nav {
+    align-items: center;
+}
+
+    .navbar-nav .nav-item {
+        white-space: nowrap;
+    }
 /*banner*/
 .banner-img {
     height: 650px;
@@ -69,4 +76,25 @@ body {
     }
 
 
+
+
+/*search*/
+
+.search-dropdown {
+    position: absolute;
+    top: 40px;
+    width: 300px;
+    background: white;
+    border: 1px solid #ddd;
+    display: none;
+    z-index: 1000;
 }
+
+.search-item {
+    padding: 10px;
+    cursor: pointer;
+}
+
+    .search-item:hover {
+        background: #f1f1f1;
+    }

@@ -48,5 +48,38 @@ namespace Shopbannoithat.Controllers
 
             return View(product);
         }
+
+        public IActionResult Search(string keyword)
+        {
+            if (string.IsNullOrEmpty(keyword))
+            {
+                return RedirectToAction("Index");
+            }
+
+            keyword = keyword.ToLower();
+
+            var products = _context.Products
+    .Where(p => p.Name.Contains(keyword) ||
+                p.Description.Contains(keyword) ||
+                p.Category.Name.Contains(keyword))
+    .ToList();
+
+            return View("Index", products);
+        }
+
+        public JsonResult SearchAjax(string keyword)
+        {
+            var data = _context.Products
+                .Where(p => p.Name.Contains(keyword))
+                .Select(p => new
+                {
+                    id = p.Id,
+                    name = p.Name
+                })
+                .Take(5)
+                .ToList();
+
+            return Json(data);
+        }
     }
 }

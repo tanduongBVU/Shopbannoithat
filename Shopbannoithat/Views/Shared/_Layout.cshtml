@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -71,20 +73,30 @@
                 </ul>
 
                 <!-- Search -->
-                <form class="d-flex me-3" asp-controller="Product" asp-action="Search">
+                <form class="d-flex me-3 position-relative"
+                      asp-controller="Product"
+                      asp-action="Search">
+
                     <input class="form-control me-2"
+                           id="searchBox"
                            type="search"
                            name="keyword"
+                           autocomplete="off"
                            placeholder="Tìm sản phẩm...">
+
                     <button class="btn btn-light">
                         <i class="bi bi-search"></i>
                     </button>
+
+                    <div id="searchResult" class="search-dropdown"></div>
+
                 </form>
 
                 <!-- Menu phải -->
                 @{
                     var email = Context.Session.GetString("UserEmail");
                     var role = Context.Session.GetString("UserRole");
+                    var name = Context.Session.GetString("UserName");
                 }
 
                 <ul class="navbar-nav">
@@ -117,6 +129,14 @@
                             </li>
                         }
 
+                        @if (role == "Customer")
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link text-light">
+                                    <i class="bi bi-person-circle"></i> @name
+                                </span>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-danger"
                                asp-controller="Auth"
@@ -370,7 +390,36 @@
         });
 
     </script>
+    @* search *@
+    <script>
 
+        $("#searchBox").keyup(function () {
+
+            var keyword = $(this).val();
+
+            if (keyword.length == 0) {
+                $("#searchResult").hide();
+                return;
+            }
+
+            $.get("/Product/SearchAjax", { keyword: keyword }, function (data) {
+
+                var html = "";
+
+                data.forEach(function (p) {
+                    html += `<div class="search-item"
+                             onclick="location.href='/Product/Details/${p.id}'">
+                             ${p.name}
+                             </div>`;
+                });
+
+                $("#searchResult").html(html).show();
+
+            });
+
+        });
+
+    </script>
 
    @* /* CHAT BOX ////////////////////////////////////////////////////////////////*/ *@
     @{
