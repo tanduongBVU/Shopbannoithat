@@ -11,7 +11,7 @@
 
 <h2>Sửa sản phẩm</h2>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
 
     <input type="hidden" asp-for="Id" />
 
@@ -28,8 +28,8 @@
     </div>
 
     <div class="mb-3">
-        <label>Hình ảnh</label>
-        <input asp-for="Image" class="form-control" />
+        <label class="form-label">Ảnh sản phẩm</label>
+        <input type="file" name="imageFile" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
 

@@ -57,10 +57,26 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = _context.Categories.ToList();
+                // ❗ LOAD LẠI Y NHƯ GET
+                ViewBag.Parents = _context.Categories
+                    .Where(c => c.ParentId == null)
+                    .ToList();
+
+                var children = _context.Categories
+                    .Where(c => c.ParentId != null)
+                    .Select(c => new { c.Id, c.Name, c.ParentId })
+                    .ToList();
+
+                ViewBag.ChildrenJson = System.Text.Json.JsonSerializer.Serialize(children,
+                    new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                    });
+
                 return View(product);
             }
 
+            // upload file
             string fileName = Path.GetFileName(imageFile.FileName);
 
             string path = Path.Combine(
@@ -107,13 +123,46 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public IActionResult Edit(Product product, IFormFile imageFile)
         {
+            if (imageFile == null)
+            {
+                ModelState.AddModelError("Image", "Vui lòng chọn hình ảnh");
+            }
+
             if (!ModelState.IsValid)
             {
+                // load lại ViewBag (QUAN TRỌNG)
+                ViewBag.Parents = _context.Categories
+                    .Where(c => c.ParentId == null)
+                    .ToList();
+
+                var children = _context.Categories
+                    .Where(c => c.ParentId != null)
+                    .Select(c => new { c.Id, c.Name, c.ParentId })
+                    .ToList();
+
+                ViewBag.ChildrenJson = System.Text.Json.JsonSerializer.Serialize(children,
+                    new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                    });
+
                 ViewBag.Categories = _context.Categories.ToList();
+
                 return View(product);
             }
+
+            // upload file
+            string fileName = Path.GetFileName(imageFile.FileName);
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                imageFile.CopyTo(stream);
+            }
+
+            product.Image = fileName;
 
             _context.Products.Update(product);
             _context.SaveChanges();
