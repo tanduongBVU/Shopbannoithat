@@ -12,7 +12,7 @@
 </head>
 
 <body>
-
+    
     <div class="d-flex">
 
         <!-- SIDEBAR -->
@@ -51,9 +51,9 @@
                 </li>
 
                 <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Admin" asp-controller="Category" asp-action="Index">
-                    Quản lý loại sản phẩm
-                </a>
+                    <a class="nav-link text-white" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                        <i class="bi bi-box-seam"></i> Quản lý sản phẩm
+                    </a>
                 </li>
 
                 <li class="nav-item">
@@ -125,4 +125,5 @@
 
     @RenderSection("Scripts", required: false)
 </body>
+
 </html>

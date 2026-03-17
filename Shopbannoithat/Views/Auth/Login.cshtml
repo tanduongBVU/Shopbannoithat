@@ -4,22 +4,197 @@
 @{
 }
 
+<div class="login-page">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="brand-logo">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h2>Chào mừng quay lại</h2>
+            <p>Vui lòng đăng nhập vào tài khoản của bạn</p>
+        </div>
 
-<h2>Đăng nhập</h2>
+        <form method="post" class="login-form">
+            <div class="input-group-custom">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" placeholder="Email của bạn" class="form-control" required />
+            </div>
 
-<form method="post">
-    <label>Email</label>
-    <input type="email" name="email" placeholder="Email" class="form-control" />
-    <br>
-    <label>Mật khẩu</label>
-    <input type="password" name="password" placeholder="Password" class="form-control" />
-    
-    <a asp-controller="Auth" asp-action="ForgotPassword">
-        Quên mật khẩu?
-    </a>
-    <br />
-    <br />
-    <button class="btn btn-primary">Đăng nhập</button>
+            <div class="input-group-custom">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="Mật khẩu" class="form-control" required />
+            </div>
 
-    <p style="color:red">@ViewBag.Error</p>
-</form>
+            <div class="form-options">
+                <div class="remember-me">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Ghi nhớ tôi</label>
+                </div>
+                <a asp-controller="Auth" asp-action="ForgotPassword" class="forgot-link">Quên mật khẩu?</a>
+            </div>
+
+            <button type="submit" class="btn-login-glow">
+                ĐĂNG NHẬP <i class="fas fa-sign-in-alt"></i>
+            </button>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="error-msg">
+                    <i class="fas fa-exclamation-circle"></i> @ViewBag.Error
+                </div>
+            }
+        </form>
+    </div>
+</div>
+<style>
+    /* Nền trang chuyển động giống trang Quên mật khẩu */
+    .login-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e);
+        background-size: 400% 400%;
+        animation: gradientBG 10s ease infinite;
+        padding: 20px;
+    }
+
+    @@keyframes gradientBG {
+        0%
+
+    {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+
+    }
+
+    /* Card hiệu ứng kính mờ */
+    .login-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        width: 100%;
+        max-width: 420px;
+        padding: 40px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        color: white;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .brand-logo {
+        font-size: 50px;
+        color: #00d2ff;
+        margin-bottom: 15px;
+        text-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+    }
+
+    .login-header h2 {
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .login-header p {
+        color: #aaa;
+        font-size: 14px;
+    }
+
+    /* Ô nhập liệu hiện đại */
+    .input-group-custom {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+        .input-group-custom i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00d2ff;
+        }
+
+        .input-group-custom .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 12px 12px 45px;
+            color: white;
+            transition: 0.3s;
+        }
+
+            .input-group-custom .form-control:focus {
+                background: rgba(255, 255, 255, 0.2);
+                border-color: #00d2ff;
+                box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+                outline: none;
+            }
+
+    /* Tùy chỉnh placeholder */
+    .form-control::placeholder {
+        color: #888;
+    }
+
+    /* Tùy chọn dưới input */
+    .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        margin-bottom: 25px;
+    }
+
+    .forgot-link {
+        color: #00d2ff;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+            color: #3a7bd5;
+        }
+
+    /* Nút bấm phát sáng */
+    .btn-login-glow {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        background: linear-gradient(to right, #00d2ff, #3a7bd5);
+        color: white;
+        font-weight: 700;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: 0.4s;
+        box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+    }
+
+        .btn-login-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.5);
+            filter: brightness(1.1);
+        }
+
+    /* Thông báo lỗi */
+    .error-msg {
+        margin-top: 20px;
+        background: rgba(255, 71, 71, 0.1);
+        border-left: 4px solid #ff4747;
+        padding: 10px;
+        font-size: 13px;
+        color: #ff9494;
+        text-align: center;
+    }
+</style>

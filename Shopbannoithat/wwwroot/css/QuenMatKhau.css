@@ -1,0 +1,161 @@
+﻿/* Nền trang với hiệu ứng chuyển màu động */
+.forgot-password-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Card hiệu ứng Kính mờ (Glassmorphism) */
+.forgot-card-animated {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    width: 450px;
+    overflow: hidden;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* Header màu sắc nổi bật */
+.card-header-gradient {
+    background: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 30px;
+    border: 2px solid #fff;
+}
+
+.card-content {
+    padding: 40px;
+}
+
+/* Input phong cách hiện đại (Floating Label) */
+.input-box {
+    position: relative;
+    margin-bottom: 35px;
+}
+
+    .input-box input {
+        width: 100%;
+        padding: 10px 0;
+        font-size: 16px;
+        border: none;
+        border-bottom: 2px solid #ddd;
+        outline: none;
+        background: transparent;
+        transition: 0.5s;
+    }
+
+    .input-box label {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        pointer-events: none;
+        color: #999;
+        transition: 0.5s;
+    }
+
+    .input-box input:focus ~ label,
+    .input-box input:valid ~ label {
+        top: -20px;
+        left: 0;
+        color: #2575fc;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .input-box .line {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 2px;
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        transition: 0.5s;
+    }
+
+    .input-box input:focus ~ .line {
+        width: 100%;
+    }
+
+/* Nút bấm Neon phát sáng */
+.btn-neon {
+    position: relative;
+    width: 100%;
+    padding: 15px;
+    color: #2575fc;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    font-weight: bold;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: 0.5s;
+    overflow: hidden;
+}
+
+    .btn-neon:hover {
+        background: #2575fc;
+        color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 5px #2575fc, 0 0 25px #2575fc, 0 0 50px #2575fc, 0 0 100px #2575fc;
+    }
+
+.footer-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+    .footer-links a {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+        .footer-links a:hover {
+            color: #2575fc;
+        }
+
+/* Thông báo lỗi nổi bật */
+.alert-custom {
+    background: #fff5f5;
+    border-left: 5px solid #ff4d4d;
+    color: #cc0000;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
