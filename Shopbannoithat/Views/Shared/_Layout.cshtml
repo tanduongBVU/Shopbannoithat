@@ -42,20 +42,53 @@
                         </a>
                     </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/Product"
-                       id="productMenu" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-grid"></i> Sản phẩm
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="productMenu">
-                        <li><a class="dropdown-item" href="/Product">Tất cả sản phẩm</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-khach"><i class="bi bi-sofa me-2"></i>Phòng khách</a></li>
-                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-ngu"><i class="bi bi-moon me-2"></i>Phòng ngủ</a></li>
-                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-bep"><i class="bi bi-cup-hot me-2"></i>Phòng bếp</a></li>
-                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-lam-viec"><i class="bi bi-laptop me-2"></i>Phòng làm việc</a></li>
-                    </ul>
+                <li class="nav-item mega-menu-wrap" id="megaMenuTrigger">
+                        <a class="nav-link" href="/Product">
+                            <i class="bi bi-grid"></i> Sản phẩm
+                            <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                        </a>
+
+                        <!-- Mega Menu -->
+                        <div class="mega-menu" id="megaMenu">
+                            <div class="mega-menu-inner">
+
+                                <!-- Cột trái: danh sách phòng -->
+                                <div class="mega-col-rooms">
+                                    <a href="/Product" class="mega-room-item">
+                                        <i class="bi bi-grid-fill me-2"></i> Tất cả sản phẩm
+                                    </a>
+                                    <a href="/Product/ByCategory/phong-khach"
+                                       class="mega-room-item" data-slug="phong-khach"
+                                       onmouseenter="showSub('phong-khach')">
+                                        Phòng khách <i class="bi bi-chevron-right ms-auto"></i>
+                                    </a>
+                                    <a href="/Product/ByCategory/phong-ngu"
+                                       class="mega-room-item" data-slug="phong-ngu"
+                                       onmouseenter="showSub('phong-ngu')">
+                                        Phòng ngủ <i class="bi bi-chevron-right ms-auto"></i>
+                                    </a>
+                                    <a href="/Product/ByCategory/phong-bep"
+                                       class="mega-room-item" data-slug="phong-bep"
+                                       onmouseenter="showSub('phong-bep')">
+                                        Phòng bếp <i class="bi bi-chevron-right ms-auto"></i>
+                                    </a>
+                                    <a href="/Product/ByCategory/phong-lam-viec"
+                                       class="mega-room-item" data-slug="phong-lam-viec"
+                                       onmouseenter="showSub('phong-lam-viec')">
+                                        Phòng làm việc <i class="bi bi-chevron-right ms-auto"></i>
+                                    </a>
+                                </div>
+
+                                <!-- Cột phải: danh mục con -->
+                                <div class="mega-col-subs" id="megaSubList">
+                                    <div class="mega-sub-placeholder">
+                                        <i class="bi bi-arrow-left me-2"></i>
+                                        Rê chuột vào phòng để xem loại sản phẩm
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                 </li>
 
                   
@@ -212,10 +245,10 @@
                 <h6 class="footer-heading">Danh mục</h6>
                 <ul class="footer-links">
                     <li><a href="/Product">Tất cả sản phẩm</a></li>
-                    <li><a href="/Product">Phòng khách</a></li>
-                    <li><a href="/Product">Phòng ngủ</a></li>
-                    <li><a href="/Product">Phòng bếp</a></li>
-                    <li><a href="/Product">Phòng làm việc</a></li>
+                    <li><a href="/Product/ByCategory/phong-khach">Phòng khách</a></li>
+                    <li><a href="/Product/ByCategory/phong-ngu">Phòng ngủ</a></li>
+                    <li><a href="/Product/ByCategory/phong-bep">Phòng bếp</a></li>
+                    <li><a href="/Product/ByCategory/phong-lam-viec">Phòng làm việc</a></li>
                 </ul>
             </div>
 
@@ -362,6 +395,97 @@
         padding: 16px 0;
         color: #7a6a5a;
         font-size: 0.83rem;
+    }
+
+       /* Mega menu */
+    .mega-menu-wrap { position: relative; }
+
+    .mega-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 500px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        z-index: 9999;
+        border: 1px solid #eee;
+        overflow: hidden;
+    }
+
+    .mega-menu-wrap:hover .mega-menu { display: block; }
+
+    .mega-menu-inner {
+        display: flex;
+        min-height: 200px;
+    }
+
+    .mega-col-rooms {
+        width: 200px;
+        background: #f8f5f0;
+        padding: 8px 0;
+        flex-shrink: 0;
+        border-right: 1px solid #eee;
+    }
+
+    .mega-room-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 16px;
+        color: #3a2a1a;
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: background 0.15s, color 0.15s;
+        cursor: pointer;
+    }
+
+    .mega-room-item:hover,
+    .mega-room-item.active {
+        background: #e05c2a;
+        color: #fff;
+    }
+
+    .mega-col-subs {
+        flex: 1;
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .mega-sub-placeholder {
+        color: #aaa;
+        font-size: 0.83rem;
+        margin: auto;
+        text-align: center;
+    }
+
+    .mega-sub-item {
+        display: block;
+        padding: 8px 12px;
+        color: #3a2a1a;
+        text-decoration: none;
+        font-size: 0.87rem;
+        border-radius: 8px;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    .mega-sub-item:hover {
+        background: #fdf0ea;
+        color: #e05c2a;
+    }
+
+    .mega-sub-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #9e8e7e;
+        margin-bottom: 6px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #f0ece6;
     }
 </style>
 
@@ -573,7 +697,52 @@
             }
             }
         </script>
+
+       
     }
+        <script>
+        var subCategoriesData = [];
+
+        if (document.getElementById('megaMenu')) {
+            $.get('/Product/GetSubCategories', function(data) {
+                subCategoriesData = data;
+            });
+        }
+
+        var slugToName = {
+            'phong-khach': 'Phòng khách',
+            'phong-ngu': 'Phòng ngủ',
+            'phong-bep': 'Phòng bếp',
+            'phong-lam-viec': 'Phòng làm việc'
+        };
+
+        function showSub(slug) {
+            var roomName = slugToName[slug];
+            var subs = subCategoriesData.filter(c => c.parentName === roomName);
+            var container = document.getElementById('megaSubList');
+
+            document.querySelectorAll('.mega-room-item').forEach(function(el) {
+                el.classList.remove('active');
+                if (el.dataset.slug === slug) el.classList.add('active');
+            });
+
+            if (subs.length === 0) {
+                container.innerHTML = '<div class="mega-sub-placeholder">Chưa có loại sản phẩm nào</div>';
+                return;
+            }
+
+            var html = `<div class="mega-sub-title">${roomName}</div>`;
+            subs.forEach(function(s) {
+                html += `<a href="/Product/BySubCategory/${s.id}" class="mega-sub-item">
+                            <i class="bi bi-tag me-2" style="color:#e05c2a;font-size:12px;"></i>${s.name}
+                         </a>`;
+            });
+            container.innerHTML = html;
+        }
+    </script>
+
+
+
    
 </body>
 </html>

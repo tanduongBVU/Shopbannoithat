@@ -19,13 +19,27 @@ namespace Shopbannoithat.Controllers
 
         public async Task<IActionResult> Index()
         {
+            // Helper: lấy tất cả ID danh mục con theo tên phòng cha
+            List<int> GetCategoryIds(string roomName)
+            {
+                var parent = _context.Categories
+                    .FirstOrDefault(c => c.Name == roomName && c.ParentId == null);
+                if (parent == null) return new List<int>();
+                var childIds = _context.Categories
+                    .Where(c => c.ParentId == parent.Id)
+                    .Select(c => c.Id)
+                    .ToList();
+                childIds.Add(parent.Id);
+                return childIds;
+            }
+
             // Sản phẩm bán chạy
             var bestSelling = await _context.OrderDetails
                 .GroupBy(od => od.ProductId)
                 .Select(g => new { ProductId = g.Key, TotalSold = g.Sum(od => od.Quantity) })
                 .OrderByDescending(x => x.TotalSold)
                 .Take(8)
-                .Join(_context.Products.Include(p => p.Category),
+                .Join(_context.Products.Include(p => p.Category).ThenInclude(c => c.Parent),
                     sold => sold.ProductId,
                     product => product.Id,
                     (sold, product) => product)
@@ -34,37 +48,42 @@ namespace Shopbannoithat.Controllers
             if (!bestSelling.Any())
             {
                 bestSelling = await _context.Products
-                    .Include(p => p.Category)
+                    .Include(p => p.Category).ThenInclude(c => c.Parent)
                     .OrderByDescending(p => p.Id)
                     .Take(8)
                     .ToListAsync();
             }
 
-            // Phòng khách
+            var idsKhach = GetCategoryIds("Phòng khách");
+            var idsNgu = GetCategoryIds("Phòng ngủ");
+            var idsBep = GetCategoryIds("Phòng bếp");
+            var idsLamViec = GetCategoryIds("Phòng làm việc");
+
             var phongKhach = await _context.Products
-                .Include(p => p.Category)
-                .Where(p => p.Category != null && p.Category.Name.ToLower().Contains("khách"))
-                .Take(8)
-                .ToListAsync();
+                .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Where(p => p.CategoryId != null && idsKhach.Contains(p.CategoryId.Value))
+                .Take(8).ToListAsync();
 
-            // Phòng ngủ
             var phongNgu = await _context.Products
-                .Include(p => p.Category)
-                .Where(p => p.Category != null && p.Category.Name.ToLower().Contains("ngủ"))
-                .Take(8)
-                .ToListAsync();
+                .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Where(p => p.CategoryId != null && idsNgu.Contains(p.CategoryId.Value))
+                .Take(8).ToListAsync();
 
-            // Phòng bếp
             var phongBep = await _context.Products
-                .Include(p => p.Category)
-                .Where(p => p.Category != null && p.Category.Name.ToLower().Contains("bếp"))
-                .Take(8)
-                .ToListAsync();
+                .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Where(p => p.CategoryId != null && idsBep.Contains(p.CategoryId.Value))
+                .Take(8).ToListAsync();
+
+            var phongLamViec = await _context.Products
+                .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Where(p => p.CategoryId != null && idsLamViec.Contains(p.CategoryId.Value))
+                .Take(8).ToListAsync();
 
             ViewBag.BestSelling = bestSelling;
             ViewBag.PhongKhach = phongKhach;
             ViewBag.PhongNgu = phongNgu;
             ViewBag.PhongBep = phongBep;
+            ViewBag.PhongLamViec = phongLamViec;
 
             return View();
         }

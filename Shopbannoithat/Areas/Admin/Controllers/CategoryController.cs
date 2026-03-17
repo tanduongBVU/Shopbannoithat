@@ -67,6 +67,17 @@ namespace Shopbannoithat.Areas.Admin.Controllers
                     .ToList();
                 return View(category);
             }
+
+            // Lấy ParentId cũ từ database, không cho form ghi đè
+            var existing = _context.Categories
+                .AsNoTracking()
+                .FirstOrDefault(c => c.Id == category.Id);
+
+            if (existing != null)
+            {
+                category.ParentId = existing.ParentId;
+            }
+
             _context.Categories.Update(category);
             _context.SaveChanges();
             return RedirectToAction("Index");

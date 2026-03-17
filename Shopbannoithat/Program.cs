@@ -39,6 +39,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapHub<Shopbannoithat.Hubs.ChatHub>("/chatHub");
 
+
+app.MapControllerRoute(
+    name: "bySubCategory",
+    pattern: "Product/BySubCategory/{categoryId}",
+    defaults: new { controller = "Product", action = "BySubCategory" }
+);
+
 // Thêm route này TRƯỚC route default
 app.MapControllerRoute(
     name: "byCategory",

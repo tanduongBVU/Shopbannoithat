@@ -19,6 +19,7 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         {
             var products = _context.Products
                 .Include(p => p.Category)
+                .ThenInclude(c => c.Parent)
                 .ToList();
 
             return View(products);
@@ -84,6 +85,21 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         public IActionResult Edit(int id)
         {
             var product = _context.Products.Find(id);
+
+            ViewBag.Parents = _context.Categories
+                .Where(c => c.ParentId == null)
+                .ToList();
+
+            var children = _context.Categories
+                .Where(c => c.ParentId != null)
+                .Select(c => new { c.Id, c.Name, c.ParentId })
+                .ToList();
+
+            ViewBag.ChildrenJson = System.Text.Json.JsonSerializer.Serialize(children,
+                new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                });
 
             ViewBag.Categories = _context.Categories.ToList();
 
