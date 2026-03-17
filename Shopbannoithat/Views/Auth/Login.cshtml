@@ -3,28 +3,24 @@
 *@
 @{
 }
+@model Shopbannoithat.Models.LoginViewModel
 
-<div class="login-page">
-    <div class="login-card">
-        <div class="login-header">
-            <div class="brand-logo">
-                <i class="fas fa-user-shield"></i>
-            </div>
-            <h2>ĐĂNG NHẬP</h2>
-            <p>Vui lòng đăng nhập vào tài khoản của bạn</p>
+<div class="register-page">
+<div class="register-card">
+    <h2>Đăng nhập</h2>
+    <form asp-action="Login" method="post">
+        <div class="mb-3">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
-        <form method="post" class="login-form">
-            <div class="input-group-custom">
-                <i class="fas fa-envelope"></i>
-                <input type="email" name="email" placeholder="Email của bạn" class="form-control" required />
-            </div>
 
-            <div class="input-group-custom">
-                <i class="fas fa-lock"></i>
-                <input type="password" name="password" placeholder="Mật khẩu" class="form-control" required />
-            </div>
-
+        <div class="mb-3">
+            <label>Mật khẩu</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
             <div class="form-options">
                 <div class="remember-me">
                     <input type="checkbox" id="remember">
@@ -37,92 +33,94 @@
                 ĐĂNG NHẬP <i class="fas fa-sign-in-alt"></i>
             </button>
 
-            @if (ViewBag.Error != null)
-            {
-                <div class="error-msg">
-                    <i class="fas fa-exclamation-circle"></i> @ViewBag.Error
-                </div>
-            }
-        </form>
-    </div>
+    </form>
 </div>
+</div>
+
+
 <style>
-    /* Nền trang chuyển động giống trang Quên mật khẩu */
-    /* Tổng thể trang */
-    .login-page {
+   
+
+    /* Tổng thể trang đăng ký */
+    .register-page {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 60vh;
-        
+        min-height: 80vh;
     }
 
-    /* Thẻ đăng nhập */
-    .login-card {
+    /* Thẻ đăng ký */
+    .register-card {
         background: #ffffff;
-        padding: 45px 40px;
+        padding: 50px 40px;
         border-radius: 16px;
         box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-        width: 400px;
-        text-align: center;
-        border: 1px solid rgba(255, 215, 0, 0.3); /* viền vàng ánh kim nhẹ */
+        width: 420px;
+        border: 1px solid rgba(212,175,55,0.3);
         transition: transform 0.3s ease;
     }
 
-        .login-card:hover {
+        .register-card:hover {
             transform: translateY(-6px);
         }
 
-    /* Header */
-    .login-header .brand-logo {
-        font-size: 52px;
-        color: #d4af37; /* vàng ánh kim */
-        margin-bottom: 18px;
-    }
-
-    .login-header h2 {
-        margin: 0;
-        font-size: 28px;
-        font-weight: 600;
-        color: #593d2b;
-    }
-
-    .login-header p {
-        color: #777;
-        font-size: 15px;
-        margin-bottom: 35px;
-    }
-
-    /* Input group */
-    .input-group-custom {
-        display: flex;
-        align-items: center;
-        margin-bottom: 22px;
-        border: 1px solid #ccc;
-        border-radius: 12px;
-        padding: 12px;
-        transition: border-color 0.3s, box-shadow 0.3s;
-        background: #f9f9f9;
-    }
-
-        .input-group-custom i {
-            color: #d4af37;
-            margin-right: 12px;
-            font-size: 16px;
+        /* Tiêu đề */
+        .register-card h2 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #5a3e2b;
+            margin-bottom: 30px;
         }
 
-        .input-group-custom input {
-            border: none;
-            outline: none;
-            flex: 1;
+        /* Nhóm input */
+        .register-card .mb-3 {
+            margin-bottom: 22px;
+        }
+
+        .register-card label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .register-card input {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 12px;
             font-size: 15px;
-            background: transparent;
+            width: 100%;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #f9f9f9;
         }
 
-        .input-group-custom:focus-within {
-            border-color: #593d2b;
-            box-shadow: 0 0 10px rgba(212,175,55,0.3);
+            .register-card input:focus {
+                border-color: #d4af37;
+                box-shadow: 0 0 10px rgba(212,175,55,0.3);
+                outline: none;
+            }
+
+        /* Nút đăng ký */
+        .register-card .btn {
+            background: linear-gradient(135deg, #d4af37, #b8860b);
+            border: none;
+            color: #fff;
+            padding: 14px;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
+
+            .register-card .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px #593d2b;
+            }
+
 
     /* Options */
     .form-options {
@@ -164,18 +162,7 @@
             box-shadow: 0 8px 20px rgba(212,175,55,0.4);
         }
 
-    /* Thông báo lỗi */
-    .error-msg {
-        margin-top: 20px;
-        color: #b22222;
-        font-size: 13px;
-        background: #fbe9e7;
-        padding: 12px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+ 
 
         .error-msg i {
             margin-right: 8px;

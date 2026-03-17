@@ -21,33 +21,37 @@ namespace Shopbannoithat.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login(LoginViewModel model)
         {
-            var user = _context.Users
-        .FirstOrDefault(x => x.Email == email && x.Password == password);
+            // ❗ check validation
+            if (!ModelState.IsValid)
+                return View(model);
 
-            if (user != null)
+            var user = _context.Users
+                .FirstOrDefault(x => x.Email == model.Email && x.Password == model.Password);
+
+            if (user == null)
             {
-                HttpContext.Session.SetString("UserRole", user.Role);
-                HttpContext.Session.SetString("UserEmail", user.Email);
-                HttpContext.Session.SetString("UserName", user.Email);
-                // chuyển trang theo role
-                if (user.Role == "Admin")
-                {
-                    return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-                }
-                else if (user.Role == "Staff")
-                {
-                    return RedirectToAction("Index", "Order", new { area = "Staff" });
-                }
-                else
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                ViewBag.Error = "Sai tài khoản hoặc mật khẩu";
+                return View(model);
             }
 
-            ViewBag.Error = "Sai tài khoản hoặc mật khẩu";
-            return View();
+            // lưu session
+            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("UserName", user.Email);
+
+            // chuyển trang
+            if (user.Role == "Admin")
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            }
+            else if (user.Role == "Staff")
+            {
+                return RedirectToAction("Index", "Order", new { area = "Staff" });
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult Register()
@@ -99,19 +103,22 @@ namespace Shopbannoithat.Controllers
         }
 
         [HttpPost]
-        public IActionResult ForgotPassword(string email, string phone, string newPassword)
+        public IActionResult ForgotPassword(ForgotPasswordViewModel model)
         {
+            if (!ModelState.IsValid)
+                return View(model);
+
             var user = _context.Users
-                .FirstOrDefault(x => x.Email == email && x.Phone == phone);
+                .FirstOrDefault(x => x.Email == model.Email && x.Phone == model.Phone);
 
             if (user == null)
             {
-                ViewBag.Error = "Email hoặc số điện thoại không đúng";
-                return View();
+                // ❗ cách chuẩn (gắn lỗi vào form)
+                ModelState.AddModelError("", "Email hoặc số điện thoại không đúng");
+                return View(model);
             }
 
-            user.Password = newPassword;
-
+            user.Password = model.NewPassword;
             _context.SaveChanges();
 
             TempData["Success"] = "Đổi mật khẩu thành công";

@@ -2,7 +2,7 @@
 
 namespace Shopbannoithat.Models
 {
-    public class RegisterViewModel
+    public class ForgotPasswordViewModel
     {
         [Required(ErrorMessage = "Vui lòng nhập email")]
         public string Email { get; set; }
@@ -10,11 +10,8 @@ namespace Shopbannoithat.Models
         [Required(ErrorMessage = "Vui lòng nhập số điện thoại")]
         [Phone(ErrorMessage = "Số điện thoại không hợp lệ")]
         public string Phone { get; set; }
-        [Required(ErrorMessage = "Vui lòng nhập mật khẩu")]
-        public string Password { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập xác nhận mật khẩu")]
-        [Compare("Password", ErrorMessage = "Mật khẩu không khớp")]
-        public string ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu mới")]
+        public string NewPassword { get; set; }
     }
 }

@@ -9,40 +9,39 @@
 
 <div class="register-page">
     <div class="register-card">
-    <h2>ĐĂNG KÝ</h2>
+        <h2>ĐĂNG KÝ</h2>
+        <form asp-action="Register" method="post">
+            <div class="mb-3">
+                <label>Email</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
 
-    <div class="mb-3">
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" placeholder="Email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label>Số điện thoại</label>
-        <input asp-for="Phone" class="form-control" />
-    </div>
-    <label>Mật khẩu</label>
-    <div class="mb-3">
-        <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
+            <div class="mb-3">
+                <label>Số điện thoại</label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
 
-    <div class="mb-3">
-        <label>Xác nhận mật khẩu</label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
+            <div class="mb-3">
+                <label>Mật khẩu</label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
 
-    <button class="btn btn-success">Đăng ký</button>
+            <div class="mb-3">
+                <label>Xác nhận mật khẩu</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
 
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger">
-            @ViewBag.Error
-        </div>
-    }
+            <button type="submit" class="btn btn-success">Đăng ký</button>
 
+        </form>
     </div>
 </div>
+
+
 <style>
     /* Tổng thể trang đăng ký */
     .register-page {
@@ -125,13 +124,5 @@
                 box-shadow: 0 8px 20px #593d2b;
             }
 
-    /* Thông báo lỗi */
-    .alert-danger {
-        margin-top: 20px;
-        font-size: 13px;
-        background: #fbe9e7;
-        padding: 12px;
-        border-radius: 8px;
-        color: #b22222;
-        text-align: center;
+   
 </style>
