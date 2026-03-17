@@ -32,8 +32,16 @@
         <input name="City" class="form-control" required />
     </div>
 
-    
-
+    <div class="mb-3">
+        <label>Mã giảm giá</label>
+        <input name="CouponCode" class="form-control" placeholder="Nhập mã..." />
+    </div>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
     <hr />
 
     <h4>Sản phẩm đặt mua</h4>

@@ -46,6 +46,14 @@
                     }
                 </p>
 
+                @if (!string.IsNullOrEmpty(Model.CouponCode))
+                {
+                    <p class="text-success">
+                        Mã giảm giá: <b>@Model.CouponCode</b>
+                        (Giảm @Model.DiscountPercent%)
+                    </p>
+                }
+
                 
 
             </div>
@@ -86,7 +94,7 @@
                         </td>
 
                         <td>
-                            @((item.Price * item.Quantity).ToString("N0")) VNĐ
+                            @Model.TotalPrice.ToString("N0") VNĐ
                         </td>
 
                     </tr>

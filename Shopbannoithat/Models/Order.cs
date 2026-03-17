@@ -33,6 +33,9 @@ namespace Shopbannoithat.Models
 
         public DateTime OrderPlaced { get; set; }
 
-        
+        public string? CouponCode { get; set; }
+        public int? DiscountPercent { get; set; }
+
+
     }
 }

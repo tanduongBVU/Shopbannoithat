@@ -32,7 +32,7 @@ namespace Shopbannoithat.Controllers
 
         // Xác nhận đặt hàng
         [HttpPost]
-        public IActionResult PlaceOrder(Order order)
+        public IActionResult PlaceOrder(Order order, string CouponCode)
         {
             var email = HttpContext.Session.GetString("UserEmail");
 
@@ -49,13 +49,64 @@ namespace Shopbannoithat.Controllers
             order.Status = "Đang xử lý";
             order.OrderPlaced = DateTime.Now;
 
-            order.TotalPrice = cartItems.Sum(x => (x.Product.Price ?? 0) * x.Quantity);
+            decimal total = cartItems.Sum(x => (x.Product.Price ?? 0) * x.Quantity);
+
+            Coupon coupon = null; // 🔥 giữ lại để dùng phía dưới
+
+            // =========================
+            // 🔥 XỬ LÝ MÃ GIẢM GIÁ
+            // =========================
+            if (!string.IsNullOrEmpty(CouponCode))
+            {
+                coupon = _context.Coupons.FirstOrDefault(c => c.Code == CouponCode);
+
+                if (coupon == null)
+                {
+                    TempData["Error"] = "Mã không tồn tại";
+                    return RedirectToAction("Checkout");
+                }
+
+                if (!coupon.IsActive)
+                {
+                    TempData["Error"] = "Mã đã bị khóa";
+                    return RedirectToAction("Checkout");
+                }
+
+                if (coupon.ExpiryDate < DateTime.Now)
+                {
+                    TempData["Error"] = "Mã đã hết hạn";
+                    return RedirectToAction("Checkout");
+                }
+
+                // 🔥 CHECK: USER ĐÃ DÙNG CHƯA
+                var used = _context.UserCoupons
+                    .Any(x => x.UserEmail == email && x.CouponId == coupon.Id);
+
+                if (used)
+                {
+                    TempData["Error"] = "Bạn đã sử dụng mã này rồi";
+                    return RedirectToAction("Checkout");
+                }
+
+                if (coupon.Discount.HasValue)
+                {
+                    total = total - (total * coupon.Discount.Value / 100);
+
+                    order.CouponCode = coupon.Code;
+                    order.DiscountPercent = coupon.Discount;
+                }
+            }
+
+            if (total < 0) total = 0;
+
+            order.TotalPrice = total;
+
+            // =========================
 
             order.OrderDetails = new List<OrderDetail>();
 
             foreach (var item in cartItems)
             {
-                // TRỪ TỒN KHO
                 if (item.Product.Quantity >= item.Quantity)
                 {
                     item.Product.Quantity -= item.Quantity;
@@ -76,6 +127,23 @@ namespace Shopbannoithat.Controllers
 
             _context.Orders.Add(order);
             _context.SaveChanges();
+
+            // =========================
+            // 🔥 LƯU LỊCH SỬ DÙNG MÃ
+            // =========================
+            if (coupon != null)
+            {
+                _context.UserCoupons.Add(new UserCoupon
+                {
+                    UserEmail = email,
+                    CouponId = coupon.Id,
+                    UsedDate = DateTime.Now
+                });
+
+                _context.SaveChanges();
+            }
+
+            // =========================
 
             _context.Carts.RemoveRange(cartItems);
             _context.SaveChanges();

@@ -28,6 +28,6 @@ namespace Shopbannoithat.Data
         public DbSet<WishlistItem> Wishlists { get; set; }
 
         public DbSet<ChatMessage> ChatMessages { get; set; }
-
+        public DbSet<UserCoupon> UserCoupons { get; set; }
     }
 }
