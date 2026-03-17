@@ -26,7 +26,23 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.Categories = _context.Categories.ToList();
+            // Danh mục cha (Phòng)
+            ViewBag.Parents = _context.Categories
+                .Where(c => c.ParentId == null)
+                .ToList();
+
+            // Danh mục con dạng JSON cho JS
+            var children = _context.Categories
+                .Where(c => c.ParentId != null)
+                .Select(c => new { c.Id, c.Name, c.ParentId })
+                .ToList();
+
+            ViewBag.ChildrenJson = System.Text.Json.JsonSerializer.Serialize(children,
+                new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+                });
+
             return View();
         }
 
@@ -99,5 +115,7 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
             return RedirectToAction("Index");
         }
+
+
     }
 }

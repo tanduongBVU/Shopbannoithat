@@ -1,14 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
-
-@model Shopbannoithat.Models.Product
+﻿@model Shopbannoithat.Models.Product
 
 <h2>Thêm sản phẩm</h2>
-
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">
 
@@ -43,31 +35,45 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Loại sản phẩm</label>
-
-        <select asp-for="CategoryId" class="form-control">
-            <option value="">-- Chọn loại --</option>
-
-            @foreach (var c in ViewBag.Categories)
+        <label class="form-label">Phòng</label>
+        <select id="parentSelect" class="form-control" onchange="loadChildren(this.value)">
+            <option value="">-- Chọn phòng --</option>
+            @foreach (var p in ViewBag.Parents)
             {
-                <option value="@c.Id">@c.Name</option>
+                <option value="@p.Id">@p.Name</option>
             }
         </select>
+    </div>
 
+    <div class="mb-3">
+        <label class="form-label">Loại sản phẩm</label>
+        <select asp-for="CategoryId" id="childSelect" class="form-control">
+            <option value="">-- Chọn phòng trước --</option>
+        </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-success">
-        Lưu
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Quay lại
-    </a>
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 
 </form>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        var allChildren = @Html.Raw(ViewBag.ChildrenJson);
+
+        function loadChildren(parentId) {
+            var select = document.getElementById('childSelect');
+            select.innerHTML = '<option value="">-- Chọn loại --</option>';
+            if (!parentId) return;
+            var filtered = allChildren.filter(c => c.parentId == parentId);
+            filtered.forEach(function(c) {
+                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            });
+        }
+    </script>
 }

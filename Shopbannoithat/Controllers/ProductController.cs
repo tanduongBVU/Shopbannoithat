@@ -81,5 +81,41 @@ namespace Shopbannoithat.Controllers
 
             return Json(data);
         }
+
+        public IActionResult ByCategory(string slug, string sort)
+        {
+            // Map slug → tên danh mục
+            var categoryMap = new Dictionary<string, string>
+        {
+            { "phong-khach", "Phòng khách" },
+            { "phong-ngu", "Phòng ngủ" },
+            { "phong-bep", "Phòng bếp" },
+            { "phong-lam-viec", "Phòng làm việc" }
+        };
+
+            if (!categoryMap.ContainsKey(slug))
+                return NotFound();
+
+            var categoryName = categoryMap[slug];
+
+            var query = _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.Category != null && p.Category.Name == categoryName)
+                .AsQueryable();
+
+            query = sort switch
+            {
+                "price_asc" => query.OrderBy(p => p.Price),
+                "price_desc" => query.OrderByDescending(p => p.Price),
+                "newest" => query.OrderByDescending(p => p.CreatedAt),
+                _ => query.OrderByDescending(p => p.CreatedAt)
+            };
+
+            ViewBag.CategoryName = categoryName;
+            ViewBag.Slug = slug;
+            ViewBag.CurrentSort = sort;
+
+            return View(query.ToList());
+        }
     }
 }

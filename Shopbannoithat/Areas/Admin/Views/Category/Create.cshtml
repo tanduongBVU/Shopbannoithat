@@ -1,35 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model Shopbannoithat.Models.Category
 
-@model Shopbannoithat.Models.Category
-
-<h2>Thêm loại sản phẩm</h2>
+<h2>Thêm danh mục</h2>
 
 <form asp-action="Create" method="post">
 
-    <form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label class="form-label">Tên danh mục</label>
+        <input asp-for="Name" class="form-control" placeholder="VD: Sofa, Giường, Phòng khách..." />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
 
-        <div class="mb-3">
-            <label>Tên loại</label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
+    <div class="mb-3">
+        <label class="form-label">Mô tả</label>
+        <input asp-for="Description" class="form-control" />
+    </div>
 
-        <div class="mb-3">
-            <label>Mô tả</label>
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+    <div class="mb-3">
+        <label class="form-label">Thuộc phòng (để trống nếu đây là Phòng)</label>
+        <select asp-for="ParentId" class="form-control">
+            <option value="">-- Đây là danh mục Phòng (cấp 1) --</option>
+            @foreach (var p in ViewBag.Parents)
+            {
+                <option value="@p.Id">@p.Name</option>
+            }
+        </select>
+        <small class="text-muted">
+            Chọn phòng nếu đây là loại sản phẩm (Sofa, Giường...).
+            Để trống nếu đây là Phòng (Phòng khách, Phòng ngủ...).
+        </small>
+    </div>
 
-        <button class="btn btn-success">Thêm</button>
-
-    </form>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Quay lại
-    </a>
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 
 </form>

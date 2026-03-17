@@ -42,11 +42,21 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Product" asp-action="Index">
-                            <i class="bi bi-grid"></i> Sản phẩm
-                        </a>
-                    </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="/Product"
+                       id="productMenu" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-grid"></i> Sản phẩm
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="productMenu">
+                        <li><a class="dropdown-item" href="/Product">Tất cả sản phẩm</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-khach"><i class="bi bi-sofa me-2"></i>Phòng khách</a></li>
+                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-ngu"><i class="bi bi-moon me-2"></i>Phòng ngủ</a></li>
+                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-bep"><i class="bi bi-cup-hot me-2"></i>Phòng bếp</a></li>
+                        <li><a class="dropdown-item" href="/Product/ByCategory/phong-lam-viec"><i class="bi bi-laptop me-2"></i>Phòng làm việc</a></li>
+                    </ul>
+                </li>
 
                   
                     <li class="nav-item position-relative">

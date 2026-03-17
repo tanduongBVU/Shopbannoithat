@@ -1,51 +1,43 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<Shopbannoithat.Models.Category>
 
-
-@model List<Shopbannoithat.Models.Category>
-
-<h2>Quản lý loại sản phẩm</h2>
-
-<a asp-action="Create" class="btn btn-success mb-3">Thêm loại</a>
+<h2>Quản lý danh mục</h2>
+<a asp-action="Create" class="btn btn-success mb-3">Thêm danh mục</a>
 
 <table class="table table-bordered">
-
     <thead>
         <tr>
             <th>ID</th>
-            <th>Tên loại</th>
+            <th>Tên danh mục</th>
+            <th>Thuộc phòng</th>
+            <th>Chức năng</th>
         </tr>
     </thead>
-
     <tbody>
-
-        @foreach (var item in Model)
+        @foreach (var item in Model.Where(c => c.ParentId == null))
         {
-            <tr>
+            <tr class="table-secondary">
                 <td>@item.Id</td>
-                <td>@item.Name</td>
-                
-
+                <td><strong>🏠 @item.Name</strong></td>
+                <td><span class="text-muted">— Phòng (cấp 1)</span></td>
                 <td>
-                    <a asp-action="Edit"
-                       asp-route-id="@item.Id"
-                       class="btn btn-warning btn-sm">
-                        Sửa
-                    </a>
-
-                    <a asp-action="Delete"
-                       asp-route-id="@item.Id"
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('Bạn có chắc muốn xóa?')">
-                        Xóa
-                    </a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Xóa sẽ ảnh hưởng danh mục con. Tiếp tục?')">Xóa</a>
                 </td>
             </tr>
+            @foreach (var child in Model.Where(c => c.ParentId == item.Id))
+            {
+                <tr>
+                    <td>@child.Id</td>
+                    <td>&nbsp;&nbsp;&nbsp;↳ @child.Name</td>
+                    <td><span class="badge bg-primary">@item.Name</span></td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@child.Id" class="btn btn-warning btn-sm">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@child.Id" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                    </td>
+                </tr>
+            }
         }
-
     </tbody>
-
 </table>
