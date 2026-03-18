@@ -7,7 +7,396 @@
 
 @model Shopbannoithat.Models.Order
 
-<h2>Chi tiết đơn hàng</h2>
+<style>
+    /* dùng chung font đã import ở layout */
+
+    .od-wrap {
+        font-family: 'Jost', sans-serif;
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .od-header {
+        display: flex;
+        align-items: flex-end;
+        gap: 14px;
+        margin-bottom: 1.75rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid #e8e2d9;
+    }
+
+    .od-wood-bar {
+        width: 5px;
+        height: 36px;
+        border-radius: 3px;
+        background: linear-gradient(180deg, #c9a97a, #e2c89a, #c5a06b);
+    }
+
+    .od-title {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 26px;
+        font-weight: 600;
+        color: #3a3028;
+        margin: 0;
+    }
+
+    .od-back {
+        margin-left: auto;
+        padding: 7px 16px;
+        background: transparent;
+        color: #3a3028;
+        border: 1px solid #d9c9b0;
+        border-radius: 8px;
+        font-family: 'Jost', sans-serif;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.18s;
+    }
+
+        .od-back:hover {
+            background: #3a3028;
+            color: #f0ebe2;
+        }
+
+    .od-meta {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .od-meta-pill {
+        background: #fff;
+        border: 1px solid #ede7de;
+        border-radius: 10px;
+        padding: 10px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .od-meta-label {
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #c9a97a;
+        font-weight: 500;
+    }
+
+    .od-meta-val {
+        font-size: 14px;
+        font-weight: 500;
+        color: #3a3028;
+    }
+
+        .od-meta-val.serif {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+    /* badge — copy từ trang danh sách */
+    .od-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    .od-badge-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+    }
+
+    .od-badge-pending {
+        background: #fdf6ec;
+        color: #8a6e45;
+        border: 1px solid #e2c89a;
+    }
+
+        .od-badge-pending .od-badge-dot {
+            background: #c9a97a;
+        }
+
+    .od-badge-done {
+        background: #f5f0e8;
+        color: #5a4030;
+        border: 1px solid #d9c9b0;
+    }
+
+        .od-badge-done .od-badge-dot {
+            background: #8a6e45;
+        }
+
+    .od-badge-cancel {
+        background: #f9f4f0;
+        color: #997060;
+        border: 1px solid #ddc8bb;
+    }
+
+        .od-badge-cancel .od-badge-dot {
+            background: #c08060;
+        }
+
+    .od-card {
+        background: #faf9f6;
+        border-radius: 16px;
+        border: 1px solid #e8e2d9;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .od-section-label {
+        padding: 14px 20px 12px;
+        background: #f0ebe2;
+        border-bottom: 1px solid #e2d9cc;
+        font-size: 9px;
+        letter-spacing: 2.2px;
+        text-transform: uppercase;
+        color: #b09a7e;
+        font-weight: 500;
+    }
+
+    .od-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        .od-table th {
+            padding: 11px 20px;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #b09a7e;
+            font-weight: 500;
+            text-align: left;
+            background: #f7f4ef;
+            border-bottom: 1px solid #ede7de;
+        }
+
+            .od-table th:not(:first-child) {
+                text-align: right;
+            }
+
+        .od-table td {
+            padding: 14px 20px;
+            vertical-align: middle;
+            color: #3a3028;
+            border-bottom: 1px solid #f0ebe2;
+        }
+
+            .od-table td:not(:first-child) {
+                text-align: right;
+            }
+
+        .od-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .od-table tbody tr:hover {
+            background: #f7f4ef;
+        }
+
+    .od-product-name {
+        font-weight: 500;
+    }
+
+    .od-product-sku {
+        font-size: 11px;
+        color: #b09a7e;
+        font-weight: 300;
+    }
+
+    .od-qty {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: #f0ebe2;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 13px;
+        color: #3a3028;
+        float: right;
+    }
+
+    .od-line-total {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #8a6e45;
+    }
+
+    .od-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        background: #f0ebe2;
+        border-radius: 14px;
+        border: 1px solid #e2d9cc;
+        margin-bottom: 1.5rem;
+    }
+
+    .od-footer-label {
+        font-size: 9px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #b09a7e;
+        font-weight: 300;
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    .od-footer-note {
+        font-size: 12px;
+        color: #a89880;
+        font-weight: 300;
+    }
+
+    .od-total-val {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 28px;
+        font-weight: 600;
+        color: #3a3028;
+    }
+
+    .od-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .od-btn-outline {
+        flex: 1;
+        padding: 13px;
+        background: transparent;
+        color: #3a3028;
+        border: 1px solid #d9c9b0;
+        border-radius: 10px;
+        font-family: 'Jost', sans-serif;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.18s;
+    }
+
+        .od-btn-outline:hover {
+            background: #3a3028;
+            color: #f0ebe2;
+        }
+
+    .od-btn-solid {
+        flex: 1;
+        padding: 13px;
+        background: #3a3028;
+        color: #f0ebe2;
+        border: 1px solid #3a3028;
+        border-radius: 10px;
+        font-family: 'Jost', sans-serif;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.18s;
+    }
+
+        .od-btn-solid:hover {
+            background: #c9a97a;
+            border-color: #c9a97a;
+        }
+</style>
+
+<div class="od-wrap">
+    <div class="od-header">
+        <div class="od-wood-bar"></div>
+        <h2 class="od-title">Chi tiết đơn hàng</h2>
+        <a asp-action="Index" class="od-back">← Quay lại</a>
+    </div>
+
+    <div class="od-meta">
+        <div class="od-meta-pill">
+            <span class="od-meta-label">Mã đơn hàng</span>
+            <span class="od-meta-val serif">#ORD-@Model.Id</span>
+        </div>
+        <div class="od-meta-pill">
+            <span class="od-meta-label">Ngày đặt</span>
+            <span class="od-meta-val">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+        </div>
+        <div class="od-meta-pill">
+            <span class="od-meta-label">Trạng thái</span>
+            <span class="od-meta-val" style="padding-top:2px">
+                @{
+                    var badgeClass = Model.Status switch
+                    {
+                        "Hoàn thành" => "od-badge-done",
+                        "Đã huỷ" => "od-badge-cancel",
+                        _ => "od-badge-pending"
+                    };
+                }
+                <span class="od-badge @badgeClass">
+                    <span class="od-badge-dot"></span>@Model.Status
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <div class="od-card">
+        <div class="od-section-label">Sản phẩm đã đặt</div>
+        <table class="od-table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderDetails)
+                {
+                    <tr>
+                        <td>
+                            <div class="od-product-name">@item.Product.Name</div>
+                        </td>
+                        <td class="od-price">@item.Price.ToString("N0") VNĐ</td>
+                        <td><span class="od-qty">@item.Quantity</span></td>
+                        <td><span class="od-line-total">@((item.Price * item.Quantity).ToString("N0")) VNĐ</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="od-footer">
+        <div>
+            <span class="od-footer-label">Tổng thanh toán</span>
+            <span class="od-footer-note">Đã bao gồm VAT</span>
+        </div>
+        <span class="od-total-val">@Model.TotalPrice.ToString("N0") VNĐ</span>
+    </div>
+
+    <div class="od-actions">
+        <a asp-controller="Product" asp-action="Index" class="od-btn-outline">Tiếp tục mua sắm</a>
+        <a href="#" onclick="window.print()" class="od-btn-solid">In hoá đơn</a>
+    </div>
+</div>
+
+
+@* <h2>Chi tiết đơn hàng</h2>
 
 <p>Mã đơn: <b>#ORD-@Model.Id</b></p>
 <p>Ngày đặt: @Model.OrderDate</p>
@@ -51,4 +440,4 @@
 
 <h4 class="text-danger">
     Tổng tiền: @Model.TotalPrice.ToString("N0") VNĐ
-</h4>
+</h4> *@

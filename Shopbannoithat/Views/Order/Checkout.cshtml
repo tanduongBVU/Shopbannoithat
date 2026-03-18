@@ -9,7 +9,9 @@
 
 <h2 style="font-weight: 700; color: #4a3223;text-align:center">Trang Thanh Toán</h2>
 
-<form asp-action="PlaceOrder" method="post">
+<form asp-action="PlaceOrder" method="post"
+      style="  background-color: #fdfaf7; padding: 25px; border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);max-width: 730px; margin: auto; font-family: 'Montserrat', sans-serif;">
 
     <h4 style="background-color:#6b4f3b;border-radius:8px;color: #fff;padding: 12px;text-align:center">Thông tin giao hàng</h4>
 
@@ -76,7 +78,7 @@
 
     </table>
 
-    <h3 style="color: red;text-align:right; font-weight: bold">Tổng tiền: @total.ToString("N0") VNĐ</h3>
+    <h3 style="color: red;text-align:right;">Tổng tiền: @total.ToString("N0") VNĐ</h3>
 
     <button type="submit" class="btn btn-success">
         Xác nhận đặt hàng
@@ -91,15 +93,6 @@
 </form>
 <style>
     /* Container form */
-    form {
-        background-color: #fdfaf7; /* màu be nhẹ */
-        padding: 25px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        max-width: 730px;
-        margin: auto;
-        font-family: 'Montserrat', sans-serif;
-    }
 
     /* Tiêu đề */
     h2, h3 {

@@ -7,7 +7,248 @@
 
 @model List<Shopbannoithat.Models.Order>
 
-<h2>Đơn hàng của tôi</h2>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500&display=swap');
+
+    .mo-wrap {
+        font-family: 'Jost', sans-serif;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .mo-header {
+        display: flex;
+        align-items: flex-end;
+        gap: 14px;
+        margin-bottom: 1.75rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid #e8e2d9;
+    }
+
+    .mo-wood-bar {
+        width: 5px;
+        height: 36px;
+        border-radius: 3px;
+        background: linear-gradient(180deg, #c9a97a, #e2c89a, #c5a06b);
+        flex-shrink: 0;
+    }
+
+    .mo-title {
+       
+        font-size: 26px;
+        font-weight: 600;
+        color: #5a3e2b;
+        margin: 0;
+    }
+
+    .mo-count {
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #b09a7e;
+        font-weight: 300;
+        margin-left: auto;
+        padding-bottom: 2px;
+    }
+
+    .mo-card {
+        background: #faf9f6;
+        border-radius: 16px;
+        border: 1px solid #e8e2d9;
+        overflow: hidden;
+    }
+
+    .mo-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        .mo-table thead tr {
+            background: #76513a;
+            border-bottom: 1px solid #e2d9cc;
+        }
+
+        .mo-table th {
+            padding: 13px 18px;
+            font-size: 15px;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+            color: #dbb88a;
+            font-weight: 500;
+            text-align: left;
+        }
+
+            .mo-table th:last-child {
+                text-align: center;
+            }
+
+        .mo-table tbody tr {
+            border-bottom: 1px solid #f0ebe2;
+            transition: background 0.15s;
+        }
+
+            .mo-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .mo-table tbody tr:hover {
+                background: #f7f4ef;
+            }
+
+        .mo-table td {
+            padding: 15px 18px;
+            vertical-align: middle;
+            color: #3a3028;
+        }
+
+    .mo-order-id {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #3a3028;
+    }
+
+    .mo-date {
+        color: #a89880;
+        font-weight: 300;
+        font-size: 12.5px;
+    }
+
+    .mo-price {
+      
+        font-size: 17px;
+        font-weight: 600;
+        color: #8a6e45;
+    }
+
+    .mo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+    }
+
+    .mo-badge-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .mo-badge-pending {
+        background: #fdf6ec;
+        color: #8a6e45;
+        border: 1px solid #e2c89a;
+    }
+
+        .mo-badge-pending .mo-badge-dot {
+            background: #c9a97a;
+        }
+
+    .mo-badge-done {
+        background: #ffe8c3;
+        color: #8f4516;
+        border: 1px solid #76410a;
+    }
+
+        .mo-badge-done .mo-badge-dot {
+            background: #8a6e45;
+        }
+
+    .mo-badge-cancel {
+        background: #f9f4f0;
+        color: #997060;
+        border: 1px solid #ddc8bb;
+    }
+
+        .mo-badge-cancel .mo-badge-dot {
+            background: #c08060;
+        }
+
+    .mo-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 16px;
+        background: transparent;
+        color: #3a3028;
+        border: 1px solid #d9c9b0;
+        border-radius: 8px;
+        font-family: 'Jost', sans-serif;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.18s;
+    }
+
+        .mo-btn:hover {
+            background: #3a3028;
+            color: #f0ebe2;
+            border-color: #3a3028;
+        }
+</style>
+
+<div class="mo-wrap">
+    <div class="mo-header">
+        <div class="mo-wood-bar"></div>
+        <h2 class="mo-title">Đơn hàng của tôi</h2>
+        <span class="mo-count">@Model.Count() đơn hàng</span>
+    </div>
+
+    <div class="mo-card">
+        <table class="mo-table">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td><span class="mo-order-id">#ORD-@order.Id</span></td>
+                        <td><span class="mo-date">@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</span></td>
+                        <td><span class="mo-price">@order.TotalPrice.ToString("N0") VNĐ</span></td>
+                        <td>
+                            @{
+                                var badgeClass = order.Status switch
+                                {
+                                    "Hoàn thành" => "mo-badge-done",
+                                    "Đã huỷ" => "mo-badge-cancel",
+                                    _ => "mo-badge-pending"
+                                };
+                            }
+                            <span class="mo-badge @badgeClass">
+                                <span class="mo-badge-dot"></span>@order.Status
+                            </span>
+                        </td>
+                        <td style="text-align:center">
+                            <a asp-action="Detail" asp-route-id="@order.Id" class="mo-btn">Xem</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+@* <h2>Đơn hàng của tôi</h2>
 
 <table class="table table-bordered">
 
@@ -54,4 +295,4 @@
 
     </tbody>
 
-</table>
+</table> *@
