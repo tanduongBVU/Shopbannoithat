@@ -34,12 +34,35 @@ namespace Shopbannoithat.Controllers
         [HttpPost]
         public IActionResult PlaceOrder(Order order, string CouponCode)
         {
+
             var email = HttpContext.Session.GetString("UserEmail");
 
             var cartItems = _context.Carts
                 .Include(x => x.Product)
                 .Where(x => x.UserEmail == email)
                 .ToList();
+
+            // Kiểm tra thủ công các field trên form
+            if (string.IsNullOrWhiteSpace(order.Name) ||
+                string.IsNullOrWhiteSpace(order.Address1) ||
+                string.IsNullOrWhiteSpace(order.Address2) ||
+                string.IsNullOrWhiteSpace(order.City))
+            {
+                // Đẩy lỗi vào ModelState để hiện lên View
+                if (string.IsNullOrWhiteSpace(order.Name))
+                    ModelState.AddModelError("Name", "Vui lòng nhập tên");
+
+                if (string.IsNullOrWhiteSpace(order.Address1))
+                    ModelState.AddModelError("Address1", "Vui lòng nhập tổ ấp");
+
+                if (string.IsNullOrWhiteSpace(order.Address2))
+                    ModelState.AddModelError("Address2", "Vui lòng nhập xã phường");
+
+                if (string.IsNullOrWhiteSpace(order.City))
+                    ModelState.AddModelError("City", "Vui lòng nhập thành phố");
+
+                return View("Checkout", cartItems);
+            }
 
             if (!cartItems.Any())
                 return RedirectToAction("Checkout");

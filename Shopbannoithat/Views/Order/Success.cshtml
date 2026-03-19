@@ -6,7 +6,358 @@
 
 @model Shopbannoithat.Models.Order
 
-<div class="container mt-5">
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+    .oc-wrap {
+        font-family: 'DM Sans', sans-serif;
+        max-width: 760px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .oc-card {
+        background: #fff;
+        border-radius: 20px;
+        border: 1px solid #e8e8e5;
+        overflow: hidden;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+    }
+
+    .oc-header {
+        background: linear-gradient(135deg, #593d2b 0%, #7b5740 60%, #9f7b63 100%);
+        padding: 2.5rem 2rem 2rem;
+        text-align: center;
+    }
+
+    .oc-check {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        border: 2px solid rgba(255,255,255,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+
+    .oc-title {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 26px;
+        font-weight: 600;
+        color: #fff;
+        margin: 0 0 4px;
+    }
+
+    .oc-subtitle {
+        font-size: 12px;
+        color: rgba(255,255,255,0.75);
+        font-weight: 300;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .oc-body {
+        padding: 2rem;
+    }
+
+    .oc-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 1.5rem;
+    }
+
+    .oc-info-block {
+        background: #f5f0e9;
+        border-radius: 12px;
+        padding: 1.25rem;
+    }
+
+    .oc-info-label {
+        font-size: 15px;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        color: #c2a378;
+        font-weight: 500;
+        margin: 0 0 10px;
+    }
+
+    .oc-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+        font-size: 13px;
+        gap: 8px;
+    }
+
+    .oc-info-key {
+        color: #888;
+    }
+
+    .oc-info-val {
+        font-weight: 500;
+        text-align: right;
+        color: #593d2b;
+    }
+
+    .oc-status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #e1f5ee;
+        color: #085041;
+        border: 0.5px solid #5dcaa5;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .oc-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #1d9e75;
+    }
+
+    .oc-coupon {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: #eaf3de;
+        color: #27500a;
+        border: 0.5px solid #97c459;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .oc-divider {
+        height: 1px;
+        background: #eee;
+        margin: 0 0 1.5rem;
+    }
+
+    .oc-section-label {
+        font-size: 15px;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        color: #c2a378;
+        font-weight: 500;
+        margin: 0 0 12px;
+    }
+
+    .oc-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-bottom: 1.5rem;
+    }
+
+        .oc-table thead tr {
+            border-bottom: 1px solid #e0e0dd;
+        }
+
+        .oc-table th {
+            padding: 8px 0 10px;
+            font-weight: 500;
+            font-size: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #c2a378;
+            text-align: left;
+        }
+
+            .oc-table th:not(:first-child) {
+                text-align: right;
+            }
+
+        .oc-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid #f2f2ef;
+            vertical-align: middle;
+        }
+
+            .oc-table td:not(:first-child) {
+                text-align: right;
+            }
+
+        .oc-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .oc-product-name {
+        font-weight: 500;
+        margin: 0 0 2px;
+    }
+
+    .oc-product-sub {
+        font-size: 12px;
+        color: #c2a378;
+    }
+
+    .oc-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        background: #f5f0e9;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+    }
+
+    .oc-total-label {
+        font-size: 15px;
+        font-weight:bold;
+        color: #888;
+    }
+
+    .oc-total-val {
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: #593d2b;
+    }
+
+    .oc-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background: #3a3028;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .oc-btn:hover {
+            background: #c9a97a;
+            color: #fff;
+        }
+
+    @@media (max-width: 540px) {
+        .oc-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .oc-body {
+            padding: 1.25rem;
+        }
+    }
+</style>
+
+<div class="oc-wrap">
+    <div class="oc-card">
+        <div class="oc-header">
+            <div class="oc-check">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                     stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+            </div>
+            <h1 class="oc-title">Đặt hàng thành công</h1>
+            <p class="oc-subtitle">Cảm ơn bạn đã tin tưởng mua sắm</p>
+        </div>
+
+        <div class="oc-body">
+            <div class="oc-grid">
+                <div class="oc-info-block">
+                    <p class="oc-info-label">Thông tin đơn hàng</p>
+                    <div class="oc-info-row">
+                        <span class="oc-info-key">Mã đơn</span>
+                        <span class="oc-info-val">#ORD-@Model.Id</span>
+                    </div>
+                    <div class="oc-info-row">
+                        <span class="oc-info-key">Ngày đặt</span>
+                        <span class="oc-info-val">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+                    </div>
+                    <div class="oc-info-row">
+                        <span class="oc-info-key">Trạng thái</span>
+                        <span class="oc-info-val">
+                            <span class="oc-status-badge">
+                                <span class="oc-dot"></span>@Model.Status
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="oc-info-block">
+                    <p class="oc-info-label">Thông tin giao hàng</p>
+                    <div class="oc-info-row">
+                        <span class="oc-info-key">Người nhận</span>
+                        <span class="oc-info-val">@Model.Name</span>
+                    </div>
+                    <div class="oc-info-row">
+                        <span class="oc-info-key">Địa chỉ</span>
+                        <span class="oc-info-val">
+                            @Model.Address1
+                            @if (!string.IsNullOrEmpty(Model.Address2))
+                            {
+                                <text>, @Model.Address2</text>
+                            }
+                        </span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.CouponCode))
+                    {
+                        <div class="oc-info-row">
+                            <span class="oc-info-key">Mã giảm giá</span>
+                            <span class="oc-info-val">
+                                <span class="oc-coupon">@Model.CouponCode — Giảm @Model.DiscountPercent%</span>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="oc-divider"></div>
+            <p class="oc-section-label">Sản phẩm đã đặt</p>
+
+            <table class="oc-table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>SL</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <tr>
+                            <td><div class="oc-product-name">@item.Product.Name</div></td>
+                            <td>@item.Price.ToString("N0") VNĐ</td>
+                            <td>@item.Quantity</td>
+                            <td>@Model.TotalPrice.ToString("N0") VNĐ</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="oc-total-row">
+                <span class="oc-total-label">Tổng thanh toán</span>
+                <span class="oc-total-val">@Model.TotalPrice.ToString("N0") VNĐ</span>
+            </div>
+
+            <a asp-controller="Product" asp-action="Index" class="oc-btn">
+                Tiếp tục mua sắm
+            </a>
+        </div>
+    </div>
+</div>
+
+@* <div class="container mt-5">
 
     <div class="card shadow p-4">
 
@@ -125,3 +476,6 @@
     </div>
 
 </div>
+<style>
+
+</style> *@

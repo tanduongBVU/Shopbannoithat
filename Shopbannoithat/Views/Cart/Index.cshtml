@@ -99,3 +99,94 @@
        class="btn btn-success">
     Thanh toán
 </a>
+<style>
+    /* Tổng thể bảng giỏ hàng */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fdfdfd;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        /* Header bảng */
+        .table thead {
+            background-color: #6b4f3b; /* màu nâu gỗ */
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .table th, .table td {
+            padding: 12px 16px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Hình ảnh sản phẩm */
+        .table img {
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+    /* Nút hành động */
+    .btn {
+        border-radius: 4px;
+        font-size: 14px;
+        padding: 6px 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-danger {
+        background-color: #b23b3b;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #922d2d;
+        }
+
+    .btn-secondary {
+        background-color: #6b4f3b;
+        border: none;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #4a3223;
+        }
+
+    .btn-success {
+        background-color: #c44e22;
+        border: none;
+    }
+
+        .btn-success:hover {
+            background-color: #1d5c2d;
+        }
+
+    /* Tổng tiền */
+    h4 {
+        font-weight: 600;
+        margin-top: 20px;
+    }
+
+        h4 .text-danger {
+            font-size: 20px;
+            color: #b23b3b;
+        }
+
+    /* Nút tiếp tục mua sắm và thanh toán */
+    a.btn {
+        margin-right: 10px;
+        text-decoration: none;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f0eb; /* màu be nhẹ */
+    }
+
+</style>
