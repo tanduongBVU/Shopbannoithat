@@ -1,6 +1,168 @@
 ﻿@model Shopbannoithat.Models.Category
 
-<h2>Thêm danh mục</h2>
+
+<style>
+    /* ===== FORM CATEGORY ===== */
+    .category-form-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 32px;
+        border-radius: 18px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        border-top: 6px solid #0984e3;
+    }
+
+    /* ===== TITLE ===== */
+    .category-form-title {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #2d3436;
+    }
+
+    /* ===== LABEL ===== */
+    .category-form-container .form-label {
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    /* ===== INPUT ===== */
+    .category-form-container .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #ccc;
+        transition: all 0.25s ease;
+    }
+
+        /* focus */
+        .category-form-container .form-control:focus {
+            border-color: #0984e3;
+            box-shadow: 0 0 0 3px rgba(9,132,227,0.25);
+        }
+
+    /* ===== SELECT ===== */
+    .category-form-container select.form-control {
+        cursor: pointer;
+    }
+
+    /* ===== TEXT NOTE ===== */
+    .category-form-container small {
+        display: block;
+        margin-top: 5px;
+        font-size: 13px;
+    }
+
+    /* ===== BUTTON GROUP ===== */
+    .category-form-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    /* ===== BUTTON SAVE ===== */
+    .btn-save-category {
+        background: linear-gradient(90deg, #00b894, #00cec9);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 10px 18px;
+        transition: 0.3s;
+    }
+
+        .btn-save-category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+    /* ===== BUTTON BACK ===== */
+    .btn-back-category {
+        background: #636e72;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 18px;
+        transition: 0.3s;
+    }
+
+        .btn-back-category:hover {
+            background: red;
+            transform: translateY(-2px);
+        }
+
+    /* ===== VALIDATION ===== */
+    .text-danger {
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 576px) {
+        .category-form-actions
+
+    {
+        flex-direction: column;
+    }
+
+    .btn-save-category,
+    .btn-back-category {
+        width: 100%;
+        text-align: center;
+    }
+
+    }
+</style>
+
+<div class="category-form-container">
+
+    <h2 class="category-form-title">📂 Thêm danh mục</h2>
+
+    <form asp-action="Create" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Tên danh mục</label>
+            <input asp-for="Name" class="form-control"
+                   placeholder="VD: Sofa, Giường, Phòng khách..." />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <input asp-for="Description" class="form-control"
+                   placeholder="Mô tả ngắn..." />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Thuộc phòng</label>
+
+            <select asp-for="ParentId" class="form-control">
+                <option value="">-- Đây là danh mục Phòng (cấp 1) --</option>
+                @foreach (var p in ViewBag.Parents)
+                {
+                    <option value="@p.Id">@p.Name</option>
+                }
+            </select>
+
+           
+        </div>
+
+        <div class="category-form-actions">
+            <button type="submit" class="btn btn-save-category">
+                💾 Lưu
+            </button>
+
+            <a asp-action="Index" class="btn btn-back-category">
+                ← Quay lại
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+
+@* <h2>Thêm danh mục</h2>
 
 <form asp-action="Create" method="post">
 
@@ -33,4 +195,4 @@
     <button type="submit" class="btn btn-success">Lưu</button>
     <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 
-</form>
+</form> *@

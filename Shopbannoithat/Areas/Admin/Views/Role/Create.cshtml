@@ -7,7 +7,113 @@
 
 @model Shopbannoithat.Models.Role
 
-<h2>Thêm quyền</h2>
+<style>
+    /* ===== Form Card ===== */
+    .role-form-container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        border-top: 5px solid #6c5ce7;
+    }
+
+    /* Title */
+    .role-form-title {
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 25px;
+        color: #2d3436;
+    }
+
+    /* Label */
+    .role-form-container label {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    /* Input */
+    .role-form-container .form-control {
+        border-radius: 10px;
+        padding: 11px;
+        border: 1px solid #ccc;
+        transition: 0.25s;
+    }
+
+        /* Focus */
+        .role-form-container .form-control:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.25);
+        }
+
+    /* ===== Buttons ===== */
+    .btn-create {
+        background: linear-gradient(90deg, #00b894, #00cec9);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 10px 18px;
+        transition: 0.3s;
+    }
+
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+    /* Nút quay lại */
+    .btn-back {
+        background: #636e72;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 18px;
+        transition: 0.3s;
+    }
+
+        .btn-back:hover {
+            background: #2d3436;
+            transform: translateY(-2px);
+        }
+
+    /* spacing button */
+    .form-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+    }
+</style>
+
+<div class="role-form-container">
+
+    <h2 class="role-form-title">➕ Thêm quyền</h2>
+
+    <form asp-action="Create" method="post">
+
+        <div class="form-group mb-3">
+            <label>Tên quyền</label>
+            <input asp-for="Name" class="form-control" placeholder="Nhập tên quyền..." />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-create">
+                <i class="bi bi-plus-circle"></i> Thêm
+            </button>
+
+            <a asp-action="Index" class="btn btn-back">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+
+
+@* <h2>Thêm quyền</h2>
 
 <form asp-action="Create" method="post">
 
@@ -27,4 +133,4 @@
         Quay lại
     </a>
 
-</form>
+</form> *@

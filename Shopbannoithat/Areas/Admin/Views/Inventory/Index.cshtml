@@ -6,7 +6,198 @@
 
 @model List<Shopbannoithat.Models.Product>
 
-<h2>Quản lý kho</h2>
+<style>
+    /* ===== CONTAINER ===== */
+    .stock-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        margin-top: 20px;
+    }
+
+    /* ===== TITLE ===== */
+    .stock-title {
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #2d3436;
+    }
+
+    /* ===== TABLE ===== */
+    .stock-table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .stock-table thead {
+            background: linear-gradient(90deg, #00b894, #0984e3);
+            color: #fff;
+        }
+
+        .stock-table th {
+            padding: 14px;
+            border: none !important;
+        }
+
+        .stock-table td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        /* Hover */
+        .stock-table tbody tr {
+            transition: 0.2s;
+        }
+
+            .stock-table tbody tr:hover {
+                background: #f4faff;
+                transform: scale(1.01);
+            }
+
+    /* ===== PRODUCT NAME ===== */
+    .product-name {
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    /* ===== PRICE ===== */
+    .product-price {
+        font-weight: 600;
+        color: #6c5ce7;
+    }
+
+    /* ===== STOCK STATUS ===== */
+    .stock-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    /* còn nhiều */
+    .stock-ok {
+        background: #e8f5e9;
+        color: #00b894;
+    }
+
+    /* sắp hết */
+    .stock-low {
+        background: #fff3cd;
+        color: #e17055;
+    }
+
+    /* hết hàng */
+    .stock-out {
+        background: #ffe5e5;
+        color: #d63031;
+    }
+
+    /* ===== BUTTON ===== */
+    .btn-stock {
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+    /* nhập */
+    .btn-success {
+        background: linear-gradient(90deg, #00b894, #00cec9);
+        border: none;
+    }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+    /* xuất */
+    .btn-danger {
+        background: linear-gradient(90deg, #d63031, #e17055);
+        border: none;
+    }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+</style>
+<div class="stock-container">
+
+    <h2 class="stock-title">📦 Quản lý kho</h2>
+
+    <table class="table stock-table">
+
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Giá</th>
+                <th>Tồn kho</th>
+                <th class="text-center">Nhập / Xuất</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td class="product-name">@item.Name</td>
+
+                    <td class="product-price">
+                        @item.Price?.ToString("N0") VNĐ
+                    </td>
+
+                    <td>
+                        @if (item.Quantity == 0)
+                        {
+                            <span class="stock-badge stock-out">Hết hàng</span>
+                        }
+                        else if (item.Quantity < 5)
+                        {
+                            <span class="stock-badge stock-low">
+                                @item.Quantity (Sắp hết)
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="stock-badge stock-ok">
+                                @item.Quantity (Còn hàng)
+                            </span>
+                        }
+                    </td>
+
+                    <td class="text-center">
+
+                        <a asp-action="UpdateStock"
+                           asp-route-id="@item.Id"
+                           asp-route-quantity="10"
+                           class="btn btn-success btn-stock me-2">
+                            ➕ Nhập +10
+                        </a>
+
+                        <a asp-action="UpdateStock"
+                           asp-route-id="@item.Id"
+                           asp-route-quantity="-1"
+                           class="btn btn-danger btn-stock">
+                            ➖ Xuất -1
+                        </a>
+
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+@* <h2>Quản lý kho</h2>
 
 <table class="table table-bordered">
 
@@ -65,4 +256,4 @@
 
     </tbody>
 
-</table>
+</table> *@

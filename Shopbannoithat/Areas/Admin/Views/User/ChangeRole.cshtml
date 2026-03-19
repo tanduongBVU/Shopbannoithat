@@ -5,6 +5,115 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<style>
+    /* ===== Form Card ===== */
+    .form-container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 32px;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        border-top: 5px solid #0984e3;
+    }
+
+    /* Title */
+    .form-title {
+        font-weight: 700;
+        margin-bottom: 25px;
+        text-align: center;
+        color: #2d3436;
+    }
+
+    /* Label */
+    .form-container label {
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    /* Input */
+    .form-control {
+        border-radius: 10px;
+        padding: 11px;
+        border: 1px solid #ccc;
+        transition: all 0.25s ease;
+    }
+
+        /* Focus đậm hơn */
+        .form-control:focus {
+            border-color: #0984e3;
+            box-shadow: 0 0 0 3px rgba(9,132,227,0.25);
+        }
+
+    /* Select */
+    select.form-control {
+        cursor: pointer;
+    }
+
+    /* ===== Button đậm hơn ===== */
+    .btn-save {
+        width: 100%;
+        border-radius: 12px;
+        padding: 12px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #0984e3, #6c5ce7);
+        border: none;
+        color: #fff;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+        /* Hover nổi mạnh */
+        .btn-save:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Click */
+        .btn-save:active {
+            transform: scale(0.97);
+        }
+</style>
+
+<div class="form-container">
+
+    <h2 class="form-title">🔐 Phân quyền tài khoản</h2>
+
+    <form method="post">
+
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input class="form-control" value="@Model.Email" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label>Role</label>
+
+            <select name="role" class="form-control">
+
+                @foreach (var r in ViewBag.Roles)
+                {
+                    <option value="@r.Name"
+                            selected="@(Model.Role == r.Name)">
+                        @r.Name
+                    </option>
+                }
+
+            </select>
+
+        </div>
+
+        <button class="btn btn-save">
+            💾 Lưu thay đổi
+        </button>
+
+    </form>
+
+</div>
+
+@* 
 <h2>Phân quyền</h2>
 
 <form method="post">
@@ -37,4 +146,4 @@
         Lưu
     </button>
 
-</form>
+</form> *@

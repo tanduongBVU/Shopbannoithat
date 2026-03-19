@@ -7,7 +7,127 @@
 
 @model Shopbannoithat.Models.Coupon
 
-<h2>Tạo mã giảm giá</h2>
+
+<style>
+    /* ===== FORM COUPON ===== */
+    .coupon-form-container {
+        max-width: 520px;
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 32px;
+        border-radius: 18px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        border-top: 6px solid #0984e3;
+    }
+
+    /* Title */
+    .coupon-form-title {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #2d3436;
+    }
+
+    /* Label */
+    .coupon-form-container label {
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    /* Input */
+    .coupon-form-container .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #ccc;
+        transition: 0.25s;
+    }
+
+        /* Focus */
+        .coupon-form-container .form-control:focus {
+            border-color: #0984e3;
+            box-shadow: 0 0 0 3px rgba(9,132,227,0.25);
+        }
+
+    /* ===== CHECKBOX ===== */
+    .form-check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .form-check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #0984e3;
+            cursor: pointer;
+        }
+
+    /* ===== BUTTON ===== */
+    .btn-create-coupon {
+        width: 100%;
+        margin-top: 10px;
+        background: linear-gradient(90deg, #00b894, #00cec9);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 12px;
+        transition: 0.3s;
+    }
+
+        .btn-create-coupon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+    /* ===== VALIDATION ===== */
+    .text-danger {
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+</style>
+
+<div class="coupon-form-container">
+
+    <h2 class="coupon-form-title">🎟️ Tạo mã giảm giá</h2>
+
+    <form asp-action="Create" method="post">
+
+        <div class="mb-3">
+            <label>Mã giảm giá</label>
+            <input asp-for="Code" class="form-control" placeholder="VD: SALE50" />
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label>Giảm (%)</label>
+            <input asp-for="Discount" class="form-control" placeholder="VD: 10" />
+            <span asp-validation-for="Discount" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label>Hạn sử dụng</label>
+            <input asp-for="ExpiryDate" type="date" class="form-control" />
+            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input asp-for="IsActive" type="checkbox" />
+            <label>Đang hoạt động</label>
+        </div>
+
+        <button class="btn btn-create-coupon">
+            <i class="bi bi-plus-circle"></i> Tạo mã
+        </button>
+
+    </form>
+
+</div>
+
+
+
+@* <h2>Tạo mã giảm giá</h2>
 
 <form asp-action="Create">
 
@@ -36,4 +156,4 @@
 
     <button class="btn btn-success">Tạo</button>
 
-</form>
+</form> *@

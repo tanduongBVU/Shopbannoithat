@@ -1,6 +1,6 @@
 ﻿@model List<Shopbannoithat.Models.Category>
 
-<h2>Quản lý danh mục</h2>
+@* <h2>Quản lý danh mục</h2>
 <a asp-action="Create" class="btn btn-success mb-3">Thêm danh mục</a>
 
 <table class="table table-bordered">
@@ -40,4 +40,226 @@
             }
         }
     </tbody>
-</table>
+</table> *@
+
+<style>
+    /* ===== CONTAINER ===== */
+    .category-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        margin-top: 20px;
+    }
+
+    /* ===== HEADER ===== */
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .category-header h2 {
+            font-weight: 700;
+            color: #2d3436;
+        }
+
+    /* ===== BUTTON ADD ===== */
+    .btn-add {
+        background: linear-gradient(90deg, #00b894, #00cec9);
+        border: none;
+        color: #fff;
+        border-radius: 10px;
+        padding: 8px 16px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+    /* ===== TABLE ===== */
+    .category-table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .category-table thead {
+            background: linear-gradient(90deg, #0984e3, #6c5ce7);
+            color: #fff;
+        }
+
+        .category-table th {
+            padding: 14px;
+            border: none !important;
+        }
+
+        .category-table td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        /* hover */
+        .category-table tbody tr {
+            transition: 0.2s;
+        }
+
+            .category-table tbody tr:hover {
+                background: #f4f7ff;
+                transform: scale(1.01);
+            }
+
+    /* ===== PARENT ===== */
+    .parent-row {
+        background: #eef3ff;
+        font-weight: 600;
+    }
+
+        .parent-row td {
+            border-top: 2px solid #dfe6ff;
+        }
+
+    /* ===== CHILD ===== */
+    .child-row {
+        background: #fff;
+    }
+
+    .child-name {
+        padding-left: 30px;
+        color: #636e72;
+    }
+
+    /* ===== BADGE ===== */
+    .badge-parent {
+        background: #dfe6ff;
+        color: #6c5ce7;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    .badge-child {
+        background: linear-gradient(90deg, #0984e3, #6c5ce7);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    /* ===== BUTTON ===== */
+    .btn-action {
+        border-radius: 8px;
+        padding: 6px 10px;
+        transition: 0.2s;
+    }
+
+    .btn-warning {
+        background: #fbc531;
+        border: none;
+    }
+
+        .btn-warning:hover {
+            background: #e1a700;
+            transform: translateY(-2px);
+        }
+
+    .btn-danger {
+        background: linear-gradient(90deg, #d63031, #e17055);
+        border: none;
+    }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+</style>
+
+<div class="category-container">
+
+    <div class="category-header">
+        <h2>📂 Quản lý danh mục</h2>
+
+        <a asp-action="Create" class="btn btn-add">
+            <i class="bi bi-plus-circle"></i> Thêm danh mục
+        </a>
+    </div>
+
+    <table class="table category-table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên danh mục</th>
+                <th>Thuộc phòng</th>
+                <th class="text-center">Chức năng</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model.Where(c => c.ParentId == null))
+            {
+                <!-- DANH MỤC CHA -->
+                <tr class="parent-row">
+                    <td>@item.Id</td>
+
+                    <td class="fw-bold">
+                        🏠 @item.Name
+                    </td>
+
+                    <td>
+                        <span class="badge badge-parent">Phòng</span>
+                    </td>
+
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.Id"
+                           class="btn btn-warning btn-action me-2">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+
+                        <a asp-action="Delete" asp-route-id="@item.Id"
+                           class="btn btn-danger btn-action"
+                           onclick="return confirm('Xóa sẽ ảnh hưởng danh mục con. Tiếp tục?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+
+                <!-- DANH MỤC CON -->
+                @foreach (var child in Model.Where(c => c.ParentId == item.Id))
+                {
+                    <tr class="child-row">
+                        <td>@child.Id</td>
+
+                        <td class="child-name">
+                            ↳ @child.Name
+                        </td>
+
+                        <td>
+                            <span class="badge badge-child">
+                                @item.Name
+                            </span>
+                        </td>
+
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@child.Id"
+                               class="btn btn-warning btn-action me-2">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+
+                            <a asp-action="Delete" asp-route-id="@child.Id"
+                               class="btn btn-danger btn-action"
+                               onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+
+    </table>
+
+</div>

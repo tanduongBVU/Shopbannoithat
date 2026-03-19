@@ -6,7 +6,193 @@
 
 @model List<Shopbannoithat.Models.Role>
 
-<h2>Quản lý quyền</h2>
+
+<style>
+    /* ===== Container ===== */
+    .role-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-top: 20px;
+    }
+
+    /* ===== Title + Button ===== */
+    .role-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .role-title {
+        font-weight: 700;
+        color: #2d3436;
+    }
+
+    /* Nút thêm */
+    .btn-add {
+        background: linear-gradient(90deg, #00b894, #00cec9);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 8px 16px;
+        transition: 0.3s;
+    }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+    /* ===== Table ===== */
+    .role-table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        /* Header đậm màu */
+        .role-table thead {
+            background: linear-gradient(90deg, #0984e3, #6c5ce7);
+            color: white;
+        }
+
+        .role-table th {
+            padding: 14px;
+            border: none !important;
+        }
+
+        .role-table td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        /* Hover */
+        .role-table tbody tr {
+            transition: 0.2s;
+        }
+
+            .role-table tbody tr:hover {
+                background: #f1f7ff;
+                transform: scale(1.01);
+            }
+
+    /* ===== Badge Role ===== */
+    .role-badge {
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    /* màu từng role */
+    .badge-admin {
+        background: #ffe5e5;
+        color: #d63031;
+    }
+
+    .badge-staff {
+        background: #e3f2fd;
+        color: #0984e3;
+    }
+
+    .badge-customer {
+        background: #e8f5e9;
+        color: #00b894;
+    }
+
+    .badge-default {
+        background: #eee;
+        color: #555;
+    }
+
+    /* ===== Buttons ===== */
+    .btn-action {
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+    .btn-warning {
+        background: #fbc531;
+        border: none;
+    }
+
+        .btn-warning:hover {
+            background: #e1a700;
+            transform: translateY(-2px);
+        }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="role-container">
+
+    <div class="role-header">
+        <h2 class="role-title">🔐 Quản lý quyền</h2>
+
+        <a asp-action="Create" class="btn btn-add">
+            <i class="bi bi-plus-circle"></i> Thêm quyền
+        </a>
+    </div>
+
+    <table class="table role-table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên quyền</th>
+                <th class="text-center">Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Id</td>
+
+                    <td>
+                        @{
+                            var roleClass = "badge-default";
+                            if (r.Name == "Admin") roleClass = "badge-admin";
+                            else if (r.Name == "Staff") roleClass = "badge-staff";
+                            else if (r.Name == "Customer") roleClass = "badge-customer";
+                        }
+
+                        <span class="role-badge @roleClass">
+                            @r.Name
+                        </span>
+                    </td>
+
+                    <td class="text-center">
+                        <a asp-action="Edit"
+                           asp-route-id="@r.Id"
+                           class="btn btn-warning btn-action me-2">
+                            <i class="bi bi-pencil"></i> Sửa
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@r.Id"
+                           class="btn btn-danger btn-action">
+                            <i class="bi bi-trash"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@* <h2>Quản lý quyền</h2>
 
 <a asp-action="Create" class="btn btn-primary">Thêm quyền</a>
 
@@ -34,4 +220,4 @@
         </tr>
     }
 
-</table>
+</table> *@

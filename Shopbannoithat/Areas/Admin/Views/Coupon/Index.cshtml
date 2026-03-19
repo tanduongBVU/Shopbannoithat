@@ -7,7 +7,205 @@
 
 @model List<Shopbannoithat.Models.Coupon>
 
-<h2>Quản lý mã giảm giá</h2>
+    <style>
+    /* ===== CONTAINER ===== */
+    .coupon-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        margin-top: 20px;
+    }
+
+    /* ===== HEADER ===== */
+    .coupon-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .coupon-title {
+        font-weight: 700;
+        color: #2d3436;
+    }
+
+    /* ===== BUTTON ADD ===== */
+    .btn-add-coupon {
+        background: linear-gradient(90deg, #00b894, #00cec9);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 8px 16px;
+        transition: 0.3s;
+    }
+
+        .btn-add-coupon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+    /* ===== TABLE ===== */
+    .coupon-table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .coupon-table thead {
+            background: linear-gradient(90deg, #0984e3, #6c5ce7);
+            color: #fff;
+        }
+
+        .coupon-table th {
+            padding: 14px;
+            border: none !important;
+        }
+
+        .coupon-table td {
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        /* Hover */
+        .coupon-table tbody tr {
+            transition: 0.2s;
+        }
+
+            .coupon-table tbody tr:hover {
+                background: #f4f7ff;
+                transform: scale(1.01);
+            }
+
+    /* ===== BADGE STATUS ===== */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    /* active */
+    .status-active {
+        background: #e8f5e9;
+        color: #00b894;
+    }
+
+    /* inactive */
+    .status-inactive {
+        background: #ffe5e5;
+        color: #d63031;
+    }
+
+    /* ===== BUTTON ===== */
+    .btn-action {
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-weight: 500;
+        transition: 0.2s;
+    }
+
+    /* toggle */
+    .btn-warning {
+        background: #fbc531;
+        border: none;
+    }
+
+        .btn-warning:hover {
+            background: #e1a700;
+            transform: translateY(-2px);
+        }
+
+    /* delete */
+    .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+
+    /* ===== DISCOUNT TEXT ===== */
+    .discount-text {
+        font-weight: 600;
+        color: #6c5ce7;
+    }
+    </style>
+<div class="coupon-container">
+
+    <div class="coupon-header">
+        <h2 class="coupon-title">🎟️ Quản lý mã giảm giá</h2>
+
+        <a asp-action="Create" class="btn btn-add-coupon">
+            <i class="bi bi-plus-circle"></i> Thêm mã
+        </a>
+    </div>
+
+    <table class="table coupon-table">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Mã</th>
+                <th>Giảm (%)</th>
+                <th>Hạn</th>
+                <th>Trạng thái</th>
+                <th class="text-center">Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Id</td>
+
+                    <td>
+                        <strong>@c.Code</strong>
+                    </td>
+
+                    <td>
+                        <span class="discount-text">@c.Discount %</span>
+                    </td>
+
+                    <td>
+                        @c.ExpiryDate?.ToShortDateString()
+                    </td>
+
+                    <td>
+                        @if (c.IsActive)
+                        {
+                            <span class="status-badge status-active">✔ Đang dùng</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge status-inactive">✖ Đã tắt</span>
+                        }
+                    </td>
+
+                    <td class="text-center">
+                        <a asp-action="Toggle"
+                           asp-route-id="@c.Id"
+                           class="btn btn-warning btn-action me-2">
+                            <i class="bi bi-power"></i> Bật / Tắt
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@c.Id"
+                           class="btn btn-danger btn-action"
+                           onclick="return confirm('Xóa mã này?')">
+                            <i class="bi bi-trash"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+
+@* <h2>Quản lý mã giảm giá</h2>
 
 <a asp-action="Create" class="btn btn-primary">Thêm mã</a>
 
@@ -44,4 +242,4 @@
             </td>
         </tr>
     }
-</table>
+</table> *@

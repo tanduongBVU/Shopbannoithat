@@ -119,3 +119,118 @@
         });
     </script>
 }
+<style>
+    /* ===== KHUNG TỔNG ===== */
+    .d-flex[style*="75vh"] {
+        background: #f1f5f9;
+        border-radius: 16px;
+        padding: 10px;
+    }
+
+    /* ===== DANH SÁCH KHÁCH ===== */
+    .customer-item {
+        transition: all 0.25s ease;
+        background: #ffffff !important;
+        border: 1px solid #eee;
+    }
+
+        /* hover */
+        .customer-item:hover {
+            background: linear-gradient(90deg, #0984e3, #6c5ce7) !important;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        /* active (nếu bạn add class active bằng JS sau này) */
+        .customer-item.active {
+            background: linear-gradient(90deg, #6c5ce7, #0984e3) !important;
+            color: #fff;
+        }
+
+    /* ===== HEADER CHAT ===== */
+    #chat-header {
+        background: #fff;
+        padding: 10px 15px;
+        border-radius: 10px;
+        border: 1px solid #eee;
+        color: #2d3436 !important;
+    }
+
+    /* ===== KHUNG TIN NHẮN ===== */
+    #chat-messages {
+        background: #eaf1ff !important;
+        border: none !important;
+        border-radius: 12px;
+    }
+
+        /* ===== SCROLL BAR ===== */
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 10px;
+        }
+
+    /* ===== BONG BÓNG CHAT ===== */
+    /* tin nhắn khách */
+    .message-customer {
+        background: #ffffff;
+        padding: 8px 12px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        max-width: 70%;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+
+    /* tin nhắn admin */
+    .message-admin {
+        background: linear-gradient(90deg, #0984e3, #6c5ce7);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        margin-left: auto;
+        max-width: 70%;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    /* ===== INPUT ===== */
+    #reply-input {
+        border-radius: 10px 0 0 10px;
+        border: 1px solid #ccc;
+    }
+
+        /* focus */
+        #reply-input:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 2px rgba(108,92,231,0.2);
+        }
+
+    /* ===== BUTTON GỬI ===== */
+    #reply-box .btn-primary {
+        border-radius: 0 10px 10px 0;
+        background: linear-gradient(90deg, #0984e3, #6c5ce7);
+        border: none;
+        transition: 0.3s;
+    }
+
+        /* hover */
+        #reply-box .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+    /* ===== KHUNG DANH SÁCH ===== */
+    .border-end {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    /* title */
+    h6 {
+        color: #2d3436;
+    }
+</style>

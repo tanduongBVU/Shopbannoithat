@@ -5,7 +5,165 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2>Quản lý tài khoản</h2>
+<style>
+    /* ===== Container ===== */
+    .table-container {
+        background: #fff;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        margin-top: 20px;
+    }
+
+    /* ===== Title ===== */
+    .page-title {
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    /* ===== Table ===== */
+    .custom-table {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+        .custom-table thead {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            color: #fff;
+        }
+
+        .custom-table th {
+            border: none !important;
+            padding: 14px;
+            font-weight: 600;
+        }
+
+        .custom-table td {
+            vertical-align: middle;
+            padding: 12px;
+        }
+
+        /* Hover */
+        .custom-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+            .custom-table tbody tr:hover {
+                background: #f5faff;
+                transform: scale(1.01);
+            }
+
+    /* ===== Badge Role ===== */
+    .role-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .role-admin {
+        background: #ffe5e5;
+        color: #d63031;
+    }
+
+    .role-staff {
+        background: #e3f2fd;
+        color: #0984e3;
+    }
+
+    .role-customer {
+        background: #e8f5e9;
+        color: #00b894;
+    }
+
+    /* ===== Buttons ===== */
+    .btn-custom {
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-warning {
+        background: #fbc531;
+        border: none;
+    }
+
+        .btn-warning:hover {
+            background: #e1a700;
+            transform: translateY(-2px);
+        }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+    }
+</style>
+<div class="table-container">
+
+    <h2 class="page-title">👤 Quản lý tài khoản</h2>
+
+    <table class="table custom-table">
+
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Phone</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Email</td>
+
+                    <td>
+                        @if (item.Role == "Admin")
+                        {
+                            <span class="role-badge role-admin">Admin</span>
+                        }
+                        else if (item.Role == "Staff")
+                        {
+                            <span class="role-badge role-staff">Staff</span>
+                        }
+                        else
+                        {
+                            <span class="role-badge role-customer">Customer</span>
+                        }
+                    </td>
+
+                    <td>@item.Phone</td>
+
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="User"
+                           asp-action="ChangeRole"
+                           asp-route-id="@item.Id"
+                           class="btn btn-warning btn-custom me-2">
+                            <i class="bi bi-gear"></i> Phân quyền
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.Id"
+                           class="btn btn-danger btn-custom"
+                           onclick="return confirm('Bạn có chắc muốn xóa tài khoản này?')">
+                            <i class="bi bi-trash"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+</div>
+
+@* <h2>Quản lý tài khoản</h2>
 
 <table class="table table-bordered">
 
@@ -47,4 +205,4 @@
 
     </tbody>
 
-</table>
+</table> *@

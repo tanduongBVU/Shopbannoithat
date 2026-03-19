@@ -6,7 +6,142 @@
 
 @model Shopbannoithat.Models.Role
 
-<h2>Sửa quyền</h2>
+<style>
+    /* ===== FORM ADMIN (THÊM / SỬA QUYỀN) ===== */
+    .role-form-container {
+        max-width: 500px;
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 32px;
+        border-radius: 18px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        border-top: 6px solid #6c5ce7;
+    }
+
+    /* ===== TITLE ===== */
+    .role-form-title {
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 25px;
+        color: #2d3436;
+    }
+
+    /* ===== LABEL ===== */
+    .role-form-container label {
+        font-weight: 600;
+        color: #2d3436;
+    }
+
+    /* ===== INPUT ===== */
+    .role-form-container .form-control {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #ccc;
+        transition: all 0.25s ease;
+    }
+
+        /* Focus đẹp hơn */
+        .role-form-container .form-control:focus {
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.25);
+        }
+
+    /* ===== VALIDATION ===== */
+    .text-danger {
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    /* ===== BUTTON GROUP ===== */
+    .form-actions {
+        margin-top: 18px;
+        display: flex;
+        gap: 12px;
+    }
+
+    /* ===== BUTTON LƯU / THÊM ===== */
+    .btn-create {
+        background: linear-gradient(90deg, #0984e3, #6c5ce7);
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 10px 18px;
+        transition: all 0.3s ease;
+    }
+
+        /* Hover */
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Click */
+        .btn-create:active {
+            transform: scale(0.96);
+        }
+
+    /* ===== BUTTON QUAY LẠI ===== */
+    .btn-back {
+        background: #636e72;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 18px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-back:hover {
+            background: #2d3436;
+            transform: translateY(-2px);
+        }
+
+    /* ===== RESPONSIVE ===== */
+   @@media (max-width: 576px) {
+        .form-actions
+
+    {
+        flex-direction: column;
+    }
+
+    .btn-create,
+    .btn-back {
+        width: 100%;
+        text-align: center;
+    }
+
+    }
+</style>
+
+<div class="role-form-container">
+
+    <h2 class="role-form-title">✏️ Sửa Quyền</h2>
+
+    <form method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label>Tên quyền</label>
+            <input asp-for="Name" class="form-control" placeholder="Nhập tên quyền..." />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-create">
+                💾 Lưu
+            </button>
+
+            <a asp-action="Index" class="btn btn-back">
+                ← Quay lại
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+@* <h2>Sửa quyền</h2>
 
 <form asp-action="Edit" method="post">
 
@@ -20,4 +155,4 @@
 
     <button class="btn btn-success">Lưu</button>
 
-</form>
+</form> *@
