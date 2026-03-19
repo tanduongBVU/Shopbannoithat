@@ -1,4 +1,4 @@
-﻿@model List<Shopbannoithat.Models.Product>
+﻿@* @model List<Shopbannoithat.Models.Product>
 
 @{
     var currentSort = ViewBag.CurrentSort as string;
@@ -296,4 +296,743 @@
         });
     });
 });
+</script>
+
+ *@
+
+@model List<Shopbannoithat.Models.Product>
+
+@{
+    var currentSort = ViewBag.CurrentSort as string;
+    var currentCategory = ViewBag.CurrentCategory as int?;
+    var currentPrice = ViewBag.CurrentPrice as string;
+    var categories = ViewBag.Categories as List<Shopbannoithat.Models.Category>;
+    var totalCount = ViewBag.TotalCount != null ? (int)ViewBag.TotalCount : 0;
+
+    var sortLabel = currentSort switch
+    {
+        "newest" => "Mới nhất",
+        "price_asc" => "Giá thấp → cao",
+        "price_desc" => "Giá cao → thấp",
+        _ => "Sắp xếp theo"
+    };
+
+    // Hàm tạo URL giữ lại các filter hiện tại
+    Func<string, string> catUrl = (catId) =>
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrEmpty(catId)) parts.Add("categoryId=" + catId);
+        if (!string.IsNullOrEmpty(currentSort)) parts.Add("sort=" + currentSort);
+        if (!string.IsNullOrEmpty(currentPrice)) parts.Add("priceRange=" + currentPrice);
+        return "/Product" + (parts.Count > 0 ? "?" + string.Join("&", parts) : "");
+    };
+
+    Func<string, string> priceUrl = (price) =>
+    {
+        var parts = new List<string>();
+        if (currentCategory.HasValue) parts.Add("categoryId=" + currentCategory);
+        if (!string.IsNullOrEmpty(currentSort)) parts.Add("sort=" + currentSort);
+        if (!string.IsNullOrEmpty(price)) parts.Add("priceRange=" + price);
+        return "/Product" + (parts.Count > 0 ? "?" + string.Join("&", parts) : "");
+    };
+
+    Func<string, string> sortUrl = (sort) =>
+    {
+        var parts = new List<string>();
+        if (currentCategory.HasValue) parts.Add("categoryId=" + currentCategory);
+        if (!string.IsNullOrEmpty(sort)) parts.Add("sort=" + sort);
+        if (!string.IsNullOrEmpty(currentPrice)) parts.Add("priceRange=" + currentPrice);
+        return "/Product" + (parts.Count > 0 ? "?" + string.Join("&", parts) : "");
+    };
+}
+
+<div class="container py-4">
+    <div class="shop-layout">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="shop-sidebar">
+
+            <a href="@catUrl("")" class="sidebar-item @(!currentCategory.HasValue ? "active" : "")">
+                <span>Tất cả sản phẩm</span>
+                <span class="sidebar-count">@totalCount</span>
+            </a>
+
+            @if (categories != null)
+            {
+                @foreach (var cat in categories)
+                {
+                    var hasChildren = cat.Children != null && cat.Children.Any();
+                    var isParentActive = currentCategory == cat.Id ||
+                    (cat.Children != null && cat.Children.Any(c => c.Id == currentCategory));
+
+                    <div class="sidebar-group @(isParentActive ? "open" : "")">
+                        <!-- Danh mục cha -->
+                        <div class="sidebar-parent @(isParentActive ? "active" : "")"
+                             onclick="toggleGroup(this)">
+                            <a href="@catUrl(cat.Id.ToString())" class="sidebar-parent-link"
+                               onclick="event.stopPropagation()">@cat.Name</a>
+                            @if (hasChildren)
+                            {
+                                <svg class="group-chevron" width="13" height="13" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            }
+                        </div>
+
+                        <!-- Danh mục con -->
+                        @if (hasChildren)
+                        {
+                            <div class="sidebar-children">
+                                @foreach (var child in cat.Children)
+                                {
+                                    <a href="@catUrl(child.Id.ToString())"
+                                       class="sidebar-item sidebar-child @(currentCategory == child.Id ? "active" : "")">
+                                        <span>@child.Name</span>
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            }
+
+            <!-- Mức giá -->
+            <div class="sidebar-box">
+                <div class="sidebar-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" /></svg>
+                    Mức giá
+                </div>
+                @{
+                    var priceOptions = new[] {
+                                ("",        "Tất cả mức giá"),
+                                ("under5",  "Dưới 5 triệu"),
+                                ("5to10",   "5 – 10 triệu"),
+                                ("10to20",  "10 – 20 triệu"),
+                                ("over20",  "Trên 20 triệu"),
+                                };
+                }
+                @foreach (var (val, label) in priceOptions)
+                {
+                    var isActive = (string.IsNullOrEmpty(val) && string.IsNullOrEmpty(currentPrice))
+                    || currentPrice == val;
+                    <a href="@priceUrl(val)" class="sidebar-item @(isActive ? "active" : "")">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;opacity:0.6"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" /></svg>
+                        @label
+                    </a>
+                }
+            </div>
+
+        </aside>
+
+        <!-- ===== CONTENT ===== -->
+        <div class="shop-content">
+
+            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+                <h2 class="mb-0" style="font-size:1.3rem">
+                    Danh sách sản phẩm
+                    <small style="font-size:0.85rem;color:#9e8e7e;font-weight:400">(@totalCount sản phẩm)</small>
+                </h2>
+                <div class="sort-dropdown">
+                    <button class="sort-btn" id="sortToggle">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="21" y1="10" x2="7" y2="10"></line>
+                            <line x1="21" y1="6" x2="3" y2="6"></line>
+                            <line x1="21" y1="14" x2="3" y2="14"></line>
+                            <line x1="21" y1="18" x2="7" y2="18"></line>
+                        </svg>
+                        <span id="sortLabelText">@sortLabel</span>
+                        <svg class="sort-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="sort-menu" id="sortMenu">
+                        <div class="sort-menu-header">Sắp xếp theo</div>
+                        <a href="@sortUrl("")" class="sort-item @(string.IsNullOrEmpty(currentSort) ? "active" : "")">
+                            <span class="sort-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg></span>
+                            Mặc định
+                            @if (string.IsNullOrEmpty(currentSort))
+                            {
+                                <span class="sort-check">✓</span>
+                            }
+                        </a>
+                        <a href="@sortUrl("newest")" class="sort-item @(currentSort == "newest" ? "active" : "")">
+                            <span class="sort-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span>
+                            Mới nhất
+                            @if (currentSort == "newest")
+                            {
+                                <span class="sort-check">✓</span>
+                            }
+                        </a>
+                        <a href="@sortUrl("price_asc")" class="sort-item @(currentSort == "price_asc" ? "active" : "")">
+                            <span class="sort-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg></span>
+                            Giá thấp → cao
+                            @if (currentSort == "price_asc")
+                            {
+                                <span class="sort-check">✓</span>
+                            }
+                        </a>
+                        <a href="@sortUrl("price_desc")" class="sort-item @(currentSort == "price_desc" ? "active" : "")">
+                            <span class="sort-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></span>
+                            Giá cao → thấp
+                            @if (currentSort == "price_desc")
+                            {
+                                <span class="sort-check">✓</span>
+                            }
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                @foreach (var item in Model)
+                {
+                    <div class="col-6 col-md-4 col-lg-4">
+                        <div class="product-card">
+                            <div class="product-img-wrap">
+                                <img src="~/images/@item.Image" alt="@item.Name" class="product-img">
+                                @if (item.Quantity <= 0)
+                                {
+                                    <span class="product-badge badge-out">Hết hàng</span>
+                                }
+                                else
+                                {
+                                    <span class="product-badge badge-hot">Bán chạy</span>
+                                }
+                                @if (Context.Session.GetString("UserEmail") != null)
+                                {
+                                    <button class="btn-wishlist addWishlist" data-id="@item.Id">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="/Auth/Login" class="btn-wishlist">
+                                        <i class="bi bi-heart"></i>
+                                    </a>
+                                }
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">Nội thất</div>
+                                <div class="product-name">@item.Name</div>
+                                <div class="product-price">@item.Price?.ToString("N0") ₫</div>
+                                <div class="product-actions">
+                                    <a asp-controller="Product" asp-action="Details"
+                                       asp-route-id="@item.Id" class="btn-detail">
+                                        Xem chi tiết
+                                    </a>
+                                    @if (Context.Session.GetString("UserEmail") != null)
+                                    {
+                                        @if (item.Quantity > 0)
+                                        {
+                                            <a asp-controller="Cart" asp-action="Add"
+                                               asp-route-id="@item.Id" class="btn-cart">
+                                                <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn-cart btn-cart-disabled" disabled>Hết hàng</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Auth" asp-action="Login" class="btn-cart">
+                                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+        <!-- end shop-content -->
+    </div>
+    <!-- end shop-layout -->
+</div>
+
+<style>
+    /* ===== LAYOUT ===== */
+    .shop-layout {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .shop-sidebar {
+        position: sticky;
+        top: 20px;
+    }
+
+    .sidebar-box {
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .sidebar-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #9e8e7e;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #f0ece6;
+    }
+
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border-radius: 9px;
+        font-size: 0.87rem;
+        color: #3a2a1a;
+        text-decoration: none;
+        gap: 8px;
+        transition: background 0.15s, color 0.15s;
+        margin-bottom: 2px;
+    }
+
+        .sidebar-item:hover {
+            background: #faf7f3;
+            color: #3a2a1a;
+        }
+
+        .sidebar-item.active {
+            background: #2a1f14;
+            color: #fff;
+            font-weight: 600;
+        }
+
+            .sidebar-item.active svg {
+                stroke: #fff !important;
+            }
+
+    .sidebar-count {
+        font-size: 0.75rem;
+        background: #f0ece6;
+        color: #7a6a5a;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+
+    .sidebar-item.active .sidebar-count {
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+    }
+
+    /* ===== PRODUCT CARDS (giữ nguyên) ===== */
+    .product-card {
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+        }
+
+    .product-img-wrap {
+        position: relative;
+        overflow: hidden;
+        background: #f5f0eb;
+        aspect-ratio: 1/1;
+    }
+
+    .product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.35s ease;
+    }
+
+    .product-card:hover .product-img {
+        transform: scale(1.06);
+    }
+
+    .product-badge {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
+
+    .badge-hot {
+        background: #e05c2a;
+        color: #fff;
+    }
+
+    .badge-out {
+        background: #6c757d;
+        color: #fff;
+    }
+
+    .btn-wishlist {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 34px;
+        height: 34px;
+        background: #fff;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        color: #aaa;
+        text-decoration: none;
+        font-size: 15px;
+        transition: color 0.2s, transform 0.2s;
+    }
+
+        .btn-wishlist:hover {
+            color: #e05c2a;
+            transform: scale(1.12);
+        }
+
+    .product-info {
+        padding: 14px 14px 16px;
+    }
+
+    .product-category {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #9e8e7e;
+        margin-bottom: 4px;
+    }
+
+    .product-name {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #2a1f14;
+        margin-bottom: 6px;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .product-price {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #e05c2a;
+        margin-bottom: 12px;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .btn-detail {
+        flex: 1;
+        padding: 8px 10px;
+        background: #2a1f14;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+        transition: background 0.2s;
+        white-space: nowrap;
+    }
+
+        .btn-detail:hover {
+            background: #3d2e1e;
+            color: #fff;
+        }
+
+    .btn-cart {
+        flex: 1.2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 8px 10px;
+        background: #e05c2a;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.2s;
+        white-space: nowrap;
+    }
+
+        .btn-cart:hover {
+            background: #c44e22;
+            color: #fff;
+        }
+
+    .btn-cart-disabled {
+        background: #ccc !important;
+        cursor: not-allowed;
+    }
+
+    /* ===== SORT DROPDOWN (giữ nguyên) ===== */
+    .sort-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .sort-btn {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 16px;
+        border-radius: 10px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        color: #3a2a1a;
+        background: #fff;
+        border: 1.5px solid #d6cfc6;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+        .sort-btn:hover, .sort-btn.open {
+            border-color: #3a2a1a;
+            background: #faf8f5;
+        }
+
+    .sort-chevron {
+        transition: transform 0.22s;
+        opacity: 0.6;
+    }
+
+        .sort-chevron.open {
+            transform: rotate(180deg);
+        }
+
+    .sort-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        background: #fff;
+        border: 1.5px solid #e8e2da;
+        border-radius: 12px;
+        min-width: 210px;
+        z-index: 999;
+        box-shadow: 0 8px 24px rgba(58,42,26,0.12);
+        overflow: hidden;
+    }
+
+        .sort-menu.show {
+            display: block;
+            animation: dropIn 0.18s ease;
+        }
+
+    @@keyframes dropIn {
+        from {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .sort-menu-header {
+        padding: 10px 16px 8px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #9e8e7e;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        border-bottom: 1px solid #f0ece6;
+    }
+
+    .sort-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        font-size: 0.88rem;
+        color: #3a2a1a;
+        text-decoration: none;
+        transition: background 0.15s;
+    }
+
+        .sort-item:hover {
+            background: #faf7f3;
+            color: #3a2a1a;
+        }
+
+        .sort-item.active {
+            background: #faf7f3;
+            font-weight: 600;
+        }
+
+    .sort-item-icon {
+        display: flex;
+        align-items: center;
+        color: #9e8e7e;
+        flex-shrink: 0;
+    }
+
+    .sort-item.active .sort-item-icon {
+        color: #7a4f2d;
+    }
+
+    .sort-check {
+        margin-left: auto;
+        color: #7a4f2d;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 768px) {
+        .shop-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .shop-sidebar {
+            position: static;
+        }
+    }
+
+    .sidebar-group {
+        margin-bottom: 2px;
+    }
+
+    .sidebar-parent {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.15s;
+        color: #3a2a1a;
+    }
+
+        .sidebar-parent:hover {
+            background: #faf7f3;
+        }
+
+        .sidebar-parent.active {
+            background: #2a1f14;
+            color: #fff;
+            font-weight: 600;
+        }
+
+            .sidebar-parent.active .sidebar-parent-link {
+                color: #fff;
+            }
+
+            .sidebar-parent.active .group-chevron {
+                stroke: #fff;
+            }
+
+    .sidebar-parent-link {
+        font-size: 0.87rem;
+        color: #3a2a1a;
+        text-decoration: none;
+        flex: 1;
+    }
+
+    .group-chevron {
+        flex-shrink: 0;
+        opacity: 0.6;
+        transition: transform 0.25s ease;
+    }
+
+    .sidebar-children {
+        display: none;
+        padding-left: 8px;
+        margin-top: 2px;
+    }
+
+    .sidebar-group.open .sidebar-children {
+        display: block;
+    }
+
+    .sidebar-group.open .group-chevron {
+        transform: rotate(180deg);
+    }
+
+    .sidebar-child {
+        padding-left: 18px;
+        font-size: 0.83rem;
+        color: #6a5a4a;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const sortToggle = document.getElementById('sortToggle');
+    const sortMenu = document.getElementById('sortMenu');
+    const chevron = document.querySelector('.sort-chevron');
+
+    sortToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isOpen = sortMenu.classList.toggle('show');
+        sortToggle.classList.toggle('open', isOpen);
+        chevron.classList.toggle('open', isOpen);
+    });
+
+    document.addEventListener('click', function () {
+        sortMenu.classList.remove('show');
+        sortToggle.classList.remove('open');
+        chevron.classList.remove('open');
+    });
+
+    $(document).on("click", ".addWishlist", function () {
+        var btn = $(this);
+        var productId = btn.data("id");
+        $.post("/Wishlist/Add/" + productId, function (data) {
+            if (data.success == false) { window.location = "/Auth/Login"; return; }
+            $("#wishlist-count").text(data.count);
+            if (data.isAdded) {
+                btn.css("color", "#e05c2a");
+                btn.find("i").removeClass("bi-heart").addClass("bi-heart-fill");
+            } else {
+                btn.css("color", "#aaa");
+                btn.find("i").removeClass("bi-heart-fill").addClass("bi-heart");
+            }
+        });
+    });
+
+    $.get("/Wishlist/GetUserWishlist", function (ids) {
+        ids.forEach(function (id) {
+            var btn = $(".addWishlist[data-id='" + id + "']");
+            btn.css("color", "#e05c2a");
+            btn.find("i").removeClass("bi-heart").addClass("bi-heart-fill");
+        });
+    });
 </script>

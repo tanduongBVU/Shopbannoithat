@@ -103,3 +103,131 @@
     });
 </script>
 }
+<style>
+    /* Tổng thể Form Container */
+    form {
+        max-width: 850px;
+        margin: 40px auto;
+        padding: 40px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Tiêu đề trang */
+    h2 {
+        color: #1e293b;
+        font-weight: 800;
+        font-size: 1.75rem;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            border-radius: 2px;
+        }
+
+    /* Nhãn (Labels) */
+    form label {
+        display: block;
+        font-weight: 700;
+        color: #475569;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        padding-left: 4px;
+    }
+
+    /* Ô nhập liệu (Inputs, Select, Textarea) */
+    .form-control {
+        border-radius: 12px;
+        padding: 12px 16px;
+        border: 2px solid #f1f5f9;
+        background-color: #f8fafc;
+        color: #1e293b;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+        /* Hiệu ứng khi nhấn vào ô nhập */
+        .form-control:focus {
+            background-color: #ffffff;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            outline: none;
+        }
+
+    /* Riêng ô nhập File */
+    input[type="file"].form-control {
+        padding: 8px;
+        background: #f0fdf4;
+        border: 2px dashed #cbd5e1;
+    }
+
+    /* Ô mô tả (Textarea) */
+    textarea.form-control {
+        min-height: 150px;
+        line-height: 1.6;
+    }
+
+    /* Thông báo lỗi */
+    .text-danger {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #ef4444 !important;
+        margin-top: 6px;
+        display: block;
+    }
+
+    /* Nút bấm (Buttons) */
+    .btn {
+        padding: 12px 30px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+    }
+
+    /* Nút Lưu */
+    .btn-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+            filter: brightness(1.05);
+        }
+
+    /* Nút Quay lại */
+    .btn-secondary {
+        background-color: #f1f5f9;
+        color: #64748b;
+    }
+
+        .btn-secondary:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+            transform: translateY(-2px);
+        }
+
+    /* Khoảng cách giữa các hàng */
+    .mb-3 {
+        margin-bottom: 1.5rem !important;
+    }
+</style>

@@ -78,3 +78,143 @@
         }
     </script>
 }
+
+<style>
+    /* Background toàn trang */
+    body {
+        background: linear-gradient(135deg, #eef2f7, #f8f9fa);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Form tổng */
+    form {
+        max-width: 720px;
+        margin: 50px auto;
+        padding: 45px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 18px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(10px);
+        animation: fadeIn 0.6s ease;
+    }
+
+    /* Title */
+    h2 {
+        text-align: center;
+        font-weight: 800;
+        color: #2c3e50;
+        margin-bottom: 35px;
+        letter-spacing: 1px;
+        position: relative;
+    }
+
+        h2::after {
+            content: "";
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            display: block;
+            margin: 10px auto;
+            border-radius: 3px;
+        }
+
+    /* Label */
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #444;
+    }
+
+    /* Input */
+    .form-control {
+        border-radius: 10px;
+        padding: 12px 15px;
+        border: 1px solid #e0e6ed;
+        background: #f9fbfd;
+        transition: all 0.25s ease;
+    }
+
+        /* Focus đẹp hơn */
+        .form-control:focus {
+            border-color: #28a745;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+            transform: scale(1.01);
+        }
+
+    /* Textarea */
+    textarea.form-control {
+        min-height: 130px;
+    }
+
+    /* Select custom */
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        background-color: #f9fbfd;
+        background-image: url("data:image/svg+xml,%3csvg fill='none' stroke='%236c757d' stroke-width='2' viewBox='0 0 24 24'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 14px;
+    }
+
+    /* File input */
+    input[type="file"] {
+        padding: 10px;
+        background: #fff;
+    }
+
+    /* Error */
+    .text-danger {
+        font-size: 0.85rem;
+        margin-top: 4px;
+    }
+
+    /* Button */
+    .btn {
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.25s ease;
+    }
+
+    /* Nút Lưu */
+    .btn-success {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border: none;
+        color: #fff;
+        box-shadow: 0 6px 15px rgba(40, 167, 69, 0.25);
+    }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.35);
+        }
+
+    /* Nút Quay lại */
+    .btn-secondary {
+        background: #e9ecef;
+        color: #333;
+        margin-left: 10px;
+    }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+    /* Animation */
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+</style>

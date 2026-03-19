@@ -13,30 +13,82 @@ namespace Shopbannoithat.Controllers
             _context = context;
         }
 
-        public IActionResult Index(string sort)
-        {
-            var products = _context.Products.AsQueryable();
+        //public IActionResult Index(string sort)
+        //{
+        //    var products = _context.Products.AsQueryable();
 
-            switch (sort)
+        //    switch (sort)
+        //    {
+        //        case "price_asc":
+        //            products = products.OrderBy(p => p.Price);
+        //            break;
+        //        case "price_desc":
+        //            products = products.OrderByDescending(p => p.Price);
+        //            break;
+        //        case "newest":
+        //            products = products.OrderByDescending(p => p.CreatedAt);
+        //            break;
+        //        default:
+        //            products = products.OrderByDescending(p => p.Id);
+        //            break;
+        //    }
+
+        //    ViewBag.CurrentSort = sort;
+        //    return View(products.ToList());
+        //}
+
+        public IActionResult Index(string sort, int? categoryId, string priceRange)
+        {
+            var query = _context.Products
+                .Include(p => p.Category)
+                .AsQueryable();
+
+            // Lọc danh mục
+            if (categoryId.HasValue)
             {
-                case "price_asc":
-                    products = products.OrderBy(p => p.Price);
-                    break;
-                case "price_desc":
-                    products = products.OrderByDescending(p => p.Price);
-                    break;
-                case "newest":
-                    products = products.OrderByDescending(p => p.CreatedAt);
-                    break;
-                default:
-                    products = products.OrderByDescending(p => p.Id);
-                    break;
+                // Lấy cả danh mục con nếu click vào danh mục cha
+                var childIds = _context.Categories
+                    .Where(c => c.ParentId == categoryId)
+                    .Select(c => c.Id)
+                    .ToList();
+                childIds.Add(categoryId.Value);
+
+                query = query.Where(p => p.CategoryId != null && childIds.Contains(p.CategoryId.Value));
             }
 
-            ViewBag.CurrentSort = sort;
-            return View(products.ToList());
-        }
+            // Lọc giá
+            if (!string.IsNullOrEmpty(priceRange))
+            {
+                query = priceRange switch
+                {
+                    "under5" => query.Where(p => p.Price < 5_000_000),
+                    "5to10" => query.Where(p => p.Price >= 5_000_000 && p.Price < 10_000_000),
+                    "10to20" => query.Where(p => p.Price >= 10_000_000 && p.Price < 20_000_000),
+                    "over20" => query.Where(p => p.Price >= 20_000_000),
+                    _ => query
+                };
+            }
 
+            // Sắp xếp
+            query = sort switch
+            {
+                "price_asc" => query.OrderBy(p => p.Price),
+                "price_desc" => query.OrderByDescending(p => p.Price),
+                "newest" => query.OrderByDescending(p => p.CreatedAt),
+                _ => query.OrderByDescending(p => p.Id)
+            };
+
+            ViewBag.CurrentSort = sort;
+            ViewBag.CurrentCategory = categoryId;
+            ViewBag.CurrentPrice = priceRange;
+            ViewBag.Categories = _context.Categories
+                .Include(c => c.Children)
+                .Where(c => c.ParentId == null)
+                .ToList();
+            ViewBag.TotalCount = query.Count();
+
+            return View(query.ToList());
+        }
         public async Task<IActionResult> Details(int id)
         {
             if (id == 0) return NotFound();

@@ -7,7 +7,7 @@
 }
 
 @model List<Shopbannoithat.Models.Order>
-
+@* 
 <h2>Quản lý đơn hàng</h2>
 
 <table class="table table-bordered">
@@ -70,4 +70,165 @@
         }
 
     </tbody>
-</table>
+</table> *@
+
+<style>
+    /* Tổng thể bảng */
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 8px; /* Tạo khoảng cách giữa các dòng */
+        background-color: transparent;
+        border: none !important;
+    }
+
+        /* Header sang trọng */
+        .table thead th {
+            background-color: transparent;
+            border: none;
+            color: #64748b; /* Màu xám Slate */
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            padding: 15px;
+        }
+
+        /* Từng hàng dữ liệu như một chiếc thẻ (Card) */
+        .table tbody tr {
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+            .table tbody tr:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                background-color: #f8fafc;
+            }
+
+        .table tbody td {
+            padding: 18px 15px;
+            vertical-align: middle;
+            border: none;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        /* Bo góc cho dòng đầu và cuối của row */
+        .table tbody tr td:first-child {
+            border-radius: 12px 0 0 12px;
+            font-weight: 700;
+            color: #6366f1;
+        }
+
+        .table tbody tr td:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+    /* Tổng tiền nổi bật */
+    .price-column {
+ 
+        color: #e11d48 !important; /* Đỏ sang */
+        font-weight: 700 !important;
+    }
+
+    /* Trạng thái đơn hàng (Badges) */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background-color: #d6dadd;
+        color: #d97706;
+    }
+    /* Đang xử lý */
+    .status-completed {
+        background-color: #dcfce7;
+        color: #15803d;
+    }
+    /* Hoàn thành */
+
+    /* Nút bấm tinh tế */
+    .btn-sm {
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-weight: 600;
+        border: none;
+        transition: 0.2s;
+    }
+
+    .btn-info {
+        background-color: #e0f2fe;
+        color: #0369a1;
+    }
+
+    .btn-primary {
+        background-color: #e0e7ff;
+        color: #4338ca;
+    }
+
+    .btn-success {
+        background-color: #dcfce7;
+        color: #15803d;
+    }
+
+    .btn-sm:hover {
+        filter: brightness(0.9);
+        transform: scale(1.05);
+    }
+</style>
+<div class="container-fluid py-4" style="background-color: #f1f5f9; min-height: 100vh;">
+    <h2 class="mb-4 fw-bold" style="color: #1e293b;">📋 Quản lý đơn hàng</h2>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>#ORD-@item.Id</td>
+                        <td>
+                            <div class="fw-bold">@item.Name</div>
+                            <small class="text-muted" style="font-size: 0.7rem;">ID: @item.Id</small>
+                        </td>
+                        <td class="text-muted">@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="price-column">
+                            @item.TotalPrice.ToString("N0") <small>VNĐ</small>
+                        </td>
+                        <td>
+                            <span class="status-badge @(item.Status == "Hoàn thành" ? "status-completed" : "status-pending")">
+                                @item.Status
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="Detail" asp-route-id="@item.Id" class="btn btn-info btn-sm">
+                                👁 Chi tiết
+                            </a>
+                            <a asp-action="UpdateStatus" asp-route-id="@item.Id" asp-route-status="Đang giao" class="btn btn-primary btn-sm">
+                                Giao hàng
+                            </a>
+                            <a asp-action="UpdateStatus" asp-route-id="@item.Id" asp-route-status="Hoàn thành" class="btn btn-success btn-sm">
+                                Hoàn thành
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
