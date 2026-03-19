@@ -124,5 +124,50 @@ namespace Shopbannoithat.Controllers
             TempData["Success"] = "Đổi mật khẩu thành công";
             return RedirectToAction("Login");
         }
+
+        public IActionResult LoginGoogle()
+        {
+            var redirectUrl = Url.Action("GoogleCallback", "Auth");
+            var properties = new Microsoft.AspNetCore.Authentication.AuthenticationProperties
+            {
+                RedirectUri = redirectUrl
+            };
+            return Challenge(properties, "Google");
+        }
+
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var result = await HttpContext.AuthenticateAsync("Cookies");
+
+            if (!result.Succeeded)
+                return RedirectToAction("Login");
+
+            var email = result.Principal.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var name = result.Principal.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+                return RedirectToAction("Login");
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
+            if (user == null)
+            {
+                user = new User
+                {
+                    Email = email,
+                    Password = Guid.NewGuid().ToString(),
+                    Role = "Customer",
+                    RoleId = 3
+                };
+                _context.Users.Add(user);
+                _context.SaveChanges();
+            }
+
+            HttpContext.Session.SetString("UserEmail", user.Email);
+            HttpContext.Session.SetString("UserRole", user.Role);
+            HttpContext.Session.SetString("UserName", name ?? email);
+
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
