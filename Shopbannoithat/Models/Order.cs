@@ -18,15 +18,15 @@ namespace Shopbannoithat.Models
 
         public bool Shipped { get; set; }
 
-        [Required(ErrorMessage = "Please enter a name")]
+        [Required(ErrorMessage = "Vui lòng nhập tên")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Please enter the first address")]
+        [Required(ErrorMessage = "Vui lòng nhập tổ ấp")]
         public string Address1 { get; set; }
-
+        [Required(ErrorMessage = "Vui lòng nhập xã phường")]
         public string Address2 { get; set; }
 
-        [Required(ErrorMessage = "Please enter a city name")]
+        [Required(ErrorMessage = "Vui lòng nhập thành phố ")]
         public string City { get; set; }
 
         

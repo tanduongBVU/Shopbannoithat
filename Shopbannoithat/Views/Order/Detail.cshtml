@@ -352,6 +352,18 @@
                 </span>
             </span>
         </div>
+        <div class="od-meta-pill">
+            @if (!string.IsNullOrEmpty(Model.CouponCode))
+            {
+                <div class="oc-info-row">
+                    <span class="od-meta-label"" >Mã giảm giá</span>
+                    <span class="od-meta-val serif">
+                        <span class="oc-coupon">@Model.CouponCode — Giảm @Model.DiscountPercent%</span>
+                    </span>
+                </div>
+            }
+        </div>
+        
     </div>
 
     <div class="od-card">
@@ -374,7 +386,7 @@
                         </td>
                         <td class="od-price">@item.Price.ToString("N0") VNĐ</td>
                         <td><span class="od-qty">@item.Quantity</span></td>
-                        <td><span class="od-line-total">@((item.Price * item.Quantity).ToString("N0")) VNĐ</span></td>
+                        <td><span class="od-line-total">@Model.TotalPrice.ToString("N0") VNĐ</span></td>
                     </tr>
                 }
             </tbody>

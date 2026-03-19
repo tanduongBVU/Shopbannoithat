@@ -9,7 +9,7 @@
 
 <h2 style="font-weight: 700; color: #4a3223;text-align:center">Trang Thanh Toán</h2>
 
-<form asp-action="PlaceOrder" method="post"
+<form asp-action="PlaceOrder" method="post" 
       style="  background-color: #fdfaf7; padding: 25px; border-radius: 10px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);max-width: 730px; margin: auto; font-family: 'Montserrat', sans-serif;">
 
@@ -17,26 +17,39 @@
 
     <div class="mb-3">
         <label>Tên người nhận</label>
-        <input name="Name" class="form-control" required />
+        <input name="Name" class="form-control"/>
+        <span class="text-danger">
+            @Html.ValidationMessage("Name")
+        </span>
+
     </div>
 
     <div class="mb-3">
-        <label>Địa chỉ</label>
-        <input name="Address1" class="form-control" required />
+        <label>Tổ,Ấp:</label>
+        <input name="Address1" class="form-control"/>
+        <span class="text-danger">
+            @Html.ValidationMessage("Address1")
+        </span>
     </div>
 
     <div class="mb-3">
-        <label>Địa chỉ bổ sung</label>
+        <label>Xã/Phường:</label>
         <input name="Address2" class="form-control" />
+        <span class="text-danger">
+            @Html.ValidationMessage("Address2")
+        </span>
     </div>
 
     <div class="mb-3">
-        <label>Thành phố</label>
-        <input name="City" class="form-control" required />
+        <label>Thành phố:</label>
+        <input name="City" class="form-control"  />
+        <span class="text-danger">
+            @Html.ValidationMessage("City")
+        </span>
     </div>
 
     <div class="mb-3">
-        <label>Mã giảm giá</label>
+        <label>Mã giảm giá:</label>
         <input name="CouponCode" class="form-control" placeholder="Nhập mã..." />
     </div>
     @if (TempData["Error"] != null)
@@ -90,7 +103,10 @@
         Quay lại giỏ hàng
     </a>
 
+
 </form>
+
+
 <style>
     /* Container form */
 
