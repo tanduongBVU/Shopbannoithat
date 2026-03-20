@@ -205,7 +205,7 @@
         <h4>Tổng tiền thanh toán: @Model.TotalPrice.ToString("N0") VNĐ</h4>
     </div>
 
-    <a asp-action="Index" class="btn btn-secondary mt-4">
+    <a asp-area="Admin" asp-controller="Order"  asp-action="Index" class="btn btn-secondary mt-4">
         <i class="fas fa-arrow-left"></i> Quay lại danh sách
     </a>
 </div>

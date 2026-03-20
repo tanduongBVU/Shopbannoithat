@@ -181,6 +181,16 @@ namespace Shopbannoithat.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        public IActionResult Detail(int id)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+
+            if (product == null)
+                return NotFound();
+
+            return View(product);
+        }
+
 
     }
 }

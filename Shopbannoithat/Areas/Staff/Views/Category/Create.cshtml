@@ -99,18 +99,15 @@
 
     /* ===== RESPONSIVE ===== */
     @@media (max-width: 576px) {
-        .category-form-actions
+        .category-form-actions {
+            flex-direction: column;
+        }
 
-    {
-        flex-direction: column;
-    }
-
-    .btn-save-category,
-    .btn-back-category {
-        width: 100%;
-        text-align: center;
-    }
-
+        .btn-save-category,
+        .btn-back-category {
+            width: 100%;
+            text-align: center;
+        }
     }
 </style>
 
@@ -118,7 +115,7 @@
 
     <h2 class="category-form-title">📂 Thêm danh mục</h2>
 
-    <form asp-area="Admin" asp-controller="Category"  asp-action="Create" method="post">
+    <form asp-area="Staff" asp-controller="Category" asp-action="Create" method="post">
 
         <div class="mb-3">
             <label class="form-label">Tên danh mục</label>
@@ -144,7 +141,7 @@
                 }
             </select>
 
-           
+
         </div>
 
         <div class="category-form-actions">
@@ -152,7 +149,7 @@
                 💾 Lưu
             </button>
 
-            <a asp-area="Admin" asp-controller="Category"  asp-action="Index" class="btn btn-back-category">
+            <a asp-area="Staff" asp-controller="Category" asp-action="Index" class="btn btn-back-category">
                 ← Quay lại
             </a>
         </div>

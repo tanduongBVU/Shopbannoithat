@@ -188,16 +188,17 @@
         background: #FAC775;
     }
 </style>
-
+@* HIỂN THỊ DANH SÁCH SẢN PHẨM ĐÃ THÊM *@
 <div class="pm-wrap">
     <div class="pm-header">
         <h2 class="pm-title"><span></span>Quản lý sản phẩm</h2>
-        <a asp-action="Create" class="btn-add">+ Thêm sản phẩm</a>
+        <a asp-area="Admin" asp-controller="Product" asp-action="Create" class="btn-add">+ Thêm sản phẩm</a>
     </div>
 
     <div class="table-wrap">
         <table>
             <thead>
+                @* CÁC CỘT THÔNG TIN *@
                 <tr>
                     <th>Hình</th>
                     <th>Tên sản phẩm</th>
@@ -224,8 +225,17 @@
                         <td>@item.Quantity</td>
                         <td>
                             <div class="actions">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-edit">Sửa</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn-delete">Xóa</a>
+                                @* NÚT Xem chi tiet *@
+                                <a asp-area="Admin" asp-controller="Product"
+                                   asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-info btn-sm">
+                                    Xem chi tiết
+                                </a>
+                                @* NÚT Sua *@
+                                <a asp-area="Admin" asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id" class="btn-edit">Sửa</a>
+                                @* NÚT Xoa *@
+                                <a asp-area="Admin" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id" class="btn-delete">Xóa</a>
                             </div>
                         </td>
                     </tr>

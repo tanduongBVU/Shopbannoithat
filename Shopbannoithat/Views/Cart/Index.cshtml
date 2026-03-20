@@ -56,7 +56,7 @@
                 </td>
 
                 <td>
-                    <a asp-action="Remove"
+                    <a asp-controller="Cart" asp-action="Remove"
                            asp-route-id="@item.ProductId"
                            class="btn btn-danger">
                         Xóa
@@ -65,13 +65,13 @@
 
                 <td>
 
-                    <a asp-action="Decrease"
+                    <a asp-controller="Cart" asp-action="Decrease"
                        asp-route-id="@item.ProductId"
                        class="btn btn-sm btn-secondary">-</a>
 
                     @item.Quantity
 
-                    <a asp-action="Increase"
+                    <a asp-controller="Cart" asp-action="Increase"
                        asp-route-id="@item.ProductId"
                        class="btn btn-sm btn-secondary">+</a>
 

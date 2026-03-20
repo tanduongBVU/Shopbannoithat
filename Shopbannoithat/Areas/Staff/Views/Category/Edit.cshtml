@@ -95,7 +95,7 @@
 
     <h2 class="edit-category-title">✏️ Sửa loại sản phẩm</h2>
 
-    <form asp-area="Admin" asp-controller="Category"  asp-action="Edit" method="post">
+    <form asp-area="Staff" asp-controller="Category" asp-action="Edit" method="post">
 
         <input type="hidden" asp-for="Id" />
 
@@ -118,7 +118,7 @@
                 💾 Lưu
             </button>
 
-            <a asp-area="Admin" asp-controller="Category"  asp-action="Index" class="btn btn-back-edit">
+            <a asp-area="Staff" asp-controller="Category" asp-action="Index" class="btn btn-back-edit">
                 ← Quay lại
             </a>
         </div>

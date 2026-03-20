@@ -117,7 +117,7 @@
 
     <h2 class="role-form-title">✏️ Sửa Quyền</h2>
 
-    <form method="post">
+    <form asp-area="Admin" asp-controller="Role" asp-action="Edit" method="post">
 
         <input type="hidden" asp-for="Id" />
 
@@ -132,7 +132,7 @@
                 💾 Lưu
             </button>
 
-            <a asp-action="Index" class="btn btn-back">
+            <a asp-area="Admin" asp-controller="Role"  asp-action="Index" class="btn btn-back">
                 ← Quay lại
             </a>
         </div>

@@ -7,40 +7,240 @@
 
 @model List<Shopbannoithat.Models.Product>
 
-<h2>Danh sách sản phẩm</h2>
 
-<table class="table table-bordered">
 
-    <thead>
-        <tr>
-            <th>Sản phẩm</th>
-            <th>Giá</th>
-            <th>Tồn kho</th>
-            <th>Xem</th>
-        </tr>
-    </thead>
+<style>
+    /* ProductManagement.css */
+    .pm-wrap {
+        padding: 1.5rem 0;
+    }
 
-    <tbody>
+    .pm-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
+    .pm-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+    }
 
-                <td>@item.Price?.ToString("N0") VNĐ</td>
-
-                <td>@item.Quantity</td>
-
-                <td>
-                    <a asp-action="Detail"
-                       asp-route-id="@item.Id"
-                       class="btn btn-info btn-sm">
-                        Xem chi tiết
-                    </a>
-                </td>
-            </tr>
+        .pm-title span {
+            display: inline-block;
+            width: 6px;
+            height: 22px;
+            background: #1D9E75;
+            border-radius: 3px;
+            margin-right: 10px;
+            vertical-align: middle;
         }
 
-    </tbody>
+    .btn-add {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f3a11e;
+        color: #fff;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background 0.15s;
+    }
 
-</table>
+        .btn-add:hover {
+            background: #0F6E56;
+            color: #fff;
+        }
+
+    /* Table */
+    .table-wrap {
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+
+        .table-wrap table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 13.5px;
+        }
+
+        .table-wrap thead tr {
+            background: #6f3eeb;
+        }
+
+        .table-wrap th {
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid #eee;
+            white-space: nowrap;
+        }
+
+        .table-wrap td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            color: #1a1a2e;
+        }
+
+        .table-wrap tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-wrap tbody tr:hover td {
+            background: #f9fafb;
+        }
+
+        /* Img */
+        .table-wrap td img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+    /* Badges */
+    .badge {
+        display: inline-flex;
+        padding: 3px 10px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .badge-room {
+        background: #E6F1FB;
+        color: #185FA5;
+    }
+
+    .badge-cat {
+        background: #E1F5EE;
+        color: #0F6E56;
+    }
+
+    /* Price */
+    .price-val {
+        font-weight: 600;
+        color: #0F6E56;
+    }
+
+    /* Buttons */
+    .btn-edit, .btn-del {
+        padding: 5px 13px;
+        border-radius: 7px;
+        border: 1px solid;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.12s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-edit {
+        background: #FAEEDA;
+        color: #854F0B;
+        border-color: #FAC775;
+    }
+
+        .btn-edit:hover {
+            background: #FAC775;
+        }
+
+    .btn-del {
+        background: #FCEBEB;
+        color: #A32D2D;
+        border-color: #F7C1C1;
+    }
+
+        .btn-del:hover {
+            background: #F7C1C1;
+        }
+
+    .actions {
+        display: flex;
+        gap: 6px;
+    }
+
+    .btn-delete {
+        background: #f3c8c8;
+        color: #854F0B;
+        border-color: #cf4f49;
+        padding: 5px 13px;
+        border-radius: 7px;
+        border: 1px solid;
+    }
+
+        .btn-delete:hover {
+            background: #FAC775;
+        }
+</style>
+@* HIỂN THỊ DANH SÁCH SẢN PHẨM ĐÃ THÊM *@
+<div class="pm-wrap">
+    <div class="pm-header">
+        <h2 class="pm-title"><span></span>Quản lý sản phẩm</h2>
+        <a asp-area="Staff" asp-controller="Product" asp-action="Create" class="btn-add">+ Thêm sản phẩm</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                @* CÁC CỘT THÔNG TIN *@
+                <tr>
+                    <th>Hình</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Phòng</th>
+                    <th>Loại sản phẩm</th>
+                    <th>Mô tả</th>
+                    <th>Số lượng</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><img src="~/images/@item.Image" alt="@item.Name" /></td>
+                        <td><strong>@item.Name</strong></td>
+                        <td><span class="price-val">@item.Price?.ToString("N0") đ</span></td>
+                        <td><span class="badge badge-room">@item.Category?.Parent?.Name</span></td>
+                        <td><span class="badge badge-cat">@item.Category?.Name</span></td>
+                        <td style="max-width:180px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">
+                            @item.Description
+                        </td>
+                        <td>@item.Quantity</td>
+                        <td>
+                            <div class="actions">
+                                @* NÚT Xem chi tiet *@
+                                <a asp-area="Staff" asp-controller="Product"
+                                    asp-action="Detail"
+                                   asp-route-id="@item.Id"
+                                   class="btn btn-info btn-sm">
+                                    Xem chi tiết
+                                </a>
+                                @* NÚT Sua *@
+                                <a asp-area="Staff" asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id" class="btn-edit">Sửa</a>
+                                @* NÚT Xoa *@
+                                <a asp-area="Staff" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id" class="btn-delete">Xóa</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div></table>

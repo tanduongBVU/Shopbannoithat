@@ -4,7 +4,7 @@
 @* TRANG TẠO SẢN PHẨM MỚI *@
 <h2>Thêm sản phẩm</h2>
 
-<form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data"> 
+<form asp-area="Staff" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
 
     <div class="mb-3">
         <label class="form-label">Tên</label>
@@ -57,7 +57,7 @@
     </div>
 
     <button type="submit" class="btn btn-success">Lưu</button>
-    <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    <a asp-area="Staff" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Quay lại</a>
 
 </form>
 
@@ -206,17 +206,14 @@
 
     /* Animation */
     @@keyframes fadeIn {
-        from
+        from {
+            opacity: 0;
+            transform: translateY(25px);
+        }
 
-    {
-        opacity: 0;
-        transform: translateY(25px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>

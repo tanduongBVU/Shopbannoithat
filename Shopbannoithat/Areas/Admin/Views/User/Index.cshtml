@@ -147,7 +147,8 @@
                             <i class="bi bi-gear"></i> Phân quyền
                         </a>
 
-                        <a asp-action="Delete"
+                        <a asp-area="Admin" asp-controller="User"
+                            asp-action="Delete"
                            asp-route-id="@item.Id"
                            class="btn btn-danger btn-custom"
                            onclick="return confirm('Bạn có chắc muốn xóa tài khoản này?')">

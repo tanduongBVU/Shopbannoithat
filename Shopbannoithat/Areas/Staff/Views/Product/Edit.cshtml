@@ -1,8 +1,6 @@
 ﻿@model Shopbannoithat.Models.Product
-
-
 @{
-    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
 
     // Tìm ParentId hiện tại của sản phẩm
     var allCategories = ViewBag.Categories as List<Shopbannoithat.Models.Category>;
@@ -12,7 +10,7 @@
 
 <h2>Sửa sản phẩm</h2>
 
-<form asp-area="Admin" asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data">
+<form asp-area="Staff" asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data">
 
     <input type="hidden" asp-for="Id" />
 
@@ -73,36 +71,36 @@
     </div>
 
     <button class="btn btn-success">Lưu</button>
-    <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+    <a asp-area="Staff" asp-controller="Product" asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
 
 </form>
 
 @section Scripts {
-<script>
-    var allChildren = @Html.Raw(ViewBag.ChildrenJson);
-    var currentCategoryId = @Model.CategoryId;
+    <script>
+        var allChildren = @Html.Raw(ViewBag.ChildrenJson);
+        var currentCategoryId = @Model.CategoryId;
 
-    function loadChildren(parentId, selectedId) {
-        var select = document.getElementById('childSelect');
-        select.innerHTML = '<option value="">-- Chọn loại --</option>';
-        if (!parentId) return;
-        var filtered = allChildren.filter(c => c.parentId == parentId);
-        filtered.forEach(function(c) {
-            var selected = (c.id == selectedId) ? 'selected' : '';
-            select.innerHTML += `<option value="${c.id}" ${selected}>${c.name}</option>`;
+        function loadChildren(parentId, selectedId) {
+            var select = document.getElementById('childSelect');
+            select.innerHTML = '<option value="">-- Chọn loại --</option>';
+            if (!parentId) return;
+            var filtered = allChildren.filter(c => c.parentId == parentId);
+            filtered.forEach(function(c) {
+                var selected = (c.id == selectedId) ? 'selected' : '';
+                select.innerHTML += `<option value="${c.id}" ${selected}>${c.name}</option>`;
+            });
+        }
+
+        // Load khi trang mở, tự chọn đúng loại hiện tại
+        var initialParent = document.getElementById('parentSelect').value;
+        if (initialParent) {
+            loadChildren(initialParent, currentCategoryId);
+        }
+
+        document.getElementById('parentSelect').addEventListener('change', function() {
+            loadChildren(this.value, null);
         });
-    }
-
-    // Load khi trang mở, tự chọn đúng loại hiện tại
-    var initialParent = document.getElementById('parentSelect').value;
-    if (initialParent) {
-        loadChildren(initialParent, currentCategoryId);
-    }
-
-    document.getElementById('parentSelect').addEventListener('change', function() {
-        loadChildren(this.value, null);
-    });
-</script>
+    </script>
 }
 <style>
     /* Tổng thể Form Container */

@@ -89,7 +89,7 @@
 
     <h2 class="role-form-title">➕ Thêm quyền</h2>
 
-    <form asp-action="Create" method="post">
+    <form asp-area="Admin" asp-controller="Role"  asp-action="Create" method="post">
 
         <div class="form-group mb-3">
             <label>Tên quyền</label>
@@ -102,7 +102,7 @@
                 <i class="bi bi-plus-circle"></i> Thêm
             </button>
 
-            <a asp-action="Index" class="btn btn-back">
+            <a asp-area="Admin" asp-controller="Role"  asp-action="Index" class="btn btn-back">
                 <i class="bi bi-arrow-left"></i> Quay lại
             </a>
         </div>

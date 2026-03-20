@@ -10,7 +10,7 @@
 <div class="register-page">
     <div class="register-card">
         <h2>ĐĂNG KÝ</h2>
-        <form asp-action="Register" method="post">
+        <form asp-controller="Auth" asp-action="Register" method="post">
             <div class="mb-3">
                 <label>Email</label>
                 <input asp-for="Email" class="form-control" />

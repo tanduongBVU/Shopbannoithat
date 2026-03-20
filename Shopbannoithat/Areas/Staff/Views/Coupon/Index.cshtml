@@ -7,7 +7,7 @@
 
 @model List<Shopbannoithat.Models.Coupon>
 
-    <style>
+<style>
     /* ===== CONTAINER ===== */
     .coupon-container {
         background: #fff;
@@ -126,13 +126,13 @@
         font-weight: 600;
         color: #6c5ce7;
     }
-    </style>
+</style>
 <div class="coupon-container">
 
     <div class="coupon-header">
         <h2 class="coupon-title">🎟️ Quản lý mã giảm giá</h2>
 
-        <a asp-area="Admin" asp-controller="Coupon"  asp-action="Create" class="btn btn-add-coupon">
+        <a asp-area="Admin" asp-controller="Coupon" asp-action="Create" class="btn btn-add-coupon">
             <i class="bi bi-plus-circle"></i> Thêm mã
         </a>
     </div>
@@ -181,13 +181,13 @@
                     </td>
 
                     <td class="text-center">
-                        <a asp-area="Admin" asp-controller="Coupon"  asp-action="Toggle"
+                        <a asp-area="Staff" asp-controller="Coupon" asp-action="Toggle"
                            asp-route-id="@c.Id"
                            class="btn btn-warning btn-action me-2">
                             <i class="bi bi-power"></i> Bật / Tắt
                         </a>
 
-                        <a asp-area="Admin" asp-controller="Coupon" asp-action="Delete"
+                        <a asp-area="Staff" asp-controller="Coupon" asp-action="Delete"
                            asp-route-id="@c.Id"
                            class="btn btn-danger btn-action"
                            onclick="return confirm('Xóa mã này?')">

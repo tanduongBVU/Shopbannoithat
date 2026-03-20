@@ -170,14 +170,14 @@
 
                     <td class="text-center">
 
-                        <a asp-action="UpdateStock"
+                        <a asp-area="Admin" asp-controller="Inventory" asp-action="UpdateStock"
                            asp-route-id="@item.Id"
                            asp-route-quantity="10"
                            class="btn btn-success btn-stock me-2">
                             ➕ Nhập +10
                         </a>
 
-                        <a asp-action="UpdateStock"
+                        <a asp-area="Admin" asp-controller="Inventory" asp-action="UpdateStock"
                            asp-route-id="@item.Id"
                            asp-route-quantity="-1"
                            class="btn btn-danger btn-stock">
