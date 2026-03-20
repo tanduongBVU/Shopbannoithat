@@ -18,5 +18,8 @@ namespace Shopbannoithat.Models
         public DateTime SentAt { get; set; } = DateTime.Now;
 
         public string CustomerEmail { get; set; }
+
+        // Lưu cards dạng JSON
+        public string? CardsJson { get; set; }
     }
 }

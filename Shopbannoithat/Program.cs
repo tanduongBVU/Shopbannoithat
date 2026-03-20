@@ -31,6 +31,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSession();
 builder.Services.AddSignalR();
 
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<Shopbannoithat.Services.GeminiService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

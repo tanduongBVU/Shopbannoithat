@@ -26,6 +26,7 @@ namespace Shopbannoithat.Controllers
                     m.SenderEmail,
                     m.SenderRole,
                     m.Message,
+                    m.CardsJson,
                     SentAt = m.SentAt.ToString("HH:mm dd/MM")
                 })
                 .ToList();

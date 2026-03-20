@@ -4,19 +4,22 @@
     Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
 }
 
-<div class="d-flex" style="height: 75vh;">
+<div style="display:flex; height:calc(100vh - 140px); background:#f1f5f9; border-radius:16px; padding:12px; gap:12px;">
 
     <!-- Danh sách khách -->
-    <div class="border-end pe-3 me-3" style="width:260px; overflow-y:auto;">
-        <h6 class="fw-bold mb-3"><i class="bi bi-people"></i> Khách hàng</h6>
+    <div style="width:200px; flex-shrink:0; background:#fff; border-radius:12px;
+                padding:10px; overflow-y:auto; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+        <h6 class="fw-bold mb-3" style="color:#2d3436;">
+            <i class="bi bi-people me-1"></i> Khách hàng
+        </h6>
         @if (!Model.Any())
         {
-            <p class="text-muted small">Chưa có tin nhắn nào</p>
+            <p class="text-muted small text-center mt-4">Chưa có tin nhắn nào</p>
         }
         @foreach (var customer in Model)
         {
-            <div class="customer-item p-2 rounded mb-1"
-                 style="cursor:pointer; background:#f8f9fa;"
+            <div class="customer-item p-2 rounded mb-2"
+                 style="cursor:pointer;"
                  onclick="loadChat('@customer', this)">
                 <i class="bi bi-person-circle me-1"></i>
                 <small>@customer</small>
@@ -25,98 +28,138 @@
     </div>
 
     <!-- Khung chat -->
-    <div class="flex-fill d-flex flex-column">
-        <div id="chat-header" class="fw-bold mb-2 text-muted">
+    <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+
+        <div id="chat-header"
+             style="background:#fff; padding:10px 16px; border-radius:10px;
+                    margin-bottom:10px; font-weight:600; color:#2d3436;
+                    box-shadow:0 2px 6px rgba(0,0,0,0.05);">
             ← Chọn khách để xem tin nhắn
         </div>
 
         <div id="chat-messages"
-             class="flex-fill border rounded p-3 mb-2"
-             style="overflow-y:auto; background:#fafafa; min-height:200px;">
+             style="flex:1; overflow-y:auto; background:#eaf1ff; border-radius:12px;
+                    padding:14px; margin-bottom:10px;">
         </div>
 
         <div id="reply-box" style="display:none;">
             <div class="input-group">
                 <input type="text" id="reply-input" class="form-control"
-                       placeholder="Nhập tin nhắn trả lời..." />
-                <button class="btn btn-primary" onclick="sendReply()">
+                       placeholder="Nhập tin nhắn trả lời..."
+                       style="border-radius:10px 0 0 10px; border:1px solid #ccc;" />
+                <button class="btn btn-primary" onclick="sendReply()"
+                        style="border-radius:0 10px 10px 0;
+                               background:linear-gradient(90deg,#0984e3,#6c5ce7); border:none;">
                     <i class="bi bi-send"></i> Gửi
                 </button>
             </div>
         </div>
+
     </div>
 </div>
 
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
-    <script>
-        let currentCustomer = null;
+<style>
+    .customer-item {
+        background: #f8f9fa;
+        border: 1px solid #eee;
+        transition: all 0.2s ease;
+        font-size: 0.85rem;
+        color: #2d3436;
+        word-break: break-all;
+    }
+    .customer-item:hover {
+        background: linear-gradient(90deg,#0984e3,#6c5ce7) !important;
+        color: #fff !important;
+        transform: translateX(4px);
+    }
+    .customer-item.active {
+        background: linear-gradient(90deg,#6c5ce7,#0984e3) !important;
+        color: #fff !important;
+    }
+    #chat-messages::-webkit-scrollbar { width: 6px; }
+    #chat-messages::-webkit-scrollbar-thumb { background:#bbb; border-radius:10px; }
+    #reply-input:focus { border-color:#6c5ce7; box-shadow:0 0 0 2px rgba(108,92,231,0.2); outline:none; }
+</style>
 
-        const connection = new signalR.HubConnectionBuilder()
+@section Scripts {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+<script>
+    let currentCustomer = null;
+
+    const connection = new signalR.HubConnectionBuilder()
         .withUrl("/chatHub")
         .withAutomaticReconnect()
         .build();
 
-        connection.on("ReceiveMessage", function (senderEmail, senderRole, message, customerEmail, time) {
+    connection.on("ReceiveMessage", function (senderEmail, senderRole, message, customerEmail, time) {
         if (customerEmail === currentCustomer) {
-        appendMessage(senderEmail, senderRole, message, time);
+            appendMessage(senderEmail, senderRole, message, time);
         }
-        });
+    });
 
-        connection.start().catch(err => console.error(err));
+    connection.start().catch(err => console.error(err));
 
-        function loadChat(customerEmail, el) {
+    function loadChat(customerEmail, el) {
         currentCustomer = customerEmail;
         document.getElementById("chat-header").innerHTML =
-        `<i class="bi bi-chat-dots text-primary"></i> Chat với: <strong>${customerEmail}</strong>`;
+            `<i class="bi bi-chat-dots text-primary me-2"></i>Chat với: <strong>${customerEmail}</strong>`;
         document.getElementById("reply-box").style.display = "block";
 
         const box = document.getElementById("chat-messages");
-        box.innerHTML = '<div class="text-muted small">Đang tải...</div>';
+        box.innerHTML = '<div class="text-muted small text-center">Đang tải...</div>';
 
         fetch(`/Staff/Chat/GetHistory?customerEmail=${encodeURIComponent(customerEmail)}`)
-        .then(r => r.json())
-        .then(msgs => {
-        box.innerHTML = "";
-        msgs.forEach(m => appendMessage(m.senderEmail, m.senderRole, m.message, m.sentAt));
-        box.scrollTop = box.scrollHeight;
-        });
+            .then(r => r.json())
+            .then(msgs => {
+                box.innerHTML = "";
+                msgs.forEach(m => appendMessage(m.senderEmail, m.senderRole, m.message, m.sentAt));
+                box.scrollTop = box.scrollHeight;
+            });
 
-        document.querySelectorAll(".customer-item").forEach(e => {
-        e.style.background = "#f8f9fa";
-        e.style.color = "#000";
-        });
-        el.style.background = "#0d6efd";
-        el.style.color = "#fff";
-        }
+        document.querySelectorAll(".customer-item").forEach(e => e.classList.remove("active"));
+        el.classList.add("active");
+    }
 
-        function appendMessage(senderEmail, senderRole, message, time) {
+    function appendMessage(senderEmail, senderRole, message, time) {
         const box = document.getElementById("chat-messages");
         const isMe = (senderRole === "Admin" || senderRole === "Staff");
+        const isAI = (senderEmail === "AI ShopNoiThat" || senderEmail === "🤖 AI ShopNoiThat");
+
+        const formattedMsg = isAI ? message
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\*/g, '')
+            .replace(/\n/g, '<br>') : message;
+
         const div = document.createElement("div");
         div.className = `d-flex mb-2 ${isMe ? "justify-content-end" : "justify-content-start"}`;
         div.innerHTML = `
-        <div style="max-width:70%">
-        <div class="small text-muted mb-1">${isMe ? "Bạn" : senderEmail} · ${time}</div>
-        <div class="rounded px-3 py-2" style="background:${isMe ? "#0d6efd" : "#e9ecef"}; color:${isMe ? "#fff" : "#000"}">
-        ${message}
-        </div>
-        </div>`;
+            <div style="max-width:70%">
+                <div class="small text-muted mb-1">
+                    ${isMe ? "Bạn" : isAI ? "🤖 AI Tư vấn" : senderEmail} · ${time}
+                </div>
+                <div class="rounded px-3 py-2"
+                     style="background:${isMe ? "linear-gradient(90deg,#0984e3,#6c5ce7)" : isAI ? "#198754" : "#fff"};
+                            color:${isMe || isAI ? "#fff" : "#2d3436"};
+                            box-shadow:0 2px 6px rgba(0,0,0,0.08);
+                            font-size:14px; line-height:1.5;">
+                    ${formattedMsg}
+                </div>
+            </div>`;
         box.appendChild(div);
         box.scrollTop = box.scrollHeight;
-        }
+    }
 
-        function sendReply() {
+    function sendReply() {
         const input = document.getElementById("reply-input");
         const msg = input.value.trim();
         if (!msg || !currentCustomer) return;
         connection.invoke("ReplyToCustomer", currentCustomer, msg)
-        .catch(err => console.error(err));
+            .catch(err => console.error(err));
         input.value = "";
-        }
+    }
 
-        document.getElementById("reply-input").addEventListener("keydown", function(e) {
+    document.getElementById("reply-input").addEventListener("keydown", function(e) {
         if (e.key === "Enter") sendReply();
-        });
-    </script>
+    });
+</script>
 }
