@@ -1,31 +1,113 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Shopbannoithat.Models.Product
 @{
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
 }
 
-@model Shopbannoithat.Models.Product
-
-<h2>Chi tiết sản phẩm</h2>
-
-<div class="card" style="width:400px">
-
-    <img src="~/images/@Model.Image" class="card-img-top" />
-
-    <div class="card-body">
-
-        <h4>@Model.Name</h4>
-
-        <p><b>Giá:</b> @Model.Price?.ToString("N0") VNĐ</p>
-
-        <p><b>Tồn kho:</b> @Model.Quantity</p>
-
-        <p><b>Mô tả:</b> @Model.Description</p>
-
-        <a asp-area="Staff" asp-controller="Product"  asp-action="Index" class="btn btn-secondary">
-            Quay lại
+<div style="padding:24px; max-width:900px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <h2 style="font-size:1.5rem; font-weight:700; margin:0;">Chi tiết sản phẩm</h2>
+        <a asp-area="Staff" asp-controller="Product" asp-action="Index"
+           style="background:#6c757d;color:#fff;padding:9px 18px;border-radius:8px;text-decoration:none;font-weight:600;">
+            ← Quay lại
         </a>
-
     </div>
 
+    <div style="display:grid; grid-template-columns:300px 1fr; gap:24px; background:#fff; border-radius:16px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+
+        <!-- ẢNH -->
+        <div>
+            <img src="~/images/@Model.Image" style="width:100%; border-radius:12px; object-fit:cover;" />
+        </div>
+
+        <!-- THÔNG TIN -->
+        <div>
+            <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:16px;">@Model.Name</h3>
+
+            <table style="width:100%; font-size:0.92rem;">
+                <tr style="border-bottom:1px solid #f0f4f8;">
+                    <td style="padding:10px 0; color:#888; width:140px;">Mã SKU</td>
+                    <td style="padding:10px 0; font-weight:600;">@(Model.SKU ?? "—")</td>
+                </tr>
+                <tr style="border-bottom:1px solid #f0f4f8;">
+                    <td style="padding:10px 0; color:#888;">Giá</td>
+                    <td style="padding:10px 0; font-weight:600; color:#e05c2a;">
+                        @{
+                            string priceDisplay = "";
+                            if (Model.Variants != null && Model.Variants.Any())
+                            {
+                                var minPrice = Model.Variants.Min(v => v.Price);
+                                var maxPrice = Model.Variants.Max(v => v.Price);
+                                priceDisplay = minPrice == maxPrice
+                                ? minPrice.ToString("N0") + " ₫"
+                                : minPrice.ToString("N0") + " – " + maxPrice.ToString("N0") + " ₫";
+                            }
+                            else
+                            {
+                                priceDisplay = (Model.Price?.ToString("N0") ?? "0") + " ₫";
+                            }
+                        }
+                        @priceDisplay
+                    </td>
+                </tr>
+                <tr style="border-bottom:1px solid #f0f4f8;">
+                    <td style="padding:10px 0; color:#888;">Số lượng</td>
+                    <td style="padding:10px 0; font-weight:600;">@Model.Quantity</td>
+                </tr>
+                <tr style="border-bottom:1px solid #f0f4f8;">
+                    <td style="padding:10px 0; color:#888;">Danh mục</td>
+                    <td style="padding:10px 0; font-weight:600;">
+                        @(Model.Category?.Parent?.Name ?? "—") → @(Model.Category?.Name ?? "—")
+                    </td>
+                </tr>
+                <tr style="border-bottom:1px solid #f0f4f8;">
+                    <td style="padding:10px 0; color:#888;">Mô tả</td>
+                    <td style="padding:10px 0;">@Model.Description</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- BIẾN THỂ -->
+    @if (Model.Variants != null && Model.Variants.Any())
+    {
+        <div style="background:#fff; border-radius:16px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.08); margin-top:24px;">
+            <h4 style="font-size:1rem; font-weight:700; margin-bottom:16px;">Biến thể sản phẩm</h4>
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#f8fafc;">
+                        <th style="padding:10px 14px; text-align:left; font-size:0.82rem; color:#888;">Kích thước</th>
+                        <th style="padding:10px 14px; text-align:left; font-size:0.82rem; color:#888;">Vật liệu</th>
+                        <th style="padding:10px 14px; text-align:left; font-size:0.82rem; color:#888;">Màu sắc</th>
+                        <th style="padding:10px 14px; text-align:left; font-size:0.82rem; color:#888;">Giá</th>
+                        <th style="padding:10px 14px; text-align:left; font-size:0.82rem; color:#888;">Tồn kho</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model.Variants)
+                    {
+                        <tr style="border-bottom:1px solid #f1f5f9;">
+                            <td style="padding:12px 14px;">@(v.Size?.Name ?? "—")</td>
+                            <td style="padding:12px 14px;">@(v.Material?.Name ?? "—")</td>
+                            <td style="padding:12px 14px;">
+                                @if (v.Color != null)
+                                {
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <span style="width:16px;height:16px;border-radius:50%;background:@v.Color.HexCode;display:inline-block;border:1px solid #ddd;"></span>
+                                        @v.Color.Name
+                                    </div>
+                                }
+                                else
+                                {
+
+                                    <span>—</span>
+                                }
+                            </td>
+                            <td style="padding:12px 14px; font-weight:700; color:#e05c2a;">@v.Price.ToString("N0") ₫</td>
+                            <td style="padding:12px 14px;">@v.Stock</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>

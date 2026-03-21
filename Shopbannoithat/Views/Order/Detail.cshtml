@@ -356,7 +356,7 @@
             @if (!string.IsNullOrEmpty(Model.CouponCode))
             {
                 <div class="oc-info-row">
-                    <span class="od-meta-label"" >Mã giảm giá</span>
+                    <span class="od-meta-label">Mã giảm giá</span>
                     <span class="od-meta-val serif">
                         <span class="oc-coupon">@Model.CouponCode — Giảm @Model.DiscountPercent%</span>
                     </span>
@@ -382,11 +382,42 @@
                 {
                     <tr>
                         <td>
-                            <div class="od-product-name">@item.Product.Name</div>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <img src="~/images/@item.Product.Image"
+                                     style="width:60px; height:60px; object-fit:cover; border-radius:8px;" />
+
+                                <div>
+                                    <div class="od-product-name">@item.Product.Name</div>
+
+                                    @if (item.Variant != null)
+                                    {
+                                        <div class="od-product-sku">
+                                            Size: @item.Variant.Size?.Name |
+                                            Material: @item.Variant.Material?.Name |
+                                            Color: @item.Variant.Color?.Name
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="od-product-sku">Sản phẩm mặc định</div>
+                                    }
+                                </div>
+                            </div>
                         </td>
-                        <td class="od-price">@item.Price.ToString("N0") VNĐ</td>
-                        <td><span class="od-qty">@item.Quantity</span></td>
-                        <td><span class="od-line-total">@Model.TotalPrice.ToString("N0") VNĐ</span></td>
+
+                        <td class="od-price">
+                            @item.Price.ToString("N0") VNĐ
+                        </td>
+
+                        <td>
+                            <span class="od-qty">@item.Quantity</span>
+                        </td>
+
+                        <td>
+                            <span class="od-line-total">
+                                @( (item.Price * item.Quantity).ToString("N0") ) VNĐ
+                            </span>
+                        </td>
                     </tr>
                 }
             </tbody>

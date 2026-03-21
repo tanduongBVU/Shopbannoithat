@@ -5,6 +5,8 @@
 <h2>Thêm sản phẩm</h2>
 
 <form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data"> 
+    
+    
 
     <div class="mb-3">
         <label class="form-label">Tên</label>
@@ -12,11 +14,11 @@
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
+    @* <div class="mb-3">
         <label class="form-label">Giá</label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
+    </div> *@
 
     <div class="mb-3">
         <label class="form-label">Số lượng</label>
@@ -56,30 +58,154 @@
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 
+    
+   
+
+    @* <div class="mb-3">
+        <label class="form-label">Kích thước</label>
+        <select asp-for="SizeId" class="form-control">
+            <option value="">-- Chọn kích thước --</option>
+            @foreach (var s in ViewBag.Sizes)
+            {
+                <option value="@s.Id">@s.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Vật liệu</label>
+        <select asp-for="MaterialId" class="form-control">
+            <option value="">-- Chọn vật liệu --</option>
+            @foreach (var m in ViewBag.Materials)
+            {
+                <option value="@m.Id">@m.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Màu sắc</label>
+        <select asp-for="ColorId" class="form-control">
+            <option value="">-- Chọn màu sắc --</option>
+            @foreach (var c in ViewBag.Colors)
+            {
+                <option value="@c.Id">@c.Name</option>
+            }
+        </select>
+    </div> *@
+
+    <!-- 🔥 THÊM VÀO ĐÂY -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Biến thể sản phẩm (giá theo tổ hợp)</label>
+        <div id="variantList"></div>
+        <button type="button" onclick="addVariant()"
+                style="background:#4facfe;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:8px;">
+            + Thêm biến thể
+        </button>
+    </div>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div class="alert alert-danger">@error.ErrorMessage</div>
+        }
+    }
     <button type="submit" class="btn btn-success">Lưu</button>
     <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Quay lại</a>
 
 </form>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+javascript@section Scripts {
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script>
+    var allChildren = @Html.Raw(ViewBag.ChildrenJson);
+
+    function loadChildren(parentId) {
+        var select = document.getElementById('childSelect');
+        select.innerHTML = '<option value="">-- Chọn loại --</option>';
+        if (!parentId) return;
+        var filtered = allChildren.filter(c => c.parentId == parentId);
+        filtered.forEach(function(c) {
+            select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+        });
     }
 
-    <script>
-        var allChildren = @Html.Raw(ViewBag.ChildrenJson);
+    var variantIndex = 0;
+    const sizes     = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Sizes));
+    const materials = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Materials));
+    const colors    = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Colors));
 
-        function loadChildren(parentId) {
-            var select = document.getElementById('childSelect');
-            select.innerHTML = '<option value="">-- Chọn loại --</option>';
-            if (!parentId) return;
-            var filtered = allChildren.filter(c => c.parentId == parentId);
-            filtered.forEach(function(c) {
-                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+    function addVariant() {
+        let sizeOpts     = sizes.map(s     => `<option value="${s.Id}">${s.Name}</option>`).join('');
+        let materialOpts = materials.map(m => `<option value="${m.Id}">${m.Name}</option>`).join('');
+        let colorOpts    = colors.map(c    => `<option value="${c.Id}" data-hex="${c.HexCode}">${c.Name}</option>`).join('');
+
+        const i = variantIndex++;
+        document.getElementById('variantList').insertAdjacentHTML('beforeend', `
+            <div class="variant-row" style="display:grid;grid-template-columns:1fr 1fr 1fr 120px 100px 40px;gap:8px;margin-bottom:8px;align-items:center;">
+                <select name="Variants[${i}].SizeId" class="form-control form-control-sm">
+                    <option value="">-- Kích thước --</option>${sizeOpts}
+                </select>
+                <select name="Variants[${i}].MaterialId" class="form-control form-control-sm">
+                    <option value="">-- Vật liệu --</option>${materialOpts}
+                </select>
+                <select name="Variants[${i}].ColorId" class="form-control form-control-sm color-select">
+                    <option value="">-- Màu sắc --</option>${colorOpts}
+                </select>
+                <input name="Variants[${i}].Price" type="number" class="form-control form-control-sm" placeholder="Giá" required />
+                <input name="Variants[${i}].Stock" type="number" class="form-control form-control-sm" placeholder="Tồn kho" value="0" />
+                <button type="button" onclick="this.closest('.variant-row').remove()"
+                        style="background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;">✕</button>
+            </div>`);
+
+        setTimeout(() => {
+            const sel = document.querySelector(`select[name="Variants[${i}].ColorId"]`);
+            sel.addEventListener('change', function() {
+                const selected = this.options[this.selectedIndex];
+                const hex = selected.getAttribute('data-hex');
+                this.style.background = hex || '';
+                this.style.color = hex ? '#fff' : '#333';
             });
+        }, 0);
+    }
+
+      let isSubmitting = false;
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+
+        if (isSubmitting) {
+            e.preventDefault();
+            return;
         }
-    </script>
+
+        const productQty = parseInt(document.querySelector('[name="Quantity"]').value) || 0;
+        const variantStocks = document.querySelectorAll('input[name*=".Stock"]');
+
+        let totalVariantStock = 0;
+
+        variantStocks.forEach(input => {
+            totalVariantStock += parseInt(input.value) || 0;
+        });
+
+        if (totalVariantStock > productQty) {
+            alert("❌ Tổng tồn kho biến thể không được lớn hơn sản phẩm gốc!");
+            e.preventDefault();
+
+            // 🔥 QUAN TRỌNG: reset lại
+            isSubmitting = false;
+            return;
+        }
+
+        // ✅ chỉ set true khi hợp lệ
+        isSubmitting = true;
+    });
+       
+</script>
 }
+
+
 
 <style>
     /* Background toàn trang */

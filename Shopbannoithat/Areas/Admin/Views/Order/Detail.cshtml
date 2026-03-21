@@ -174,9 +174,24 @@
             <span>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
         </div>
         <div class="info-item">
-            <b>Địa chỉ giao hàng</b>
-            <span>@Model.Address1, @Model.City</span>
+            <b>Địa chỉ</b>
+            <span>@Model.Address1, @Model.Address2</span>
         </div>
+        <div class="info-item">
+            <b>Thành phố</b>
+            <span>@Model.City</span>
+        </div>
+        <div class="info-item">
+            <b>Trạng thái</b>
+            <span style="color:#e05c2a; font-weight:700;">@Model.Status</span>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.CouponCode))
+        {
+            <div class="info-item">
+                <b>Mã giảm giá</b>
+                <span>@Model.CouponCode (@Model.DiscountPercent%)</span>
+            </div>
+        }
     </div>
 
     <table class="table">
@@ -192,7 +207,29 @@
             @foreach (var item in Model.OrderDetails)
             {
                 <tr>
-                    <td class="fw-bold">@item.Product.Name</td>
+                    <td>
+                        <div class="fw-bold">@item.Product?.Name</div>
+                        @if (item.Variant != null)
+                        {
+                            <small style="color:white;">
+                                @item.Variant.Size?.Name |
+                                @item.Variant.Material?.Name |
+                                <span style="display:inline-flex;align-items:center;gap:4px;">
+                                    @if (item.Variant.Color != null)
+                                    {
+                                        <span style="width:12px;height:12px;border-radius:50%;background:@item.Variant.Color.HexCode;display:inline-block;border:1px solid #ddd;"></span>
+                                        @item.Variant.Color.Name
+                                    }
+                                </span>
+                            </small>
+                        }
+                        else if (!string.IsNullOrEmpty(item.VariantSize))
+                        {
+                            <small style="color:white;">
+                                @item.VariantSize | @item.VariantMaterial | @item.VariantColor
+                            </small>
+                        }
+                    </td>
                     <td class="text-end">@item.Price.ToString("N0") <small>đ</small></td>
                     <td class="text-center">@item.Quantity</td>
                     <td class="text-end fw-bold">@((item.Price * item.Quantity).ToString("N0")) <small>đ</small></td>

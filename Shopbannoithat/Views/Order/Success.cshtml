@@ -336,10 +336,30 @@
                     @foreach (var item in Model.OrderDetails)
                     {
                         <tr>
-                            <td><div class="oc-product-name">@item.Product.Name</div></td>
+                            <td>
+                                <div class="oc-product-name">@item.Product.Name</div>
+                                <div class="oc-product-sub">
+                                    @if (item.SizeId.HasValue)
+                                    {
+                                        <span>Size: @item.Variant?.Size?.Name</span>
+                                
+                                        <br />
+                                    }
+                                    @if (item.MaterialId.HasValue)
+                                    {
+                                        <span>Chất liệu: @item.Variant?.Material?.Name</span>
+                                
+                                        <br />
+                                    }
+                                    @if (item.ColorId.HasValue)
+                                    {
+                                        <span>Màu: @item.Variant?.Color?.Name</span>
+                                    }
+                                </div>
+                            </td>
                             <td>@item.Price.ToString("N0") VNĐ</td>
                             <td>@item.Quantity</td>
-                            <td>@Model.TotalPrice.ToString("N0") VNĐ</td>
+                            <td>@( (item.Price * item.Quantity).ToString("N0") ) VNĐ</td>
                         </tr>
                     }
                 </tbody>

@@ -24,15 +24,23 @@ namespace Shopbannoithat.Controllers
                 return RedirectToAction("Login", "Auth");
 
             var cart = _context.Carts
-                .Include(x => x.Product)
-                .Where(x => x.UserEmail == email)
-                .ToList();
+    .Include(x => x.Product)
+        .ThenInclude(p => p.Variants)
+            .ThenInclude(v => v.Size)
+    .Include(x => x.Product)
+        .ThenInclude(p => p.Variants)
+            .ThenInclude(v => v.Material)
+    .Include(x => x.Product)
+        .ThenInclude(p => p.Variants)
+            .ThenInclude(v => v.Color)
+    .Where(x => x.UserEmail == email)
+    .ToList();
 
             return View(cart);
         }
 
         // Thêm sản phẩm
-        public IActionResult Add(int id)
+        public IActionResult Add(int id, int? sizeId, int? materialId, int? colorId)
         {
             var email = HttpContext.Session.GetString("UserEmail");
 
@@ -47,8 +55,13 @@ namespace Shopbannoithat.Controllers
                 return RedirectToAction("Index", "Product");
             }
 
-            var cart = _context.Carts
-                .FirstOrDefault(x => x.ProductId == id && x.UserEmail == email);
+            var cart = _context.Carts.FirstOrDefault(x =>
+    x.ProductId == id &&
+    x.UserEmail == email &&
+    x.SizeId == sizeId &&
+    x.MaterialId == materialId &&
+    x.ColorId == colorId
+);
 
             if (cart != null)
             {
@@ -66,7 +79,10 @@ namespace Shopbannoithat.Controllers
                 {
                     ProductId = id,
                     UserEmail = email,
-                    Quantity = 1
+                    Quantity = 1,
+                    SizeId = sizeId,
+                    MaterialId = materialId,
+                    ColorId = colorId
                 };
 
                 _context.Carts.Add(cart);
@@ -78,12 +94,17 @@ namespace Shopbannoithat.Controllers
         }
 
         // Xóa sản phẩm
-        public IActionResult Remove(int id)
+        public IActionResult Remove(int id, int? sizeId, int? materialId, int? colorId)
         {
             var email = HttpContext.Session.GetString("UserEmail");
 
-            var cart = _context.Carts
-                .FirstOrDefault(x => x.ProductId == id && x.UserEmail == email);
+            var cart = _context.Carts.FirstOrDefault(x =>
+    x.ProductId == id &&
+    x.UserEmail == email &&
+    x.SizeId == sizeId &&
+    x.MaterialId == materialId &&
+    x.ColorId == colorId
+);
 
             if (cart != null)
             {
@@ -108,17 +129,32 @@ namespace Shopbannoithat.Controllers
             return Json(count);
         }
 
-        public IActionResult Increase(int id)
+        public IActionResult Increase(int id, int? sizeId, int? materialId, int? colorId)
         {
             var email = HttpContext.Session.GetString("UserEmail");
 
             var cart = _context.Carts
-                .Include(x => x.Product)
-                .FirstOrDefault(x => x.ProductId == id && x.UserEmail == email);
+                .Include(x => x.Product) // 🔥 Thêm Include
+                .FirstOrDefault(x =>
+                    x.ProductId == id &&
+                    x.UserEmail == email &&
+                    x.SizeId == sizeId &&
+                    x.MaterialId == materialId &&
+                    x.ColorId == colorId
+                );
 
             if (cart != null)
             {
-                if (cart.Quantity + 1 > cart.Product.Quantity)
+                var variant = _context.ProductVariants.FirstOrDefault(v =>
+                    v.ProductId == id &&
+                    v.SizeId == sizeId &&
+                    v.MaterialId == materialId &&
+                    v.ColorId == colorId
+                );
+
+                int stock = variant?.Stock ?? cart.Product?.Quantity ?? 0;
+
+                if (cart.Quantity + 1 > stock)
                 {
                     TempData["Error"] = "Không đủ hàng trong kho!";
                     return RedirectToAction("Index");
@@ -131,12 +167,17 @@ namespace Shopbannoithat.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Decrease(int id)
+        public IActionResult Decrease(int id, int? sizeId, int? materialId, int? colorId)
         {
             var email = HttpContext.Session.GetString("UserEmail");
 
-            var cart = _context.Carts
-                .FirstOrDefault(x => x.ProductId == id && x.UserEmail == email);
+            var cart = _context.Carts.FirstOrDefault(x =>
+                x.ProductId == id &&
+                x.UserEmail == email &&
+                x.SizeId == sizeId &&
+                x.MaterialId == materialId &&
+                x.ColorId == colorId
+            );
 
             if (cart != null)
             {

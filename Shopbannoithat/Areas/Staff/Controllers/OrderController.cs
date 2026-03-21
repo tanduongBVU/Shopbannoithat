@@ -48,22 +48,24 @@ namespace Shopbannoithat.Areas.Staff.Controllers
         public IActionResult Detail(int id)
         {
             var role = HttpContext.Session.GetString("UserRole");
-
             if (string.IsNullOrEmpty(role) || role != "Staff")
-            {
                 return RedirectToAction("Login", "Auth", new { area = "" });
-            }
 
             var order = _context.Orders
                 .Include(o => o.OrderDetails)
-                .ThenInclude(d => d.Product)
+                    .ThenInclude(d => d.Product)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(d => d.Variant)
+                        .ThenInclude(v => v.Size)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(d => d.Variant)
+                        .ThenInclude(v => v.Material)
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(d => d.Variant)
+                        .ThenInclude(v => v.Color)
                 .FirstOrDefault(o => o.Id == id);
 
-            if (order == null)
-            {
-                return NotFound();
-            }
-
+            if (order == null) return NotFound();
             return View(order);
         }
     }

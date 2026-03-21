@@ -40,31 +40,30 @@ namespace Shopbannoithat.Controllers
         public IActionResult Index(string sort, int? categoryId, string priceRange)
         {
             var query = _context.Products
-                .Include(p => p.Category)
-                .AsQueryable();
+        .Include(p => p.Category)
+        .Include(p => p.Variants)
+        .AsQueryable();
 
             // Lọc danh mục
             if (categoryId.HasValue)
             {
-                // Lấy cả danh mục con nếu click vào danh mục cha
                 var childIds = _context.Categories
                     .Where(c => c.ParentId == categoryId)
                     .Select(c => c.Id)
                     .ToList();
                 childIds.Add(categoryId.Value);
-
                 query = query.Where(p => p.CategoryId != null && childIds.Contains(p.CategoryId.Value));
             }
 
-            // Lọc giá
+            // 🔥 Lọc giá theo Variants
             if (!string.IsNullOrEmpty(priceRange))
             {
                 query = priceRange switch
                 {
-                    "under5" => query.Where(p => p.Price < 5_000_000),
-                    "5to10" => query.Where(p => p.Price >= 5_000_000 && p.Price < 10_000_000),
-                    "10to20" => query.Where(p => p.Price >= 10_000_000 && p.Price < 20_000_000),
-                    "over20" => query.Where(p => p.Price >= 20_000_000),
+                    "under5" => query.Where(p => p.Variants.Any(v => v.Price < 5_000_000)),
+                    "5to10" => query.Where(p => p.Variants.Any(v => v.Price >= 5_000_000 && v.Price < 10_000_000)),
+                    "10to20" => query.Where(p => p.Variants.Any(v => v.Price >= 10_000_000 && v.Price < 20_000_000)),
+                    "over20" => query.Where(p => p.Variants.Any(v => v.Price >= 20_000_000)),
                     _ => query
                 };
             }
@@ -72,8 +71,8 @@ namespace Shopbannoithat.Controllers
             // Sắp xếp
             query = sort switch
             {
-                "price_asc" => query.OrderBy(p => p.Price),
-                "price_desc" => query.OrderByDescending(p => p.Price),
+                "price_asc" => query.OrderBy(p => p.Variants.Min(v => v.Price)),
+                "price_desc" => query.OrderByDescending(p => p.Variants.Max(v => v.Price)),
                 "newest" => query.OrderByDescending(p => p.CreatedAt),
                 _ => query.OrderByDescending(p => p.Id)
             };
@@ -94,10 +93,15 @@ namespace Shopbannoithat.Controllers
             if (id == 0) return NotFound();
 
             var product = await _context.Products
+                .Include(p => p.Variants)
+                .ThenInclude(v => v.Size)
+                .Include(p => p.Variants)
+                .ThenInclude(v => v.Material)
+                .Include(p => p.Variants)
+                .ThenInclude(v => v.Color)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
-
             return View(product);
         }
 

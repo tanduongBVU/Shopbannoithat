@@ -1,4 +1,4 @@
-﻿@model Shopbannoithat.Models.Product
+﻿@* @model Shopbannoithat.Models.Product
 @{
     var userEmail = Context.Session.GetString("UserEmail");
 }
@@ -76,4 +76,269 @@
         </div>
 
     </div>
+</div> *@
+@using Shopbannoithat.Models
+@model Shopbannoithat.Models.Product
+@{
+    var userEmail = Context.Session.GetString("UserEmail");
+}
+
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- ẢNH -->
+        <div class="col-md-5">
+            <div style="border-radius:16px; overflow:hidden; background:#f5f0eb;">
+                <img src="~/images/@Model.Image"
+                     class="img-fluid w-100"
+                     style="max-height:420px; object-fit:cover;"
+                     alt="@Model.Name" />
+            </div>
+        </div>
+
+        <!-- THÔNG TIN -->
+        <div class="col-md-7 d-flex flex-column justify-content-center">
+            <p style="font-size:0.75rem; font-weight:600; text-transform:uppercase;
+                      letter-spacing:1px; color:#9e8e7e; margin-bottom:6px;">Nội thất</p>
+            <h3 style="font-weight:700; color:#2a1f14; margin-bottom:6px;">@Model.Name</h3>
+
+            @if (!string.IsNullOrEmpty(Model.SKU))
+            {
+                <p style="font-size:0.85rem; color:#9e8e7e; margin-bottom:10px;">
+                    SKU: <strong>@Model.SKU</strong>
+                </p>
+            }
+
+            <!-- GIÁ -->
+@{
+    string priceDisplay = "";
+    if (Model.Variants != null && Model.Variants.Any())
+    {
+        var minP = Model.Variants.Min(v => v.Price);
+        var maxP = Model.Variants.Max(v => v.Price);
+        priceDisplay = minP == maxP
+            ? minP.ToString("N0") + " ₫"
+            : minP.ToString("N0") + " – " + maxP.ToString("N0") + " ₫";
+    }
+    else
+    {
+        priceDisplay = (Model.Price?.ToString("N0") ?? "0") + " ₫";
+    }
+}
+<h4 id="displayPrice" style="font-weight:700; color:#e05c2a; margin-bottom:14px;">
+    @priceDisplay
+</h4>
+
+            <p style="color:#666; line-height:1.7; margin-bottom:20px;">@Model.Description</p>
+
+            <!-- BIẾN THỂ -->
+            @if (Model.Variants != null && Model.Variants.Any())
+            {
+                var sizes     = Model.Variants.Where(v => v.Size != null).Select(v => v.Size).DistinctBy(s => s.Id).ToList();
+                var materials = Model.Variants.Where(v => v.Material != null).Select(v => v.Material).DistinctBy(m => m.Id).ToList();
+                var colors    = Model.Variants.Where(v => v.Color != null).Select(v => v.Color).DistinctBy(c => c.Id).ToList();
+
+                @if (sizes.Any())
+                {
+                    <div style="margin-bottom:14px;">
+                        <p style="font-size:0.85rem; font-weight:600; color:#2a1f14; margin-bottom:8px;">Kích thước:</p>
+                        <div class="variant-group" id="sizeGroup">
+                            @foreach (var s in sizes)
+                            {
+                                <button type="button" class="variant-btn" data-type="size" data-id="@s.Id"
+                                        onclick="selectVariant(this, 'size')">@s.Name</button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (materials.Any())
+                {
+                    <div style="margin-bottom:14px;">
+                        <p style="font-size:0.85rem; font-weight:600; color:#2a1f14; margin-bottom:8px;">Vật liệu:</p>
+                        <div class="variant-group" id="materialGroup">
+                            @foreach (var m in materials)
+                            {
+                                <button type="button" class="variant-btn" data-type="material" data-id="@m.Id"
+                                        onclick="selectVariant(this, 'material')">@m.Name</button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (colors.Any())
+                {
+                    <div style="margin-bottom:20px;">
+                        <p style="font-size:0.85rem; font-weight:600; color:#2a1f14; margin-bottom:8px;">Màu sắc:</p>
+                        <div class="variant-group" id="colorGroup">
+                            @foreach (var c in colors)
+                            {
+                                <button type="button" class="variant-btn color-btn" data-type="color" data-id="@c.Id"
+                                        onclick="selectVariant(this, 'color')"
+                                        style="background:@c.HexCode; border-color:@c.HexCode; color:#fff;"
+                                        title="@c.Name">
+                                    @c.Name
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+                <input type="hidden" id="selectedSize" name="sizeId" />
+<input type="hidden" id="selectedMaterial" name="materialId" />
+<input type="hidden" id="selectedColor" name="colorId" />
+                <p id="variantWarning" style="color:#999; font-size:0.85rem; margin-top:5px; display:none;">
+    Vui lòng chọn đầy đủ kích thước, vật liệu và màu sắc
+</p>
+            }
+
+            <!-- NÚT -->
+            <div class="d-flex gap-3 align-items-center flex-wrap">
+                @if (userEmail != null)
+                {
+                    <button id="addToCartBtn" onclick="addToCart(@Model.Id)"
+        style="padding:12px 28px; background:#e05c2a; color:#fff;
+        border:none; border-radius:10px; font-weight:600;">
+    <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+</button>
+                    
+                }
+                else
+                {
+                    <a asp-controller="Auth" asp-action="Login"
+                       style="padding:12px 28px; background:#e05c2a; color:#fff;
+                              border-radius:10px; font-weight:600; text-decoration:none;
+                              font-size:0.95rem; display:flex; align-items:center; gap:8px;">
+                        <i class="bi bi-cart-plus"></i> Đăng nhập để mua
+                    </a>
+                }
+                <a asp-controller="Product" asp-action="Index"
+                   style="padding:12px 24px; background:#2a1f14; color:#fff;
+                          border-radius:10px; font-weight:600; text-decoration:none;
+                          font-size:0.95rem; display:flex; align-items:center; gap:8px;"
+                   onmouseover="this.style.background='#3d2e1e'"
+                   onmouseout="this.style.background='#2a1f14'">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .variant-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .variant-btn {
+        padding: 7px 16px; border-radius: 8px;
+        border: 2px solid #d6cfc6; background: #fff;
+        font-size: 0.85rem; font-weight: 600; color: #3a2a1a;
+        cursor: pointer; transition: all 0.2s;
+    }
+    .variant-btn:hover { border-color: #e05c2a; color: #e05c2a; }
+    .variant-btn.selected { border-color: #e05c2a; background: #e05c2a; color: #fff; }
+    .color-btn { width: 36px; height: 36px; padding: 0; border-radius: 50%; }
+    .color-btn.selected { outline: 3px solid #e05c2a; outline-offset: 2px; }
+</style>
+
+<script>
+    const basePrice = @(Model.Variants != null && Model.Variants.Any()
+        ? Model.Variants.Min(v => v.Price)
+        : (Model.Price ?? 0));
+
+    const variants = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        (Model.Variants ?? new List<Shopbannoithat.Models.ProductVariant>())
+        .Select(v => new {
+            sizeId     = v.SizeId,
+            materialId = v.MaterialId,
+            colorId    = v.ColorId,
+            price      = v.Price,
+            stock      = v.Stock
+        }).ToList()
+    ));
+
+    let selectedSize     = null;
+    let selectedMaterial = null;
+    let selectedColor    = null;
+
+    function selectVariant(btn, type) {
+        const group = btn.closest('.variant-group');
+
+        if (btn.classList.contains('selected')) {
+            btn.classList.remove('selected');
+            if (type === 'size')     { selectedSize     = null; document.getElementById('selectedSize').value     = ''; }
+            if (type === 'material') { selectedMaterial = null; document.getElementById('selectedMaterial').value = ''; }
+            if (type === 'color')    { selectedColor    = null; document.getElementById('selectedColor').value    = ''; }
+            updatePrice();
+            return;
+        }
+
+        group.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        if (type === 'size')     { selectedSize     = parseInt(btn.dataset.id); document.getElementById('selectedSize').value     = selectedSize; }
+        if (type === 'material') { selectedMaterial = parseInt(btn.dataset.id); document.getElementById('selectedMaterial').value = selectedMaterial; }
+        if (type === 'color')    { selectedColor    = parseInt(btn.dataset.id); document.getElementById('selectedColor').value    = selectedColor; }
+
+        updatePrice();
+    }
+
+    function updatePrice() {
+        const warning = document.getElementById('variantWarning');
+
+        if (selectedSize === null || selectedMaterial === null || selectedColor === null) {
+            document.getElementById('displayPrice').textContent = basePrice.toLocaleString('vi-VN') + ' ₫';
+            if (warning) warning.style.display = 'none';
+            updateButtonState(1);
+            return;
+        }
+
+        if (warning) warning.style.display = 'none';
+
+        const match = variants.find(v =>
+            v.sizeId == selectedSize &&
+            v.materialId == selectedMaterial &&
+            v.colorId == selectedColor
+        );
+
+        if (match) {
+            document.getElementById('displayPrice').textContent = match.price.toLocaleString('vi-VN') + ' ₫';
+            updateButtonState(match.stock);
+        } else {
+            document.getElementById('displayPrice').textContent = '— Không có hàng';
+            updateButtonState(0);
+        }
+    }
+
+    function addToCart(productId) {
+        const warning = document.getElementById('variantWarning');
+
+        if (selectedSize === null || selectedMaterial === null || selectedColor === null) {
+            if (warning) warning.style.display = 'block';
+            return;
+        }
+
+        const match = variants.find(v =>
+            v.sizeId == selectedSize &&
+            v.materialId == selectedMaterial &&
+            v.colorId == selectedColor
+        );
+
+        if (!match || match.stock <= 0) {
+            alert('Tổ hợp này không có hàng!');
+            return;
+        }
+
+        window.location.href = `/Cart/Add?id=${productId}&sizeId=${selectedSize}&materialId=${selectedMaterial}&colorId=${selectedColor}`;
+    }
+
+    function updateButtonState(stock) {
+        const btn = document.getElementById("addToCartBtn");
+        if (!btn) return;
+        if (stock <= 0) {
+            btn.innerHTML = "Hết hàng";
+            btn.style.background = "#ccc";
+            btn.style.pointerEvents = "none";
+        } else {
+            btn.innerHTML = "<i class='bi bi-cart-plus'></i> Thêm vào giỏ";
+            btn.style.background = "#e05c2a";
+            btn.style.pointerEvents = "auto";
+        }
+    }
+</script>

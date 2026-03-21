@@ -1,12 +1,33 @@
 ﻿@model Shopbannoithat.Models.Product
+@using System.Text.Json
+
+@using System.Linq
 @{
     Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
 
-    // Tìm ParentId hiện tại của sản phẩm
     var allCategories = ViewBag.Categories as List<Shopbannoithat.Models.Category>;
     var currentCategory = allCategories?.FirstOrDefault(c => c.Id == Model.CategoryId);
     var currentParentId = currentCategory?.ParentId ?? currentCategory?.Id;
+
+    var sizes = ViewBag.Sizes as List<Shopbannoithat.Models.ProductSize>;
+    var materials = ViewBag.Materials as List<Shopbannoithat.Models.ProductMaterial>;
+    var colors = ViewBag.Colors as List<Shopbannoithat.Models.ProductColor>;
+
+    // 🔥 FIX VARIANT JSON
+    var variantData = (Model.Variants != null
+        ? Model.Variants.Select(v => new
+        {
+            sizeId = v.SizeId,
+            materialId = v.MaterialId,
+            colorId = v.ColorId,
+            price = v.Price,
+            stock = v.Stock
+        }).Cast<object>().ToList()
+        : new List<object>());
+
+    var variantJson = JsonSerializer.Serialize(variantData);
 }
+
 
 <h2>Sửa sản phẩm</h2>
 
@@ -20,11 +41,11 @@
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
+    @* <div class="mb-3">
         <label>Giá</label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
+    </div> *@
 
     <div class="mb-3">
         <label class="form-label">Ảnh sản phẩm</label>
@@ -70,51 +91,143 @@
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
+
+    <!-- BIẾN THỂ -->
+    <div class="mb-3">
+        <label class="form-label fw-bold">Biến thể sản phẩm</label>
+        <div id="variantList"></div>
+
+    </div>
+    <div>
+        <button type="button" onclick="addVariant()"
+                style="background:#4facfe;color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;margin-top:8px;">
+            + Thêm biến thể
+        </button>
+    </div>
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <div class="alert alert-danger">@error.ErrorMessage</div>
+        }
+    }
+
     <button class="btn btn-success">Lưu</button>
     <a asp-area="Staff" asp-controller="Product" asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
 
 </form>
 
+
+
 @section Scripts {
     <script>
-        var allChildren = @Html.Raw(ViewBag.ChildrenJson);
-        var currentCategoryId = @Model.CategoryId;
+            var allChildren = @Html.Raw(ViewBag.ChildrenJson);
+            var currentCategoryId = @Model.CategoryId;
 
-        function loadChildren(parentId, selectedId) {
-            var select = document.getElementById('childSelect');
-            select.innerHTML = '<option value="">-- Chọn loại --</option>';
-            if (!parentId) return;
-            var filtered = allChildren.filter(c => c.parentId == parentId);
-            filtered.forEach(function(c) {
-                var selected = (c.id == selectedId) ? 'selected' : '';
-                select.innerHTML += `<option value="${c.id}" ${selected}>${c.name}</option>`;
+            function loadChildren(parentId, selectedId) {
+                var select = document.getElementById('childSelect');
+                select.innerHTML = '<option value="">-- Chọn loại --</option>';
+
+                var filtered = allChildren.filter(c => c.parentId == parentId);
+
+                filtered.forEach(c => {
+                    let selected = (c.id == selectedId) ? 'selected' : '';
+                    select.innerHTML += `<option value="${c.id}" ${selected}>${c.name}</option>`;
+                });
+            }
+
+            // load category
+            var initialParent = document.getElementById('parentSelect').value;
+            if (initialParent) loadChildren(initialParent, currentCategoryId);
+
+            document.getElementById('parentSelect').addEventListener('change', function () {
+                loadChildren(this.value, null);
             });
+
+            // 🔥 DATA
+            const sizes     = @Html.Raw(JsonSerializer.Serialize(ViewBag.Sizes ?? new List<object>()));
+            const materials = @Html.Raw(JsonSerializer.Serialize(ViewBag.Materials ?? new List<object>()));
+            const colors    = @Html.Raw(JsonSerializer.Serialize(ViewBag.Colors ?? new List<object>()));
+
+            // 🔥 FIX QUAN TRỌNG
+            const existingVariants = @Html.Raw(variantJson);
+
+            var variantIndex = 0;
+
+            function addVariantWithData(sizeId, materialId, colorId, price, stock) {
+
+            let sizeOpts = sizes.map(s =>
+                `<option value="${s.Id}" ${s.Id == sizeId ? 'selected' : ''}>${s.Name}</option>`
+            ).join('');
+
+            let materialOpts = materials.map(m =>
+                `<option value="${m.Id}" ${m.Id == materialId ? 'selected' : ''}>${m.Name}</option>`
+            ).join('');
+
+            let colorOpts = colors.map(c =>
+                `<option value="${c.Id}" ${c.Id == colorId ? 'selected' : ''}>${c.Name}</option>`
+            ).join('');
+
+            const i = variantIndex++;
+
+            document.getElementById('variantList').insertAdjacentHTML('beforeend', `
+                <div class="variant-row" style="display:grid;grid-template-columns:1fr 1fr 1fr 120px 100px 40px;gap:8px;margin-bottom:8px;align-items:center;">
+
+                    <select name="Variants[${i}].SizeId" class="form-control form-control-sm">
+                        <option value="">-- Kích thước --</option>
+                        ${sizeOpts}
+                    </select>
+
+                    <select name="Variants[${i}].MaterialId" class="form-control form-control-sm">
+                        <option value="">-- Vật liệu --</option>
+                        ${materialOpts}
+                    </select>
+
+                    <select name="Variants[${i}].ColorId" class="form-control form-control-sm">
+                        <option value="">-- Màu sắc --</option>
+                        ${colorOpts}
+                    </select>
+
+                    <input name="Variants[${i}].Price" type="number" value="${price}"
+                           class="form-control form-control-sm" placeholder="Giá" />
+
+                    <input name="Variants[${i}].Stock" type="number" value="${stock}"
+                           class="form-control form-control-sm" placeholder="Tồn kho" />
+
+                    <button type="button" onclick="this.closest('.variant-row').remove()"
+                            style="background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;">
+                        ✕
+                    </button>
+
+                </div>
+            `);
         }
 
-        // Load khi trang mở, tự chọn đúng loại hiện tại
-        var initialParent = document.getElementById('parentSelect').value;
-        if (initialParent) {
-            loadChildren(initialParent, currentCategoryId);
-        }
+            function addVariant() {
+                addVariantWithData(null, null, null, '', 0);
+            }
 
-        document.getElementById('parentSelect').addEventListener('change', function() {
-            loadChildren(this.value, null);
-        });
+            // 🔥 LOAD VARIANTS CŨ
+            if (existingVariants && existingVariants.length > 0) {
+                existingVariants.forEach(v => {
+                    addVariantWithData(v.sizeId, v.materialId, v.colorId, v.price, v.stock);
+                });
+            }
+
+            console.log(existingVariants);
     </script>
 }
 <style>
-    /* Tổng thể Form Container */
     form {
         max-width: 850px;
         margin: 40px auto;
         padding: 40px;
         background: #ffffff;
         border-radius: 20px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.05);
         border: 1px solid #e2e8f0;
     }
 
-    /* Tiêu đề trang */
     h2 {
         color: #1e293b;
         font-weight: 800;
@@ -137,7 +250,6 @@
             border-radius: 2px;
         }
 
-    /* Nhãn (Labels) */
     form label {
         display: block;
         font-weight: 700;
@@ -149,7 +261,6 @@
         padding-left: 4px;
     }
 
-    /* Ô nhập liệu (Inputs, Select, Textarea) */
     .form-control {
         border-radius: 12px;
         padding: 12px 16px;
@@ -160,28 +271,24 @@
         transition: all 0.3s ease;
     }
 
-        /* Hiệu ứng khi nhấn vào ô nhập */
         .form-control:focus {
             background-color: #ffffff;
             border-color: #10b981;
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
             outline: none;
         }
 
-    /* Riêng ô nhập File */
     input[type="file"].form-control {
         padding: 8px;
         background: #f0fdf4;
         border: 2px dashed #cbd5e1;
     }
 
-    /* Ô mô tả (Textarea) */
     textarea.form-control {
         min-height: 150px;
         line-height: 1.6;
     }
 
-    /* Thông báo lỗi */
     .text-danger {
         font-size: 0.8rem;
         font-weight: 600;
@@ -190,30 +297,26 @@
         display: block;
     }
 
-    /* Nút bấm (Buttons) */
     .btn {
         padding: 12px 30px;
         border-radius: 12px;
         font-weight: 700;
         font-size: 0.95rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s;
         border: none;
     }
 
-    /* Nút Lưu */
     .btn-success {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, #10b981, #059669);
         color: white;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 4px 12px rgba(16,185,129,0.3);
     }
 
         .btn-success:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-            filter: brightness(1.05);
+            box-shadow: 0 8px 20px rgba(16,185,129,0.4);
         }
 
-    /* Nút Quay lại */
     .btn-secondary {
         background-color: #f1f5f9;
         color: #64748b;
@@ -225,7 +328,6 @@
             transform: translateY(-2px);
         }
 
-    /* Khoảng cách giữa các hàng */
     .mb-3 {
         margin-bottom: 1.5rem !important;
     }

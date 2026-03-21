@@ -61,19 +61,29 @@
                             <div class="product-info">
                                 <p class="product-category">@item.Category?.Name</p>
                                 <h6 class="product-name">@item.Name</h6>
-                                <p class="product-price">@item.Price?.ToString("N0") ₫</p>
+                                <p class="product-price">
+                                    @{
+                                        string itemPrice = "";
+                                        if (item.Variants != null && item.Variants.Any())
+                                        {
+                                            var minP = item.Variants.Min(v => v.Price);
+                                            var maxP = item.Variants.Max(v => v.Price);
+                                            itemPrice = minP == maxP
+                                            ? minP.ToString("N0") + " ₫"
+                                            : minP.ToString("N0") + " – " + maxP.ToString("N0") + " ₫";
+                                        }
+                                        else
+                                        {
+                                            itemPrice = (item.Price?.ToString("N0") ?? "0") + " ₫";
+                                        }
+                                    }
+                                    @itemPrice
+                                </p>
                                 <div class="btn-group-home">
                                     <a href="/Product/Details/@item.Id" class="btn-detail">Xem chi tiết</a>
                                     @if (Context.Session.GetString("UserEmail") != null)
                                     {
-                                        @if (item.Quantity > 0)
-                                        {
-                                            <a href="/Cart/Add/@item.Id" class="btn-cart"> Thêm vào giỏ</a>
-                                        }
-                                        else
-                                        {
-                                            <span class="btn-soldout">Hết hàng</span>
-                                        }
+                                        
                                         <button class="btn-wishlist addWishlist" data-id="@item.Id" title="Thêm vào Wishlist">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                 <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
@@ -82,7 +92,7 @@
                                     }
                                     else
                                     {
-                                        <a href="/Auth/Login" class="btn-cart">🛒 Thêm vào giỏ</a>
+                                        
                                         <a href="/Auth/Login" class="btn-wishlist" title="Thêm vào Wishlist">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                                 <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
@@ -133,32 +143,42 @@
                             <div class="product-info">
                                 <p class="product-category">@item.Category?.Name</p>
                                 <h6 class="product-name">@item.Name</h6>
-                                <p class="product-price">@item.Price?.ToString("N0") ₫</p>
+                                <p class="product-price">
+                                    @{
+                                        string itemPrice = "";
+                                        if (item.Variants != null && item.Variants.Any())
+                                        {
+                                            var minP = item.Variants.Min(v => v.Price);
+                                            var maxP = item.Variants.Max(v => v.Price);
+                                            itemPrice = minP == maxP
+                                            ? minP.ToString("N0") + " ₫"
+                                            : minP.ToString("N0") + " – " + maxP.ToString("N0") + " ₫";
+                                        }
+                                        else
+                                        {
+                                            itemPrice = (item.Price?.ToString("N0") ?? "0") + " ₫";
+                                        }
+                                    }
+                                    @itemPrice
+                                </p>
                                 <div class="btn-group-home">
                                     <a href="/Product/Details/@item.Id" class="btn-detail">Xem chi tiết</a>
                                     @if (Context.Session.GetString("UserEmail") != null)
                                     {
-                                        @if (item.Quantity > 0)
-                                        {
-                                            <a href="/Cart/Add/@item.Id" class="btn-cart">
-                                                <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <span class="btn-soldout">Hết hàng</span>
-                                        }
-                                        <button class="btn-wishlist addWishlist" data-id="@item.Id">
-                                            <i class="bi bi-heart"></i>
+
+                                        <button class="btn-wishlist addWishlist" data-id="@item.Id" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
                                         </button>
                                     }
                                     else
                                     {
-                                        <a href="/Auth/Login" class="btn-cart">
-                                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                        </a>
-                                        <a href="/Auth/Login" class="btn-wishlist">
-                                            <i class="bi bi-heart"></i>
+
+                                        <a href="/Auth/Login" class="btn-wishlist" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
                                         </a>
                                     }
                                 </div>
@@ -205,32 +225,42 @@
                             <div class="product-info">
                                 <p class="product-category">@item.Category?.Name</p>
                                 <h6 class="product-name">@item.Name</h6>
-                                <p class="product-price">@item.Price?.ToString("N0") ₫</p>
+                                <p class="product-price">
+                                    @{
+                                        string itemPrice = "";
+                                        if (item.Variants != null && item.Variants.Any())
+                                        {
+                                            var minP = item.Variants.Min(v => v.Price);
+                                            var maxP = item.Variants.Max(v => v.Price);
+                                            itemPrice = minP == maxP
+                                            ? minP.ToString("N0") + " ₫"
+                                            : minP.ToString("N0") + " – " + maxP.ToString("N0") + " ₫";
+                                        }
+                                        else
+                                        {
+                                            itemPrice = (item.Price?.ToString("N0") ?? "0") + " ₫";
+                                        }
+                                    }
+                                    @itemPrice
+                                </p>
                                 <div class="btn-group-home">
                                     <a href="/Product/Details/@item.Id" class="btn-detail">Xem chi tiết</a>
                                     @if (Context.Session.GetString("UserEmail") != null)
                                     {
-                                        @if (item.Quantity > 0)
-                                        {
-                                            <a href="/Cart/Add/@item.Id" class="btn-cart">
-                                                <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <span class="btn-soldout">Hết hàng</span>
-                                        }
-                                        <button class="btn-wishlist addWishlist" data-id="@item.Id">
-                                            <i class="bi bi-heart"></i>
+
+                                        <button class="btn-wishlist addWishlist" data-id="@item.Id" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
                                         </button>
                                     }
                                     else
                                     {
-                                        <a href="/Auth/Login" class="btn-cart">
-                                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                        </a>
-                                        <a href="/Auth/Login" class="btn-wishlist">
-                                            <i class="bi bi-heart"></i>
+
+                                        <a href="/Auth/Login" class="btn-wishlist" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
                                         </a>
                                     }
                                 </div>
@@ -277,32 +307,42 @@
                             <div class="product-info">
                                 <p class="product-category">@item.Category?.Name</p>
                                 <h6 class="product-name">@item.Name</h6>
-                                <p class="product-price">@item.Price?.ToString("N0") ₫</p>
+                                <p class="product-price">
+                                    @{
+                                        string itemPrice = "";
+                                        if (item.Variants != null && item.Variants.Any())
+                                        {
+                                            var minP = item.Variants.Min(v => v.Price);
+                                            var maxP = item.Variants.Max(v => v.Price);
+                                            itemPrice = minP == maxP
+                                            ? minP.ToString("N0") + " ₫"
+                                            : minP.ToString("N0") + " – " + maxP.ToString("N0") + " ₫";
+                                        }
+                                        else
+                                        {
+                                            itemPrice = (item.Price?.ToString("N0") ?? "0") + " ₫";
+                                        }
+                                    }
+                                    @itemPrice
+                                </p>
                                 <div class="btn-group-home">
                                     <a href="/Product/Details/@item.Id" class="btn-detail">Xem chi tiết</a>
                                     @if (Context.Session.GetString("UserEmail") != null)
                                     {
-                                        @if (item.Quantity > 0)
-                                        {
-                                            <a href="/Cart/Add/@item.Id" class="btn-cart">
-                                                <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <span class="btn-soldout">Hết hàng</span>
-                                        }
-                                        <button class="btn-wishlist addWishlist" data-id="@item.Id">
-                                            <i class="bi bi-heart"></i>
+
+                                        <button class="btn-wishlist addWishlist" data-id="@item.Id" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
                                         </button>
                                     }
                                     else
                                     {
-                                        <a href="/Auth/Login" class="btn-cart">
-                                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                        </a>
-                                        <a href="/Auth/Login" class="btn-wishlist">
-                                            <i class="bi bi-heart"></i>
+
+                                        <a href="/Auth/Login" class="btn-wishlist" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
                                         </a>
                                     }
                                 </div>
@@ -349,34 +389,44 @@
                         <div class="product-info">
                             <p class="product-category">@item.Category?.Name</p>
                             <h6 class="product-name">@item.Name</h6>
-                            <p class="product-price">@item.Price?.ToString("N0") ₫</p>
+                                <p class="product-price">
+                                    @{
+                                        string itemPrice = "";
+                                        if (item.Variants != null && item.Variants.Any())
+                                        {
+                                            var minP = item.Variants.Min(v => v.Price);
+                                            var maxP = item.Variants.Max(v => v.Price);
+                                            itemPrice = minP == maxP
+                                            ? minP.ToString("N0") + " ₫"
+                                            : minP.ToString("N0") + " – " + maxP.ToString("N0") + " ₫";
+                                        }
+                                        else
+                                        {
+                                            itemPrice = (item.Price?.ToString("N0") ?? "0") + " ₫";
+                                        }
+                                    }
+                                    @itemPrice
+                                </p>
                             <div class="btn-group-home">
                                 <a href="/Product/Details/@item.Id" class="btn-detail">Xem chi tiết</a>
-                                @if (Context.Session.GetString("UserEmail") != null)
-                                {
-                                    @if (item.Quantity > 0)
+                                    @if (Context.Session.GetString("UserEmail") != null)
                                     {
-                                        <a href="/Cart/Add/@item.Id" class="btn-cart">
-                                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                        </a>
+
+                                        <button class="btn-wishlist addWishlist" data-id="@item.Id" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
+                                        </button>
                                     }
                                     else
                                     {
-                                        <span class="btn-soldout">Hết hàng</span>
+
+                                        <a href="/Auth/Login" class="btn-wishlist" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
+                                        </a>
                                     }
-                                    <button class="btn-wishlist addWishlist" data-id="@item.Id">
-                                        <i class="bi bi-heart"></i>
-                                    </button>
-                                }
-                                else
-                                {
-                                    <a href="/Auth/Login" class="btn-cart">
-                                        <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                    </a>
-                                    <a href="/Auth/Login" class="btn-wishlist">
-                                        <i class="bi bi-heart"></i>
-                                    </a>
-                                }
                             </div>
                         </div>
                     </div>

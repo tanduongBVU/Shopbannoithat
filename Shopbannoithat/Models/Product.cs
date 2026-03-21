@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 
 namespace Shopbannoithat.Models
 {
@@ -10,8 +11,7 @@ namespace Shopbannoithat.Models
         [StringLength(100, ErrorMessage = "Tên sản phẩm tối đa 100 ký tự")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập giá sản phẩm")]
-        [Range(1, 1000000000, ErrorMessage = "Giá phải lớn hơn 0")]
+        
         public decimal? Price { get; set; }
 
         [Required(ErrorMessage = "Vui lòng nhập mô tả")]
@@ -32,5 +32,22 @@ namespace Shopbannoithat.Models
 
         // Thêm mới
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        // 🔥 Thêm mới
+        
+        public string? SKU { get; set; }
+        //// Thay bằng foreign key
+        //public int? SizeId { get; set; }
+        //public ProductSize? Size { get; set; }
+
+        //public int? MaterialId { get; set; }
+        //public ProductMaterial? Material { get; set; }
+
+        //public int? ColorId { get; set; }
+        //public ProductColor? Color { get; set; }
+
+        public List<ProductVariant>? Variants { get; set; }
+
+
     }
 }

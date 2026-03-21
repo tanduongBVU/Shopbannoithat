@@ -69,6 +69,7 @@
             <th>Giá</th>
             <th>Số lượng</th>
             <th>Tổng</th>
+
         </tr>
 
         @{
@@ -77,12 +78,56 @@
 
         @foreach (var item in Model)
         {
-            var price = item.Product.Price ?? 0;
+            var variant = item.Product?.Variants?.FirstOrDefault(v =>
+            v.SizeId == item.SizeId &&
+            v.MaterialId == item.MaterialId &&
+            v.ColorId == item.ColorId
+            );
+
+            var price = variant?.Price ?? item.Product?.Price ?? 0;
             var sum = price * item.Quantity;
             total += sum;
 
             <tr>
-                <td>@item.Product.Name</td>
+                <td>
+                    <strong>@item.Product?.Name</strong><br />
+
+                    @if (variant != null)
+                    {
+                        var details = new List<string>();
+
+                        if (!string.IsNullOrEmpty(variant.Size?.Name))
+                        {
+                            details.Add("Size: " + variant.Size.Name);
+                        }
+
+                        if (!string.IsNullOrEmpty(variant.Material?.Name))
+                        {
+                            details.Add("Material: " + variant.Material.Name);
+                        }
+
+                        if (!string.IsNullOrEmpty(variant.Color?.Name))
+                        {
+                            details.Add("Color: " + variant.Color.Name);
+                        }
+
+                        if (details.Any())
+                        {
+                            <small style="color:#777;">
+                                @string.Join(" | ", details)
+                            </small>
+                        }
+                        else
+                        {
+                            <small style="color:#999;">Sản phẩm mặc định</small>
+                        }
+                    }
+                    else
+                    {
+                        <small style="color:#999;">Sản phẩm mặc định</small>
+                    }
+                </td>
+
                 <td>@price.ToString("N0") VNĐ</td>
                 <td>@item.Quantity</td>
                 <td>@sum.ToString("N0") VNĐ</td>

@@ -1,0 +1,161 @@
+﻿@{
+    Layout = "~/Areas/Staff/Views/Shared/_LayoutStaff.cshtml";
+    var sizes = ViewBag.Sizes as List<Shopbannoithat.Models.ProductSize>;
+    var materials = ViewBag.Materials as List<Shopbannoithat.Models.ProductMaterial>;
+    var colors = ViewBag.Colors as List<Shopbannoithat.Models.ProductColor>;
+}
+
+<div style="padding:24px;">
+    <h2 style="font-size:1.5rem; font-weight:700; margin-bottom:24px;">⚙️ Quản lý thuộc tính sản phẩm</h2>
+
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+
+        <!-- KÍCH THƯỚC -->
+        <div style="background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+            <div style="background:linear-gradient(135deg,#4facfe,#00f2fe); padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="color:#fff; margin:0; font-size:1rem; font-weight:700;">📐 Kích thước</h3>
+                <button onclick="toggleForm('sizeForm')"
+                        style="background:rgba(255,255,255,0.25); color:#fff; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:600;">
+                    + Thêm
+                </button>
+            </div>
+
+            <!-- Form thêm -->
+            <div id="sizeForm" style="display:none; padding:14px 16px; border-bottom:1px solid #f0f4f8;">
+                <form asp-area="Staff" asp-controller="Size" asp-action="Create" method="post" style="display:flex; gap:8px;">
+                    <input name="Name" class="form-control" placeholder="VD: 1600*900mm"
+                           style="border-radius:7px; font-size:0.88rem;" required />
+                    <button type="submit"
+                            style="background:#4facfe; color:#fff; border:none; padding:8px 16px; border-radius:7px; font-weight:600; white-space:nowrap; cursor:pointer;">
+                        Lưu
+                    </button>
+                </form>
+            </div>
+
+            <!-- Danh sách -->
+            <div style="padding:8px 0;">
+                @if (sizes != null && sizes.Any())
+                {
+                    @foreach (var item in sizes)
+                    {
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid #f8f9fa;">
+                            <span style="background:#e8f4fd; color:#2980b9; padding:3px 10px; border-radius:20px; font-size:0.85rem; font-weight:600;">
+                                @item.Name
+                            </span>
+                            <a asp-area="Staff" asp-controller="Size" asp-action="Delete" asp-route-id="@item.Id"
+                               onclick="return confirm('Xóa?')"
+                               style="color:#e74c3c; font-size:0.82rem; font-weight:600; text-decoration:none;">
+                                🗑 Xóa
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p style="text-align:center; color:#aaa; padding:20px; font-size:0.88rem;">Chưa có dữ liệu</p>
+                }
+            </div>
+        </div>
+
+        <!-- VẬT LIỆU -->
+        <div style="background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+            <div style="background:linear-gradient(135deg,#f093fb,#f5576c); padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="color:#fff; margin:0; font-size:1rem; font-weight:700;">🪵 Vật liệu</h3>
+                <button onclick="toggleForm('materialForm')"
+                        style="background:rgba(255,255,255,0.25); color:#fff; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:600;">
+                    + Thêm
+                </button>
+            </div>
+
+            <div id="materialForm" style="display:none; padding:14px 16px; border-bottom:1px solid #f0f4f8;">
+                <form asp-area="Staff" asp-controller="Material" asp-action="Create" method="post" style="display:flex; gap:8px;">
+                    <input name="Name" class="form-control" placeholder="VD: Gỗ tự nhiên"
+                           style="border-radius:7px; font-size:0.88rem;" required />
+                    <button type="submit"
+                            style="background:#f5576c; color:#fff; border:none; padding:8px 16px; border-radius:7px; font-weight:600; white-space:nowrap; cursor:pointer;">
+                        Lưu
+                    </button>
+                </form>
+            </div>
+
+            <div style="padding:8px 0;">
+                @if (materials != null && materials.Any())
+                {
+                    @foreach (var item in materials)
+                    {
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid #f8f9fa;">
+                            <span style="background:#fdf0f8; color:#c0392b; padding:3px 10px; border-radius:20px; font-size:0.85rem; font-weight:600;">
+                                @item.Name
+                            </span>
+                            <a asp-area="Staff" asp-controller="Material" asp-action="Delete" asp-route-id="@item.Id"
+                               onclick="return confirm('Xóa?')"
+                               style="color:#e74c3c; font-size:0.82rem; font-weight:600; text-decoration:none;">
+                                🗑 Xóa
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p style="text-align:center; color:#aaa; padding:20px; font-size:0.88rem;">Chưa có dữ liệu</p>
+                }
+            </div>
+        </div>
+
+        <!-- MÀU SẮC -->
+        <div style="background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+            <div style="background:linear-gradient(135deg,#667eea,#764ba2); padding:16px 20px; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="color:#fff; margin:0; font-size:1rem; font-weight:700;">🎨 Màu sắc</h3>
+                <button onclick="toggleForm('colorForm')"
+                        style="background:rgba(255,255,255,0.25); color:#fff; border:none; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:600;">
+                    + Thêm
+                </button>
+            </div>
+
+            <div id="colorForm" style="display:none; padding:14px 16px; border-bottom:1px solid #f0f4f8;">
+                <form asp-area="Staff" asp-controller="Color" asp-action="Create" method="post" style="display:flex; gap:8px; align-items:center;">
+                    <input name="Name" class="form-control" placeholder="Tên màu VD: Đỏ, Xanh"
+                           style="border-radius:7px; font-size:0.88rem;" required />
+                    <input name="HexCode" type="color" value="#000000"
+                           style="width:50px; height:42px; border:none; border-radius:7px; cursor:pointer; padding:2px;" />
+                    <button type="submit"
+                            style="background:#764ba2; color:#fff; border:none; padding:8px 16px; border-radius:7px; font-weight:600; white-space:nowrap; cursor:pointer;">
+                        Lưu
+                    </button>
+                </form>
+            </div>
+
+            <div style="padding:8px 0;">
+                @if (colors != null && colors.Any())
+                {
+                    @foreach (var item in colors)
+                    {
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 16px; border-bottom:1px solid #f8f9fa;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="width:18px;height:18px;border-radius:50%;background:@item.HexCode;display:inline-block;border:1px solid #ddd;"></span>
+                                <span style="font-size:0.85rem; font-weight:600; color:#764ba2;">@item.Name</span>
+                            </div>
+                            <a asp-area="Staff" asp-controller="Color" asp-action="Delete" asp-route-id="@item.Id"
+                               onclick="return confirm('Xóa?')"
+                               style="color:#e74c3c; font-size:0.82rem; font-weight:600; text-decoration:none;">
+                                🗑 Xóa
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p style="text-align:center; color:#aaa; padding:20px; font-size:0.88rem;">Chưa có dữ liệu</p>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function toggleForm(id) {
+        const el = document.getElementById(id);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+</script>

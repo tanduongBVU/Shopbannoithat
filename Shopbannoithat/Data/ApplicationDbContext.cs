@@ -29,5 +29,11 @@ namespace Shopbannoithat.Data
 
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<UserCoupon> UserCoupons { get; set; }
+
+        public DbSet<ProductSize> Sizes { get; set; }
+        public DbSet<ProductMaterial> Materials { get; set; }
+        public DbSet<ProductColor> Colors { get; set; }
+
+        public DbSet<ProductVariant> ProductVariants { get; set; }
     }
 }
