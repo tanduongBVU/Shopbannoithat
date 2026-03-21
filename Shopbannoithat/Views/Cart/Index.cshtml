@@ -29,7 +29,13 @@
 
         @foreach (var item in Model)
         {
-            var price = item.Product.Price ?? 0;
+            var variant = item.Product.Variants.FirstOrDefault(v =>
+            v.SizeId == item.SizeId &&
+            v.MaterialId == item.MaterialId &&
+            v.ColorId == item.ColorId
+            );
+
+            var price = variant?.Price ?? item.Product.Price ?? 0;
             var thanhTien = price * item.Quantity;
             total += thanhTien;
 
@@ -40,7 +46,12 @@
                 </td>
 
                 <td>
-                    @item.Product.Name
+                    @item.Product.Name <br />
+                    <small style="color:#777;">
+                        Size: @variant?.Size?.Name |
+                        Material: @variant?.Material?.Name |
+                        Color: @variant?.Color?.Name
+                    </small>
                 </td>
 
                 <td>
@@ -57,7 +68,10 @@
 
                 <td>
                     <a asp-controller="Cart" asp-action="Remove"
-                           asp-route-id="@item.ProductId"
+                       asp-route-id="@item.ProductId"
+                       asp-route-sizeId="@item.SizeId"
+                       asp-route-materialId="@item.MaterialId"
+                       asp-route-colorId="@item.ColorId"
                            class="btn btn-danger">
                         Xóa
                     </a>
@@ -67,12 +81,18 @@
 
                     <a asp-controller="Cart" asp-action="Decrease"
                        asp-route-id="@item.ProductId"
+                       asp-route-sizeId="@item.SizeId"
+                       asp-route-materialId="@item.MaterialId"
+                       asp-route-colorId="@item.ColorId"
                        class="btn btn-sm btn-secondary">-</a>
 
                     @item.Quantity
 
                     <a asp-controller="Cart" asp-action="Increase"
                        asp-route-id="@item.ProductId"
+                       asp-route-sizeId="@item.SizeId"
+                       asp-route-materialId="@item.MaterialId"
+                       asp-route-colorId="@item.ColorId"
                        class="btn btn-sm btn-secondary">+</a>
 
                 </td>

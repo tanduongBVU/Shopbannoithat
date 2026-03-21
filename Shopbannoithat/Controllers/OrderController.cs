@@ -23,9 +23,17 @@ namespace Shopbannoithat.Controllers
                 return RedirectToAction("Login", "Auth");
 
             var cartItems = _context.Carts
-                .Include(x => x.Product)
-                .Where(x => x.UserEmail == email)
-                .ToList();
+    .Include(x => x.Product)
+        .ThenInclude(p => p.Variants)
+            .ThenInclude(v => v.Size)
+    .Include(x => x.Product)
+        .ThenInclude(p => p.Variants)
+            .ThenInclude(v => v.Material)
+    .Include(x => x.Product)
+        .ThenInclude(p => p.Variants)
+            .ThenInclude(v => v.Color)
+    .Where(x => x.UserEmail == email)
+    .ToList();
 
             return View(cartItems);
         }
@@ -39,16 +47,16 @@ namespace Shopbannoithat.Controllers
 
             var cartItems = _context.Carts
                 .Include(x => x.Product)
+                .ThenInclude(p => p.Variants)
                 .Where(x => x.UserEmail == email)
                 .ToList();
 
-            // Kiểm tra thủ công các field trên form
+            // VALIDATE
             if (string.IsNullOrWhiteSpace(order.Name) ||
                 string.IsNullOrWhiteSpace(order.Address1) ||
                 string.IsNullOrWhiteSpace(order.Address2) ||
                 string.IsNullOrWhiteSpace(order.City))
             {
-                // Đẩy lỗi vào ModelState để hiện lên View
                 if (string.IsNullOrWhiteSpace(order.Name))
                     ModelState.AddModelError("Name", "Vui lòng nhập tên");
 
@@ -72,16 +80,58 @@ namespace Shopbannoithat.Controllers
             order.Status = "Đang xử lý";
             order.OrderPlaced = DateTime.Now;
 
-            decimal total = cartItems.Sum(x => (x.Product.Price ?? 0) * x.Quantity);
+            decimal total = 0;
+            order.OrderDetails = new List<OrderDetail>();
 
-            Coupon coupon = null; // 🔥 giữ lại để dùng phía dưới
+            foreach (var item in cartItems)
+            {
+                var variant = _context.ProductVariants.FirstOrDefault(v =>
+                    v.ProductId == item.ProductId &&
+                    v.SizeId == item.SizeId &&
+                    v.MaterialId == item.MaterialId &&
+                    v.ColorId == item.ColorId
+                );
 
-            // =========================
-            // 🔥 XỬ LÝ MÃ GIẢM GIÁ
-            // =========================
+                decimal price = variant?.Price ?? item.Product.Price ?? 0;
+                int stock = variant?.Stock ?? item.Product.Quantity;
+
+                // CHECK TỒN KHO
+                if (stock < item.Quantity)
+                {
+                    TempData["Error"] = $"Sản phẩm {item.Product.Name} không đủ hàng.";
+                    return RedirectToAction("Checkout");
+                }
+
+                // TRỪ KHO
+                if (variant != null)
+                {
+                    variant.Stock -= item.Quantity;
+                    item.Product.Quantity -= item.Quantity; // 🔥 TRỪ LUÔN PRODUCT
+                }
+                else
+                {
+                    item.Product.Quantity -= item.Quantity;
+                }
+
+                total += price * item.Quantity;
+
+                // LƯU CHI TIẾT ĐƠN
+                order.OrderDetails.Add(new OrderDetail
+                {
+                    ProductId = item.ProductId,
+                    VariantId = variant?.Id,  // 🔹 quan trọng
+                    Quantity = item.Quantity,
+                    Price = price,
+                    SizeId = item.SizeId,
+                    MaterialId = item.MaterialId,
+                    ColorId = item.ColorId
+                });
+            }
+
+            // ===== COUPON =====
             if (!string.IsNullOrEmpty(CouponCode))
             {
-                coupon = _context.Coupons.FirstOrDefault(c => c.Code == CouponCode);
+                var coupon = _context.Coupons.FirstOrDefault(c => c.Code == CouponCode);
 
                 if (coupon == null)
                 {
@@ -89,86 +139,45 @@ namespace Shopbannoithat.Controllers
                     return RedirectToAction("Checkout");
                 }
 
-                if (!coupon.IsActive)
+                if (!coupon.IsActive || coupon.ExpiryDate < DateTime.Now)
                 {
-                    TempData["Error"] = "Mã đã bị khóa";
+                    TempData["Error"] = "Mã không hợp lệ";
                     return RedirectToAction("Checkout");
                 }
 
-                if (coupon.ExpiryDate < DateTime.Now)
-                {
-                    TempData["Error"] = "Mã đã hết hạn";
-                    return RedirectToAction("Checkout");
-                }
-
-                // 🔥 CHECK: USER ĐÃ DÙNG CHƯA
                 var used = _context.UserCoupons
                     .Any(x => x.UserEmail == email && x.CouponId == coupon.Id);
 
                 if (used)
                 {
-                    TempData["Error"] = "Bạn đã sử dụng mã này rồi";
+                    TempData["Error"] = "Bạn đã dùng mã này rồi";
                     return RedirectToAction("Checkout");
                 }
 
                 if (coupon.Discount.HasValue)
                 {
-                    total = total - (total * coupon.Discount.Value / 100);
+                    total -= total * coupon.Discount.Value / 100;
 
                     order.CouponCode = coupon.Code;
                     order.DiscountPercent = coupon.Discount;
+
+                    _context.UserCoupons.Add(new UserCoupon
+                    {
+                        UserEmail = email,
+                        CouponId = coupon.Id,
+                        UsedDate = DateTime.Now
+                    });
                 }
             }
 
             if (total < 0) total = 0;
-
             order.TotalPrice = total;
 
-            // =========================
-
-            order.OrderDetails = new List<OrderDetail>();
-
-            foreach (var item in cartItems)
-            {
-                if (item.Product.Quantity >= item.Quantity)
-                {
-                    item.Product.Quantity -= item.Quantity;
-                }
-                else
-                {
-                    TempData["Error"] = $"Sản phẩm {item.Product.Name} không đủ hàng.";
-                    return RedirectToAction("Checkout");
-                }
-
-                order.OrderDetails.Add(new OrderDetail
-                {
-                    ProductId = item.ProductId,
-                    Quantity = item.Quantity,
-                    Price = item.Product.Price ?? 0
-                });
-            }
-
             _context.Orders.Add(order);
-            _context.SaveChanges();
 
-            // =========================
-            // 🔥 LƯU LỊCH SỬ DÙNG MÃ
-            // =========================
-            if (coupon != null)
-            {
-                _context.UserCoupons.Add(new UserCoupon
-                {
-                    UserEmail = email,
-                    CouponId = coupon.Id,
-                    UsedDate = DateTime.Now
-                });
-
-                _context.SaveChanges();
-            }
-
-            // =========================
-
+            // XÓA GIỎ
             _context.Carts.RemoveRange(cartItems);
+
             _context.SaveChanges();
 
             return RedirectToAction("Success", new { id = order.Id });
@@ -178,9 +187,21 @@ namespace Shopbannoithat.Controllers
         public IActionResult Success(int id)
         {
             var order = _context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Product)
-                .FirstOrDefault(o => o.Id == id);
+        .Include(o => o.OrderDetails)
+            .ThenInclude(od => od.Product)
+        .Include(o => o.OrderDetails)
+            .ThenInclude(od => od.Variant)
+                .ThenInclude(v => v.Size)
+        .Include(o => o.OrderDetails)
+            .ThenInclude(od => od.Variant)
+                .ThenInclude(v => v.Material)
+        .Include(o => o.OrderDetails)
+            .ThenInclude(od => od.Variant)
+                .ThenInclude(v => v.Color)
+        .FirstOrDefault(o => o.Id == id);
+
+            if (order == null)
+                return NotFound();
 
             return View(order);
         }
@@ -205,9 +226,27 @@ namespace Shopbannoithat.Controllers
         public IActionResult Detail(int id)
         {
             var order = _context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(d => d.Product)
-                .FirstOrDefault(o => o.Id == id);
+
+        // Product
+        .Include(o => o.OrderDetails)
+            .ThenInclude(d => d.Product)
+
+        // Variant + Size
+        .Include(o => o.OrderDetails)
+            .ThenInclude(d => d.Variant)
+                .ThenInclude(v => v.Size)
+
+        // Variant + Material
+        .Include(o => o.OrderDetails)
+            .ThenInclude(d => d.Variant)
+                .ThenInclude(v => v.Material)
+
+        // Variant + Color
+        .Include(o => o.OrderDetails)
+            .ThenInclude(d => d.Variant)
+                .ThenInclude(v => v.Color)
+
+        .FirstOrDefault(o => o.Id == id);
 
             if (order == null)
                 return NotFound();

@@ -39,7 +39,9 @@ namespace Shopbannoithat.Controllers
                 .Select(g => new { ProductId = g.Key, TotalSold = g.Sum(od => od.Quantity) })
                 .OrderByDescending(x => x.TotalSold)
                 .Take(8)
-                .Join(_context.Products.Include(p => p.Category).ThenInclude(c => c.Parent),
+                .Join(_context.Products
+                    .Include(p => p.Category).ThenInclude(c => c.Parent)
+                    .Include(p => p.Variants),
                     sold => sold.ProductId,
                     product => product.Id,
                     (sold, product) => product)
@@ -49,6 +51,7 @@ namespace Shopbannoithat.Controllers
             {
                 bestSelling = await _context.Products
                     .Include(p => p.Category).ThenInclude(c => c.Parent)
+                    .Include(p => p.Variants)
                     .OrderByDescending(p => p.Id)
                     .Take(8)
                     .ToListAsync();
@@ -61,21 +64,25 @@ namespace Shopbannoithat.Controllers
 
             var phongKhach = await _context.Products
                 .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Include(p => p.Variants)
                 .Where(p => p.CategoryId != null && idsKhach.Contains(p.CategoryId.Value))
                 .Take(8).ToListAsync();
 
             var phongNgu = await _context.Products
                 .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Include(p => p.Variants)
                 .Where(p => p.CategoryId != null && idsNgu.Contains(p.CategoryId.Value))
                 .Take(8).ToListAsync();
 
             var phongBep = await _context.Products
                 .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Include(p => p.Variants)
                 .Where(p => p.CategoryId != null && idsBep.Contains(p.CategoryId.Value))
                 .Take(8).ToListAsync();
 
             var phongLamViec = await _context.Products
                 .Include(p => p.Category).ThenInclude(c => c.Parent)
+                .Include(p => p.Variants)
                 .Where(p => p.CategoryId != null && idsLamViec.Contains(p.CategoryId.Value))
                 .Take(8).ToListAsync();
 

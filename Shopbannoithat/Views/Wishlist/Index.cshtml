@@ -26,22 +26,11 @@
                         @item.Price.ToString("N0") VNĐ
                     </p>
 
-                    <!-- Button thêm vào giỏ hàng -->
-                    @if (item.Product.Quantity > 0)
-                    {
-                        <a asp-controller="Cart"
-                           asp-action="Add"
-                           asp-route-id="@item.ProductId"
-                           class="btn btn-success btn-sm">
-                            Thêm vào giỏ hàng
-                        </a>
-                    }
-                    else
-                    {
-                        <button class="btn btn-danger btn-sm" disabled>
-                            Hết hàng
-                        </button>
-                    }
+                    
+                    <!-- Button xem chi tiết -->
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-primary btn-sm">
+                        Xem chi tiết
+                    </a>
 
                     <a asp-controller="Wishlist" asp-action="Remove"
                        asp-route-id="@item.ProductId"

@@ -216,7 +216,25 @@
                     <tr>
                         <td><img src="~/images/@item.Image" alt="@item.Name" /></td>
                         <td><strong>@item.Name</strong></td>
-                        <td><span class="price-val">@item.Price?.ToString("N0") đ</span></td>
+                        <td>
+                            @if (item.Variants != null && item.Variants.Any())
+                            {
+                                var minPrice = item.Variants.Min(v => v.Price);
+                                var maxPrice = item.Variants.Max(v => v.Price);
+                                if (minPrice == maxPrice)
+                                {
+                                    <span class="price-val">@minPrice.ToString("N0") ₫</span>
+                                }
+                                else
+                                {
+                                    <span class="price-val">@minPrice.ToString("N0") – @maxPrice.ToString("N0") ₫</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="price-val">@item.Price?.ToString("N0") ₫</span>
+                            }
+                        </td>
                         <td><span class="badge badge-room">@item.Category?.Parent?.Name</span></td>
                         <td><span class="badge badge-cat">@item.Category?.Name</span></td>
                         <td style="max-width:180px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;">
