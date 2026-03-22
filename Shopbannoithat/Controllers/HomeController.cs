@@ -47,15 +47,7 @@ namespace Shopbannoithat.Controllers
                     (sold, product) => product)
                 .ToListAsync();
 
-            if (!bestSelling.Any())
-            {
-                bestSelling = await _context.Products
-                    .Include(p => p.Category).ThenInclude(c => c.Parent)
-                    .Include(p => p.Variants)
-                    .OrderByDescending(p => p.Id)
-                    .Take(8)
-                    .ToListAsync();
-            }
+           
 
             var idsKhach = GetCategoryIds("Phòng khách");
             var idsNgu = GetCategoryIds("Phòng ngủ");
@@ -96,8 +88,7 @@ namespace Shopbannoithat.Controllers
             ViewBag.SanPhamMoi = sanPhamMoi;
             ViewBag.BestSelling = bestSelling;
             ViewBag.PhongKhach = phongKhach;
-            ViewBag.BestSelling = bestSelling;
-            ViewBag.PhongKhach = phongKhach;
+            
             ViewBag.PhongNgu = phongNgu;
             ViewBag.PhongBep = phongBep;
             ViewBag.PhongLamViec = phongLamViec;
