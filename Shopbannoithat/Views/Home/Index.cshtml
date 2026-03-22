@@ -30,6 +30,87 @@
     </button>
 </div>
 
+@* ===== 6. SẢN PHẨM MỚI NHẤT ===== *@
+<section class="product-section py-5 bg-section">
+    <div class="container">
+        <div class="section-header d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-2">
+                <span class="section-icon">✨</span>
+                <h2 class="section-title mb-0">Sản Phẩm Mới Nhất</h2>
+            </div>
+            <a href="/Product?sort=newest" class="btn-viewall">Xem tất cả →</a>
+        </div>
+        @if (ViewBag.SanPhamMoi != null && ((List<Shopbannoithat.Models.Product>)ViewBag.SanPhamMoi).Count > 0)
+        {
+            <div class="row g-3">
+                @foreach (var item in (List<Shopbannoithat.Models.Product>)ViewBag.SanPhamMoi)
+                {
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="product-card">
+                            <a href="/Product/Details/@item.Id" class="product-img-wrap">
+                                @if (!string.IsNullOrEmpty(item.Image))
+                                {
+                                    <img src="~/images/@item.Image" alt="@item.Name" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/no-image.png" alt="No image" />
+                                }
+                                <span class="badge-new">Mới</span>
+                            </a>
+                            <div class="product-info">
+                                <p class="product-category">@item.Category?.Name</p>
+                                <h6 class="product-name">@item.Name</h6>
+                                <p class="product-price">
+                                    @{
+                                        string newItemPrice = "";
+                                        if (item.Variants != null && item.Variants.Any())
+                                        {
+                                            var minP = item.Variants.Min(v => v.Price);
+                                            var maxP = item.Variants.Max(v => v.Price);
+                                            newItemPrice = minP == maxP
+                                            ? minP.ToString("N0") + " ₫"
+                                            : minP.ToString("N0") + " – " + maxP.ToString("N0") + " ₫";
+                                        }
+                                        else
+                                        {
+                                            newItemPrice = (item.Price?.ToString("N0") ?? "0") + " ₫";
+                                        }
+                                    }
+                                    @newItemPrice
+                                </p>
+                                <div class="btn-group-home">
+                                    <a href="/Product/Details/@item.Id" class="btn-detail">Xem chi tiết</a>
+                                    @if (Context.Session.GetString("UserEmail") != null)
+                                    {
+                                        <button class="btn-wishlist addWishlist" data-id="@item.Id" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <a href="/Auth/Login" class="btn-wishlist" title="Thêm vào Wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748z" />
+                                            </svg>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted text-center">Chưa có sản phẩm nào.</p>
+        }
+    </div>
+</section>
+
 @* ===== 1. SẢN PHẨM BÁN CHẠY ===== *@
 <section class="product-section py-5">
     <div class="container">
@@ -625,7 +706,17 @@
 .btn-wishlist:hover { color: #e05c2a; transform: scale(1.12); }
 .btn-wishlist.active { color: #e05c2a; }
 
-    
+    .badge-new {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: #2563eb;
+        color: #fff;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 20px;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script>
 <script>

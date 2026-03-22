@@ -351,6 +351,30 @@
                     <span class="od-badge-dot"></span>@Model.Status
                 </span>
             </span>
+            
+        </div>
+
+        <div class="od-meta-pill">
+            <span class="od-meta-label">Thanh toán</span>
+            <span class="od-meta-val">
+                @if (Model.PaymentMethod == "BANK")
+                {
+                    <span style="color:#1e40af;">🏦 Chuyển khoản</span>
+                    <br />
+                    @if (Model.IsPaid)
+                    {
+                        <small style="color:#15803d;">✅ Đã thanh toán</small>
+                    }
+                    else
+                    {
+                        <small style="color:#dc2626;">⏳ Chờ xác nhận</small>
+                    }
+                }
+                else
+                {
+                    <span>💵 COD</span>
+                }
+            </span>
         </div>
         <div class="od-meta-pill">
             @if (!string.IsNullOrEmpty(Model.CouponCode))
@@ -432,10 +456,35 @@
         <span class="od-total-val">@Model.TotalPrice.ToString("N0") VNĐ</span>
     </div>
 
-    <div class="od-actions">
-        <a asp-controller="Product" asp-action="Index" class="od-btn-outline">Tiếp tục mua sắm</a>
-        <a href="#" onclick="window.print()" class="od-btn-solid">In hoá đơn</a>
-    </div>
+    @if (Model.PaymentMethod == "BANK" && !Model.IsPaid)
+    {
+        <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:14px;
+                    padding:24px; margin-bottom:1rem; text-align:center;">
+            <h5 style="color:#166534; font-weight:700; margin-bottom:12px;">
+                🏦 Hoàn tất thanh toán chuyển khoản
+            </h5>
+            <p>
+                <b>Số tiền:</b>
+                <strong style="color:#e05c2a;">@Model.TotalPrice.ToString("N0") ₫</strong>
+            </p>
+            <div style="display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-top:12px;">
+                <div style="text-align:left; font-size:0.88rem; line-height:2;">
+                    <p><b>Ngân hàng:</b> Vietcombank</p>
+                    <p><b>Số tài khoản:</b> 1234567890</p>
+                    <p><b>Chủ tài khoản:</b> NGUYEN VAN A</p>
+                    <p style="color:#dc2626;"><b>Nội dung CK:</b>Chuyển khoản đơn hàng ORD @Model.Id</p>
+                </div>
+                <div>
+                    <img src="https://img.vietqr.io/image/VCB-1234567890-compact2.png?amount=@Model.TotalPrice&addInfo=ORD@Model.Id&accountName=NGUYEN%20VAN%20A"
+                         style="width:180px; border-radius:10px; border:1px solid #ddd;" />
+                </div>
+            </div>
+            <p style="color:#888; font-size:0.8rem; margin-top:12px;">
+                ⚠️ Đơn hàng sẽ được xử lý sau khi admin xác nhận thanh toán.
+            </p>
+        </div>
+    }
+   
 </div>
 
 

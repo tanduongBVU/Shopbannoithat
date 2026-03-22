@@ -370,6 +370,40 @@
                 <span class="oc-total-val">@Model.TotalPrice.ToString("N0") VNĐ</span>
             </div>
 
+            @* 🔥 THÊM VÀO ĐÂY *@
+            @if (Model.PaymentMethod == "BANK" && !Model.IsPaid)
+            {
+                <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:12px;
+                    padding:24px; margin-bottom:20px; text-align:center;">
+                    <h4 style="color:#166534; font-weight:700; margin-bottom:12px;">
+                        🏦 Hoàn tất thanh toán chuyển khoản
+                    </h4>
+                    <p>
+                        Vui lòng chuyển khoản với nội dung:
+                        <strong style="color:#dc2626; font-size:1.1rem;">Chuyển khoản đơn hàng (Mã đơn hàng sau khi đặt)</strong>
+                    </p>
+                    <p>
+                        <b>Số tiền:</b>
+                        <strong style="color:#e05c2a;">@Model.TotalPrice.ToString("N0") ₫</strong>
+                    </p>
+                    <div style="display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-top:12px;">
+                        <div style="text-align:left; font-size:0.9rem;">
+                            <p><b>Ngân hàng:</b> Vietcombank</p>
+                            <p><b>Số tài khoản:</b> 1234567890</p>
+                            <p><b>Chủ tài khoản:</b> NGUYEN VAN A</p>
+                            <p style="color:#dc2626;"><b>Nội dung CK:</b>Chuyển khoản đơn hàng ORD @Model.Id</p>
+                        </div>
+                        <div>
+                            <img src="https://img.vietqr.io/image/VCB-1234567890-compact2.png?amount=@Model.TotalPrice&addInfo=ORD@Model.Id&accountName=NGUYEN%20VAN%20A"
+                                 style="width:180px; border-radius:10px; border:1px solid #ddd;" />
+                        </div>
+                    </div>
+                    <p style="color:#888; font-size:0.82rem; margin-top:12px;">
+                        ⚠️ Đơn hàng sẽ được xử lý sau khi admin xác nhận thanh toán.
+                    </p>
+                </div>
+            }
+
             <a asp-controller="Product" asp-action="Index" class="oc-btn">
                 Tiếp tục mua sắm
             </a>
