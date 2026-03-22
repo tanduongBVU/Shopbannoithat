@@ -68,5 +68,17 @@ namespace Shopbannoithat.Areas.Staff.Controllers
             if (order == null) return NotFound();
             return View(order);
         }
+
+        public IActionResult ConfirmPayment(int id)
+        {
+            var order = _context.Orders.Find(id);
+            if (order != null)
+            {
+                order.IsPaid = true;
+                order.Status = "Đã thanh toán";
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

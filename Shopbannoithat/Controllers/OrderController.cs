@@ -79,6 +79,8 @@ namespace Shopbannoithat.Controllers
             order.OrderDate = DateTime.Now;
             order.Status = "Đang xử lý";
             order.OrderPlaced = DateTime.Now;
+            order.PaymentMethod = order.PaymentMethod ?? "COD"; // 🔥 Thêm
+            order.IsPaid = order.PaymentMethod == "COD";        // 🔥 COD thì coi như đã xử lý
 
             decimal total = 0;
             order.OrderDetails = new List<OrderDetail>();

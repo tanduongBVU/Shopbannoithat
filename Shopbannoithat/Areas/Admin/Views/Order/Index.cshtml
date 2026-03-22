@@ -215,6 +215,30 @@
                                 @item.Status
                             </span>
                         </td>
+                        <td>
+                        @if (item.PaymentMethod == "BANK")
+                        {
+                            <span style="background:#dbeafe;color:#1e40af;padding:4px 10px;border-radius:6px;font-size:0.78rem;font-weight:600;">
+                                🏦 Chuyển khoản
+                            </span>
+                            @if (item.IsPaid)
+                            {
+                                <br />
+                                <small style="color:#15803d;">✅ Đã thanh toán</small>
+                            }
+                            else
+                            {
+                                <br />
+                                <small style="color:#dc2626;">⏳ Chờ xác nhận</small>
+                            }
+                        }
+                        else
+                        {
+                            <span style="background:#f3f4f6;color:#374151;padding:4px 10px;border-radius:6px;font-size:0.78rem;font-weight:600;">
+                                💵 COD
+                            </span>
+                        }
+                        </td>
                         <td class="text-center">
                             <a asp-area="Admin" asp-controller="Order"  asp-action="Detail" asp-route-id="@item.Id" class="btn btn-info btn-sm">
                                 👁 Chi tiết
@@ -225,6 +249,16 @@
                             <a asp-area="Admin" asp-controller="Order" asp-action="UpdateStatus" asp-route-id="@item.Id" asp-route-status="Hoàn thành" class="btn btn-success btn-sm">
                                 Hoàn thành
                             </a>
+
+                            @if (item.PaymentMethod == "BANK" && !item.IsPaid)
+                            {
+                                <a asp-area="Admin" asp-controller="Order" asp-action="ConfirmPayment" asp-route-id="@item.Id"
+                                   class="btn btn-sm"
+                                   style="background-color:#fef9c3;color:#854d0e;"
+                                   onclick="return confirm('Xác nhận khách đã chuyển khoản?')">
+                                    💰 Xác nhận TT
+                                </a>
+                            }
                         </td>
                     </tr>
                 }

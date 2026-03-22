@@ -37,5 +37,10 @@ namespace Shopbannoithat.Models
         public int? DiscountPercent { get; set; }
 
 
+        //Thanh toán
+        public string? PaymentMethod { get; set; } // "COD" hoặc "BANK"
+        public bool IsPaid { get; set; } = false;
+
+
     }
 }

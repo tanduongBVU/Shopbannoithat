@@ -86,6 +86,16 @@ namespace Shopbannoithat.Controllers
                 .Where(p => p.CategoryId != null && idsLamViec.Contains(p.CategoryId.Value))
                 .Take(8).ToListAsync();
 
+            var sanPhamMoi = await _context.Products
+    .Include(p => p.Category).ThenInclude(c => c.Parent)
+    .Include(p => p.Variants)
+    .OrderByDescending(p => p.CreatedAt)
+    .Take(8)
+    .ToListAsync();
+
+            ViewBag.SanPhamMoi = sanPhamMoi;
+            ViewBag.BestSelling = bestSelling;
+            ViewBag.PhongKhach = phongKhach;
             ViewBag.BestSelling = bestSelling;
             ViewBag.PhongKhach = phongKhach;
             ViewBag.PhongNgu = phongNgu;

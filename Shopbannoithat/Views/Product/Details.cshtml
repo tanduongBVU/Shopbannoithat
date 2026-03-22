@@ -128,7 +128,7 @@
     @priceDisplay
 </h4>
 
-            <p style="color:#666; line-height:1.7; margin-bottom:20px;">@Model.Description</p>
+            
 
             <!-- BIẾN THỂ -->
             @if (Model.Variants != null && Model.Variants.Any())
@@ -219,6 +219,11 @@
                     <i class="bi bi-arrow-left"></i> Quay lại
                 </a>
             </div>
+            <br />
+            <p style="font-size:0.85rem; color:#9e8e7e; margin-bottom:10px;">
+                    Mô tả:
+            </p>
+            <p style="color:#666; line-height:1.7; margin-bottom:20px;">@Model.Description</p>
         </div>
     </div>
 </div>

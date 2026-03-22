@@ -155,6 +155,31 @@
             background-color: #1e293b;
             transform: translateY(-2px);
         }
+
+    /* 🔥 Thêm vào cuối style */
+    @@media print {
+        .btn {
+            display: none !important;
+        }
+
+        .invoice-container {
+            background: #fff !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+
+        .info-section {
+            background: #f8fafc !important;
+        }
+
+        .total-section {
+            background: #fff5f5 !important;
+        }
+
+        body {
+            background: #fff !important;
+        }
+    }
 </style>
 <div class="invoice-container">
     <h2 style=" text-align:center;"><i class="fas fa-file-invoice"></i> Chi tiết đơn hàng</h2>
@@ -244,4 +269,10 @@
     <a asp-area="Staff" asp-controller="Order" asp-action="Index" class="btn btn-secondary mt-4">
         <i class="fas fa-arrow-left"></i> Quay lại danh sách
     </a>
+
+    @* 🔥 Thêm nút in hóa đơn *@
+    <button onclick="window.print()" class="btn mt-4"
+            style="background:#2d3748; color:#fff; border-radius:8px; padding:10px 25px; font-weight:600; border:none; margin-left:10px;">
+        <i class="fas fa-print"></i> In hoá đơn
+    </button>
 </div>

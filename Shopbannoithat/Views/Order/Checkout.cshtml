@@ -138,6 +138,51 @@
 
     <h3 style="color: red;text-align:right;">Tổng tiền: @total.ToString("N0") VNĐ</h3>
 
+    <hr />
+
+    <!-- PHƯƠNG THỨC THANH TOÁN -->
+    <h4>Phương thức thanh toán</h4>
+
+    <div style="display:flex; gap:12px; margin-bottom:16px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;
+                  padding:12px 20px;border:2px solid #ddd;border-radius:10px;flex:1;
+                  transition:border-color 0.2s;">
+            <input type="radio" name="PaymentMethod" value="COD" checked
+                   onchange="document.getElementById('bankInfo').style.display='none'" />
+            <span>💵 Thanh toán khi nhận hàng (COD)</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;
+                  padding:12px 20px;border:2px solid #ddd;border-radius:10px;flex:1;
+                  transition:border-color 0.2s;">
+            <input type="radio" name="PaymentMethod" value="BANK"
+                   onchange="document.getElementById('bankInfo').style.display='block'" />
+            <span>🏦 Chuyển khoản ngân hàng</span>
+        </label>
+    </div>
+
+    <!-- THÔNG TIN NGÂN HÀNG -->
+    <div id="bankInfo" style="display:none; background:#f0fdf4; border:1px solid #86efac;
+     border-radius:12px; padding:20px; margin-bottom:16px;">
+        <h5 style="font-weight:700; color:#166534; margin-bottom:12px;">
+            📋 Thông tin chuyển khoản
+        </h5>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;">
+            <div>
+                <p><b>Ngân hàng:</b> Vietcombank</p>
+                <p><b>Số tài khoản:</b> 1234567890</p>
+                <p><b>Chủ tài khoản:</b> NGUYEN VAN A</p>
+                <p style="color:#dc2626;"><b>Nội dung CK:</b> ORD [Mã đơn sau khi đặt]</p>
+                <p style="color:#888; font-size:0.85rem;">
+                    ⚠️ Đơn hàng sẽ được xử lý sau khi admin xác nhận thanh toán.
+                </p>
+            </div>
+            <div style="text-align:center;">
+                <img src="https://img.vietqr.io/image/VCB-1234567890-compact2.png?amount=@total&addInfo=DatHang&accountName=NGUYEN VAN A"
+                     style="width:180px; border-radius:10px; border:1px solid #ddd;" />
+                <p style="font-size:0.8rem; color:#888; margin-top:6px;">Quét QR để chuyển khoản</p>
+            </div>
+        </div>
+    </div>
     <button type="submit" class="btn btn-success">
         Xác nhận đặt hàng
     </button>
