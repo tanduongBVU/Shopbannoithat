@@ -15,65 +15,68 @@
 
 <body>
 
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    }
     <div class="d-flex">
 
-        <div class="bg-secondary text-white p-3" style="width:250px; min-height:100vh">
+        <div class="bg-dark text-white p-3" style="width:250px; height:100vh ; position: sticky; top: 0;
+        overflow-y: auto">
 
-            <h4>STAFF</h4>
+            <h4 class="text-center">STAFF</h4>
             <hr>
 
-            <ul class="nav flex-column">
+            <ul class="nav flex-column ">
 
                 <li class="nav-item">
-                    <a class="nav-link text-white"
+                    <a class="nav-link text-white 
                        asp-area="Staff"
                        asp-controller="Order"
                        asp-action="Index">
-                        Quản lý đơn hàng
+                        <i class="bi bi-cart-check"></i> Quản lý đơn hàng
                     </a>
                 </li>
                 <li>
-                    <a class="nav-link text-white"
+                    <a class="nav-link text-white 
                         asp-area="Staff"
                        asp-controller="Inventory"
                        asp-action="Index">
-                        Quản lý kho
+                        <i class="bi bi-box-seam"></i> Quản lý kho
                     </a>
                 </li>
 
                 <li>
-                    <a class="nav-link text-white"
-                       asp-area="Staff"
+                    <a class="nav-link text-white
                        asp-controller="Product"
                        asp-action="Index">
-                        Quản lý sản phẩm 
+                        <i class="bi bi-laptop"></i> Quản lý sản phẩm
                     </a>
                 </li>
 
                 <li>
-                    <a class="nav-link text-white"
+                    <a class="nav-link text-white
                        asp-area="Staff"
                        asp-controller="Category"
                        asp-action="Index">
-                        Quản lý loại sản phẩm
+                        <i class="bi bi-grid-3x3-gap"></i> Quản lý loại sản phẩm
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-white"
+                    <a class="nav-link text-white 
                        asp-area="Staff"
                        asp-controller="Attribute"
                        asp-action="Index">
-                        Quản lý biến thể sản phẩm
+                        <i class="bi bi-diagram-3"></i> Quản lý biến thể
                     </a>
                 </li>
 
                 <li>
-                    <a class="nav-link text-white"
+                    <a class="nav-link text-white "
                        asp-area="Staff"
                        asp-controller="Coupon"
                        asp-action="Index">
-                        Quản lý mã giảm giá
+                        <i class="bi bi-ticket-perforated"></i> Quản lý mã giảm giá
                     </a>
                 </li>
                 @* <li>
@@ -86,7 +89,7 @@
                 </li> *@
 
                 <li class="nav-item">
-                    <a class="nav-link text-white"
+                    <a class="nav-link text-white "
                            asp-area="Staff"
                            asp-controller="Chat"
                            asp-action="Index">
@@ -96,7 +99,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/">
-                        Về trang chủ
+                        <i class="bi bi-house-door"></i> Về trang chủ
                     </a>
                 </li>
 
@@ -112,3 +115,64 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+<style>
+    /* Custom Sidebar Styles */
+    .admin-sidebar {
+        background-color: #212529; /* Màu nền tối hiện đại */
+        width: 260px;
+        height: 100vh;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ tách biệt với content */
+        position: sticky; /* Làm cho menu dính lại */
+        top: 0;
+        overflow-y: auto; /* Tạo thanh cuộn riêng cho menu phòng trường hợp menu quá dài hoặc màn hình laptop nhỏ */
+    }
+
+        .admin-sidebar h4 {
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #ffffff;
+            padding: 1.5rem 1rem 0.5rem 1rem;
+            margin-bottom: 0;
+        }
+
+        .admin-sidebar hr {
+            border-color: rgba(255, 255, 255, 0.15);
+            margin: 0 1.5rem 1rem 1.5rem;
+        }
+
+    .admin-menu {
+        padding: 0 1rem;
+    }
+
+        .admin-menu .nav-item {
+            margin-bottom: 4px;
+        }
+
+        .admin-menu .nav-link {
+            color: #a2a3b7 !important; /* Màu chữ xám nhạt cho menu tĩnh */
+            font-weight: 500;
+            border-radius: 8px; /* Bo góc mềm mại */
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Khoảng cách giữa icon và text */
+        }
+
+            /* Hiệu ứng khi di chuột vào (Hover) */
+            .admin-menu .nav-link:hover {
+                color: #ffffff !important;
+                background-color: #BEBDC175;
+            }
+
+            /* Trạng thái đang chọn (Active) - Lấy màu tím giống bảng dữ liệu của bạn */
+            .admin-menu .nav-link.active {
+                color: #ffffff !important;
+                background-color: #6f42c1;
+                transform: translateX(3px);
+            }
+
+            .admin-menu .nav-link i {
+                font-size: 1.1rem; /* Chỉnh kích thước icon đồng đều */
+            }
+</style>

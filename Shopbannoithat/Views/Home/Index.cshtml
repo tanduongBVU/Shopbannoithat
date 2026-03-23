@@ -3,7 +3,7 @@
 }
 
 @* ===== BANNER SLIDER ===== *@
-<div id="homeSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+@* <div id="homeSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img src="~/images/khach-s-n-senkotel-nha.jpg" class="d-block w-100 banner-img">
@@ -28,9 +28,26 @@
     <button class="carousel-control-next" type="button" data-bs-target="#homeSlider" data-bs-slide="next">
         <span class="carousel-control-next-icon"></span>
     </button>
+</div> *@
+
+@* ===== BANNER VIDEO YOUTUBE ===== *@
+<div class="banner-video-wrap">
+    <div class="video-overlay">
+        <div class="video-caption">
+            <h2>Bộ Sưu Tập ShopNoiThat</h2>
+            <p>Khi Không Gian Sống Trở Thành Cảm Hứng</p>
+            <a href="/Product" class="btn btn-light">Xem thêm</a>
+        </div>
+    </div>
+    <div class="ratio ratio-16x9">
+        <iframe src="https://www.youtube.com/embed/KxrHsF_SEOI?autoplay=1&mute=1&loop=1&playlist=KxrHsF_SEOI&controls=0&rel=0&modestbranding=1"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+        </iframe>
+    </div>
 </div>
 
-@* ===== 6. SẢN PHẨM MỚI NHẤT ===== *@
+@* ===== 0. SẢN PHẨM MỚI NHẤT ===== *@
 <section class="product-section py-5 bg-section">
     <div class="container">
         <div class="section-header d-flex align-items-center justify-content-between mb-4">
@@ -42,6 +59,9 @@
         </div>
         @if (ViewBag.SanPhamMoi != null && ((List<Shopbannoithat.Models.Product>)ViewBag.SanPhamMoi).Count > 0)
         {
+            <div class="product-slider">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
             <div class="row g-3">
                 @foreach (var item in (List<Shopbannoithat.Models.Product>)ViewBag.SanPhamMoi)
                 {
@@ -103,12 +123,15 @@
                     </div>
                 }
             </div>
+            </div>
         }
         else
         {
             <p class="text-muted text-center">Chưa có sản phẩm nào.</p>
         }
+       
     </div>
+    
 </section>
 
 @* ===== 1. SẢN PHẨM BÁN CHẠY ===== *@
@@ -123,9 +146,14 @@
         </div>
         @if (ViewBag.BestSelling != null && ((List<Shopbannoithat.Models.Product>)ViewBag.BestSelling).Count > 0)
         {
+
+            <div class="product-slider">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
             <div class="row g-3">
                 @foreach (var item in (List<Shopbannoithat.Models.Product>)ViewBag.BestSelling)
                 {
+
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="product-card">
                             <a href="/Product/Details/@item.Id" class="product-img-wrap">
@@ -186,11 +214,14 @@
                     </div>
                 }
             </div>
+            </div>
         }
         else
         {
             <p class="text-muted text-center">Chưa có sản phẩm nào.</p>
         }
+
+
     </div>
 </section>
 
@@ -206,6 +237,9 @@
         </div>
         @if (ViewBag.PhongKhach != null && ((List<Shopbannoithat.Models.Product>)ViewBag.PhongKhach).Count > 0)
         {
+                <div class="product-slider">
+                    <button class="slider-btn left">&#10094;</button>
+                     <button class="slider-btn right">&#10095;</button>
             <div class="row g-3">
                 @foreach (var item in (List<Shopbannoithat.Models.Product>)ViewBag.PhongKhach)
                 {
@@ -268,6 +302,7 @@
                     </div>
                 }
             </div>
+            </div>
         }
         else
         {
@@ -288,6 +323,10 @@
         </div>
         @if (ViewBag.PhongNgu != null && ((List<Shopbannoithat.Models.Product>)ViewBag.PhongNgu).Count > 0)
         {
+            <div class="product-slider">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
+
             <div class="row g-3">
                 @foreach (var item in (List<Shopbannoithat.Models.Product>)ViewBag.PhongNgu)
                 {
@@ -350,6 +389,7 @@
                     </div>
                 }
             </div>
+            </div>
         }
         else
         {
@@ -370,6 +410,9 @@
         </div>
         @if (ViewBag.PhongBep != null && ((List<Shopbannoithat.Models.Product>)ViewBag.PhongBep).Count > 0)
         {
+            <div class="product-slider">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
             <div class="row g-3">
                 @foreach (var item in (List<Shopbannoithat.Models.Product>)ViewBag.PhongBep)
                 {
@@ -432,6 +475,7 @@
                     </div>
                 }
             </div>
+            </div>
         }
         else
         {
@@ -452,6 +496,9 @@
         </div>
         @if (ViewBag.PhongLamViec != null && ((List<Shopbannoithat.Models.Product>)ViewBag.PhongLamViec).Count > 0)
         {
+            <div class="product-slider">
+                <button class="slider-btn left">&#10094;</button>
+                <button class="slider-btn right">&#10095;</button>
             <div class="row g-3">
                 @foreach (var item in (List<Shopbannoithat.Models.Product>)ViewBag.PhongLamViec)
                 {
@@ -514,6 +561,7 @@
                 </div>
                 }
             </div>
+            </div>
         }
         else
         {
@@ -567,6 +615,57 @@
         object-fit: cover;
         transition: transform 0.35s;
     }
+
+    /*  mới sửa */
+
+    .product-slider {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .product-slider .row {
+            display: flex;
+            flex-wrap: nowrap;
+            transition: transform 0.5s ease;
+        }
+
+        .product-slider .col-6,
+        .product-slider .col-md-4,
+        .product-slider .col-lg-3 {
+            flex: 0 0 auto;
+            width: 25%;
+        }
+
+    .slider-btn {
+        position: absolute;
+        top: 40%;
+        transform: translateY(-50%);
+        background: #3a2a1a;
+        color: #fff;
+        border: none;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        opacity: 0.8;
+    }
+
+        .slider-btn:hover {
+            background: #7a4f2d;
+        }
+
+        .slider-btn.left {
+            left: 5px;
+        }
+
+        .slider-btn.right {
+            right: 5px;
+        }
+
+   
+
+
     .product-card:hover .product-img-wrap img { transform: scale(1.06); }
     .badge-hot {
         position: absolute;
@@ -717,6 +816,62 @@
         padding: 3px 10px;
         border-radius: 20px;
     }
+
+
+    /* video */
+
+    .banner-video-wrap {
+        position: relative;
+        width: 100vw; /* tràn full màn hình */
+        margin-left: calc(-50vw + 50%); /* căn giữa để tràn ra 2 bên */
+        height: 70vh; /* 70% chiều cao màn hình */
+        overflow: hidden;
+        background: #111;
+        margin-top: -30px; /* bù lại mt-3 của container */
+    }
+
+        .banner-video-wrap .ratio {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 177.78vh; /* giữ tỉ lệ 16:9, phủ full chiều ngang */
+            min-width: 100%;
+            pointer-events: none;
+        }
+
+    .video-overlay {
+        position: absolute;
+        inset: 0;
+        /* ít mờ hơn */
+        background: rgba(0, 0, 0, 0.15);
+        /* gần như trong suốt */
+        background: rgba(0, 0, 0, 0.05);
+        /* bỏ hẳn overlay */
+        background: transparent;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .video-caption {
+        text-align: center;
+        color: #fff;
+    }
+
+        .video-caption h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .video-caption p {
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"> </script>
 <script>
@@ -738,4 +893,62 @@
             }
         });
     });
+</script>
+
+
+<script>
+    document.querySelectorAll(".product-slider").forEach(sliderWrap => {
+
+        let index = 0;
+
+        const slider = sliderWrap.querySelector(".row");
+        const items = sliderWrap.querySelectorAll(".col-lg-3");
+        const btnLeft = sliderWrap.querySelector(".slider-btn.left");
+        const btnRight = sliderWrap.querySelector(".slider-btn.right");
+
+        if (items.length === 0) return;
+
+        // 👉 lấy width thật
+        const itemWidth = items[0].offsetWidth;
+
+        // 👉 số item hiển thị
+        const visibleItems = Math.floor(sliderWrap.offsetWidth / itemWidth);
+
+        // 👉 giới hạn
+        const maxIndex = items.length - visibleItems;
+
+        // 👉 auto chạy
+        let autoSlide = setInterval(() => {
+            index++;
+            if (index > maxIndex) index = 0;
+            slider.style.transform = `translateX(-${index * itemWidth}px)`;
+        }, 3000);
+
+        // 👉 nút phải
+        btnRight.onclick = () => {
+            index++;
+            if (index > maxIndex) index = maxIndex;
+            slider.style.transform = `translateX(-${index * itemWidth}px)`;
+        };
+
+        // 👉 nút trái
+        btnLeft.onclick = () => {
+            index--;
+            if (index < 0) index = 0;
+            slider.style.transform = `translateX(-${index * itemWidth}px)`;
+        };
+
+        // 👉 dừng auto khi hover (xịn hơn)
+        sliderWrap.addEventListener("mouseenter", () => clearInterval(autoSlide));
+        sliderWrap.addEventListener("mouseleave", () => {
+            autoSlide = setInterval(() => {
+                index++;
+                if (index > maxIndex) index = 0;
+                slider.style.transform = `translateX(-${index * itemWidth}px)`;
+            }, 3000);
+        });
+
+    });
+
+    
 </script>
