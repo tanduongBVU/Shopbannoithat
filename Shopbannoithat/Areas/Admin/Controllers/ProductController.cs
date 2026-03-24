@@ -56,6 +56,21 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         public IActionResult Create(Product product, IFormFile imageFile, List<ProductVariant> Variants)
         {
 
+            // 🔥 THÊM: Bắt buộc phải có ít nhất 1 biến thể
+            if (Variants == null || !Variants.Any())
+            {
+                ModelState.AddModelError("", "Vui lòng thêm ít nhất một biến thể sản phẩm!");
+
+                ViewBag.Parents = _context.Categories.Where(c => c.ParentId == null).ToList();
+                var ch = _context.Categories.Where(c => c.ParentId != null)
+                                 .Select(c => new { c.Id, c.Name, c.ParentId }).ToList();
+                ViewBag.ChildrenJson = System.Text.Json.JsonSerializer.Serialize(ch,
+                    new System.Text.Json.JsonSerializerOptions { PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase });
+                ViewBag.Sizes = _context.Sizes.ToList();
+                ViewBag.Materials = _context.Materials.ToList();
+                ViewBag.Colors = _context.Colors.ToList();
+                return View(product);
+            }
 
             // 🔹 Tự sinh SKU nếu trống
             if (string.IsNullOrEmpty(product.SKU))

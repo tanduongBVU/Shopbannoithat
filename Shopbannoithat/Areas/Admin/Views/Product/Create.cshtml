@@ -180,6 +180,14 @@
             return;
         }
 
+             // 🔥 THÊM: Kiểm tra có ít nhất 1 biến thể
+        const variantRows = document.querySelectorAll('.variant-row');
+        if (variantRows.length === 0) {
+            alert("❌ Vui lòng thêm ít nhất một biến thể sản phẩm!");
+            e.preventDefault();
+            return;
+        }
+
         const productQty = parseInt(document.querySelector('[name="Quantity"]').value) || 0;
         const variantStocks = document.querySelectorAll('input[name*=".Stock"]');
 
