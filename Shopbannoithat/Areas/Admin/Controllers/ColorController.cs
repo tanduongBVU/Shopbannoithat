@@ -11,18 +11,18 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         public ColorController(ApplicationDbContext context) => _context = context;
 
         [HttpPost]
-        public IActionResult Create(ProductColor color)
+        public IActionResult Create(ProductColor color)  /*Thêm màu*/
         {
-            _context.Colors.Add(color);
+            _context.Colors.Add(color); /*Thêm object "color" vào bảng Colors trong database*/
             _context.SaveChanges();
-            return RedirectToAction("Index", "Attribute");
+            return RedirectToAction("Index", "Attribute");  /*chuyển sang action index của controller Attribute*/
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id)   /*Xóa màu*/
         {
-            var color = _context.Colors.Find(id);
-            if (color != null) { _context.Colors.Remove(color); _context.SaveChanges(); }
-            return RedirectToAction("Index", "Attribute");
+            var color = _context.Colors.Find(id);  
+            if (color != null) { _context.Colors.Remove(color); _context.SaveChanges(); }  /*nếu color tồn tại thì xóa color đó ra khỏi database*/
+            return RedirectToAction("Index", "Attribute");  
         }
     }
 }

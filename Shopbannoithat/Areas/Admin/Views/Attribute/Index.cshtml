@@ -5,6 +5,7 @@
     var colors = ViewBag.Colors as List<Shopbannoithat.Models.ProductColor>;
 }
 
+@* FORM TẠO BIẾN THỂ *@
 <div style="padding:24px;">
     <h2 style="font-size:1.5rem; font-weight:700; margin-bottom:24px;">⚙️ Quản lý thuộc tính sản phẩm</h2>
 
@@ -67,6 +68,7 @@
                 </button>
             </div>
 
+            <!-- Form thêm -->
             <div id="materialForm" style="display:none; padding:14px 16px; border-bottom:1px solid #f0f4f8;">
                 <form asp-area="Admin" asp-controller="Material" asp-action="Create" method="post" style="display:flex; gap:8px;">
                     <input name="Name" class="form-control" placeholder="VD: Gỗ tự nhiên"
@@ -78,6 +80,7 @@
                 </form>
             </div>
 
+            <!-- Danh sách -->
             <div style="padding:8px 0;">
                 @if (materials != null && materials.Any())
                 {
@@ -112,6 +115,7 @@
                 </button>
             </div>
 
+            <!-- Form thêm -->
             <div id="colorForm" style="display:none; padding:14px 16px; border-bottom:1px solid #f0f4f8;">
                 <form asp-area="Admin" asp-controller="Color" asp-action="Create" method="post" style="display:flex; gap:8px; align-items:center;">
                     <input name="Name" class="form-control" placeholder="Tên màu VD: Đỏ, Xanh"
@@ -125,6 +129,7 @@
                 </form>
             </div>
 
+            <!-- Danh sách -->
             <div style="padding:8px 0;">
                 @if (colors != null && colors.Any())
                 {

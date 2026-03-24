@@ -29,12 +29,15 @@
 }
 
 
+@* FORM SỬA THÔNG TIN SẢN PHẨM *@
+
 <h2>Sửa sản phẩm</h2>
 
 <form asp-area="Admin" asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data">
 
     <input type="hidden" asp-for="Id" />
 
+    @* NHẬP TÊN SẢN PHẨM *@
     <div class="mb-3">
         <label>Tên sản phẩm</label>
         <input asp-for="Name" class="form-control" />
@@ -47,12 +50,14 @@
         <span asp-validation-for="Price" class="text-danger"></span>
     </div> *@
 
+    @* CHỌN ẢNH SẢN PHẨM MỚI *@
     <div class="mb-3">
         <label class="form-label">Ảnh sản phẩm</label>
         <input type="file" name="imageFile" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
 
+    @* CHỌN DANH MỤC LOẠI PHÒNG *@
     <div class="mb-3">
         <label>Phòng</label>
         <select id="parentSelect" class="form-control" onchange="loadChildren(this.value)">
@@ -71,6 +76,7 @@
         </select>
     </div>
 
+    @* CHỌN DANH MỤC LOẠI SẢN PHẨM (SẼ LOAD THEO PHÒNG Ở TRÊN) *@
     <div class="mb-3">
         <label>Loại sản phẩm</label>
         <select name="CategoryId" id="childSelect" class="form-control">
@@ -79,12 +85,14 @@
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 
+    @* NHẬP SỐ LƯỢNG *@
     <div class="mb-3">
         <label>Số lượng</label>
         <input asp-for="Quantity" class="form-control" />
         <span asp-validation-for="Quantity" class="text-danger"></span>
     </div>
 
+    @* NHẬP MÔ TẢ *@  
     <div class="mb-3">
         <label>Mô tả</label>
         <textarea asp-for="Description" class="form-control"></textarea>
@@ -92,7 +100,7 @@
     </div>
 
    
-    <!-- BIẾN THỂ -->
+    @* CHỌN BIẾN THỂ SẢN PHẨM (ĐÃ TẠO TỪ TRƯỚC) *@
     <div class="mb-3">
         <label class="form-label fw-bold">Biến thể sản phẩm</label>
         <div id="variantList"></div>
@@ -104,6 +112,8 @@
             + Thêm biến thể
         </button>
     </div>
+
+    @* HIỂN THỊ BẮT LỖI KHI NHẤN NÚT LƯU *@
     @if (!ViewData.ModelState.IsValid)
 {
     @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
@@ -111,8 +121,9 @@
         <div class="alert alert-danger">@error.ErrorMessage</div>
     }
 }
-
+    @* NÚT LƯU *@
     <button class="btn btn-success">Lưu</button>
+    @* NÚT QUAY LẠI *@
     <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
 
 </form>
