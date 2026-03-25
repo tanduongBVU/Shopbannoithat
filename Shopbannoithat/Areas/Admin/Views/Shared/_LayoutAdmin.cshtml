@@ -2,6 +2,8 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Xuất thống kê";
+   
 }
 
 <!DOCTYPE html>
@@ -116,6 +118,13 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link text-white"
+                        asp-area="Admin" asp-controller="Export" asp-action="Index" >
+                        <i class="bi bi-file-earmark-excel"></i> Xuất thống kê
+                    </a>
+                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/">
                         Về trang chủ

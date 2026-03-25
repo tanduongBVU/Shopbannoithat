@@ -1,0 +1,437 @@
+﻿@{
+    ViewData["Title"] = "Liên hệ";
+}
+
+@* ===== HERO ===== *@
+<div class="contact-hero">
+    <div class="contact-hero-content">
+        <h1>Liên Hệ Với Chúng Tôi</h1>
+        <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+
+        @* ===== CỘT TRÁI: THÔNG TIN ===== *@
+        <div class="col-md-5">
+
+            @* Thông tin liên hệ *@
+            <span class="contact-label">Thông tin</span>
+            <h2 class="contact-title">Hãy kết nối với chúng tôi</h2>
+            <p class="contact-desc">
+                Bạn có câu hỏi về sản phẩm, đơn hàng hay cần tư vấn thiết kế nội thất?
+                Đừng ngại liên hệ — chúng tôi luôn sẵn sàng hỗ trợ!
+            </p>
+
+            <div class="contact-info-list">
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">📍</div>
+                    <div>
+                        <div class="contact-info-label">Địa chỉ</div>
+                        <div class="contact-info-value">123 Đường Nội Thất, Quận 1, TP.HCM</div>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">📞</div>
+                    <div>
+                        <div class="contact-info-label">Hotline</div>
+                        <div class="contact-info-value">
+                            <a href="tel:0903884358">0903 884 358</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">✉️</div>
+                    <div>
+                        <div class="contact-info-label">Email</div>
+                        <div class="contact-info-value">
+                            <a href="mailto:support@shopnoithat.vn">support@shopnoithat.vn</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">🕐</div>
+                    <div>
+                        <div class="contact-info-label">Giờ làm việc</div>
+                        <div class="contact-info-value">Thứ 2 – Thứ 7: 8:00 – 21:00</div>
+                    </div>
+                </div>
+            </div>
+
+            @* Mạng xã hội *@
+            <div class="mt-4">
+                <div class="contact-info-label mb-3">Theo dõi chúng tôi</div>
+                <div class="d-flex gap-3">
+                    <a href="#" class="social-contact-btn facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="social-contact-btn instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#" class="social-contact-btn tiktok">
+                        <i class="bi bi-tiktok"></i>
+                    </a>
+                    <a href="#" class="social-contact-btn youtube">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @* ===== CỘT PHẢI: FORM ===== *@
+        <div class="col-md-7">
+            <div class="contact-form-card">
+                <span class="contact-label">Nhắn tin</span>
+                <h3 class="contact-title mt-2">Gửi tin nhắn cho chúng tôi</h3>
+
+                @* Alert thành công *@
+                @if (TempData["Success"] != null)
+                {
+                    <div class="contact-alert-success">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong vòng 24 giờ.
+                    </div>
+                }
+
+                @* Alert lỗi *@
+                @if (TempData["Error"] != null)
+                {
+                    <div class="contact-alert-error">
+                        <i class="bi bi-x-circle-fill me-2"></i>
+                        Có lỗi xảy ra, vui lòng thử lại sau!
+                    </div>
+                }
+
+                @* Form - đổi sang asp-controller thật *@
+                <form method="post" asp-controller="Contact" asp-action="Send">
+                    <div class="row g-3 mt-1">
+                        <div class="col-md-6">
+                            <label class="contact-form-label">Họ và tên *</label>
+                            <input type="text" name="name" class="contact-input"
+                                   placeholder="Nguyễn Văn A" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="contact-form-label">Số điện thoại</label>
+                            <input type="tel" name="phone" class="contact-input"
+                                   placeholder="0912 345 678" />
+                        </div>
+                        <div class="col-12">
+                            <label class="contact-form-label">Email *</label>
+                            <input type="email" name="email" class="contact-input"
+                                   placeholder="email@example.com" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="contact-form-label">Chủ đề</label>
+                            <select name="subject" class="contact-input">
+                                <option value="">-- Chọn chủ đề --</option>
+                                <option>Tư vấn sản phẩm</option>
+                                <option>Hỏi về đơn hàng</option>
+                                <option>Khiếu nại / Bảo hành</option>
+                                <option>Hợp tác kinh doanh</option>
+                                <option>Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="contact-form-label">Nội dung *</label>
+                            <textarea name="message" class="contact-input" rows="5"
+                                      placeholder="Nhập nội dung tin nhắn..." required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn-contact-submit w-100">
+                                <i class="bi bi-send me-2"></i> Gửi tin nhắn
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ===== BẢN ĐỒ GOOGLE MAPS ===== *@
+<div class="map-section">
+    <div class="container mb-2">
+        <div class="text-center mb-4">
+            <span class="contact-label">Vị trí</span>
+            <h2 class="contact-title">Tìm chúng tôi trên bản đồ</h2>
+        </div>
+    </div>
+    <div class="map-wrap">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4579!2d106.6984!3d10.7727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDQ2JzIxLjciTiAxMDbCsDQxJzU0LjIiRQ!5e0!3m2!1svi!2svn!4v1234567890"
+                width="100%"
+                height="420"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>
+
+@* ===== CSS ===== *@
+<style>
+    /* Hero */
+    .contact-hero {
+        width: 100%;
+        height: 280px;
+        background: linear-gradient(135deg, #2c1e10 0%, #7a4f2d 50%, #b85c2a 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -16px;
+    }
+
+    .contact-hero-content {
+        text-align: center;
+        color: #fff;
+    }
+
+        .contact-hero-content h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .contact-hero-content p {
+            font-size: 1.1rem;
+            color: #f0e6d8;
+        }
+
+    /* Label & Title */
+    .contact-label {
+        display: inline-block;
+        background: #fdf0ea;
+        color: #e05c2a;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        padding: 4px 14px;
+        border-radius: 20px;
+    }
+
+    .contact-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #2c1e10;
+        margin-bottom: 12px;
+    }
+
+    .contact-desc {
+        color: #6b5a4a;
+        line-height: 1.8;
+        font-size: 0.92rem;
+        margin-bottom: 28px;
+    }
+
+    /* Info list */
+    .contact-info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .contact-info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 16px;
+        background: #f8f5f0;
+        border-radius: 12px;
+        border-left: 4px solid #e05c2a;
+    }
+
+    .contact-info-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        width: 40px;
+        text-align: center;
+    }
+
+    .contact-info-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #9e8672;
+        margin-bottom: 4px;
+    }
+
+    .contact-info-value {
+        font-size: 0.92rem;
+        color: #2c1e10;
+        font-weight: 500;
+    }
+
+        .contact-info-value a {
+            color: #2c1e10;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+            .contact-info-value a:hover {
+                color: #e05c2a;
+            }
+
+    /* Social */
+    .social-contact-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        text-decoration: none;
+        transition: transform 0.2s, opacity 0.2s;
+        color: #fff;
+    }
+
+        .social-contact-btn:hover {
+            transform: translateY(-3px);
+            opacity: 0.9;
+            color: #fff;
+        }
+
+    .facebook {
+        background: #1877f2;
+    }
+
+    .instagram {
+        background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+
+    .tiktok {
+        background: #000;
+    }
+
+    .youtube {
+        background: #ff0000;
+    }
+
+    /* Form */
+    .contact-form-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 36px;
+        box-shadow: 0 4px 24px rgba(90,50,20,0.1);
+        border: 1px solid #ece8e1;
+    }
+
+    .contact-form-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #3a2a1a;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .contact-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: #2c1e10;
+        background: #fafafa;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+        font-family: inherit;
+    }
+
+        .contact-input:focus {
+            border-color: #b85c2a;
+            box-shadow: 0 0 0 3px rgba(184,92,42,0.1);
+            background: #fff;
+        }
+
+    textarea.contact-input {
+        resize: vertical;
+    }
+
+    .btn-contact-submit {
+        background: linear-gradient(135deg, #3a2a1a, #7a4f2d);
+        color: #fff;
+        border: none;
+        padding: 13px 0;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s;
+        display: block;
+        text-align: center;
+    }
+
+        .btn-contact-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+    .contact-alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #6ee7b7;
+        border-radius: 10px;
+        padding: 14px 18px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 16px;
+    }
+
+    /* Map */
+    .map-section {
+        background: #f8f5f0;
+        padding: 40px 0 0;
+    }
+
+    .map-wrap {
+        overflow: hidden;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    }
+
+    .contact-alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+        border-radius: 10px;
+        padding: 14px 18px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 16px;
+    }
+</style>
+
+@* ===== SCRIPT ===== *@
+<script>
+    function submitForm() {
+        const name    = document.getElementById('inputName').value.trim();
+        const email   = document.getElementById('inputEmail').value.trim();
+        const message = document.getElementById('inputMessage').value.trim();
+
+        if (!name || !email || !message) {
+            alert('Vui lòng điền đầy đủ các trường bắt buộc (*)');
+            return;
+        }
+
+        // Giả lập gửi thành công
+        document.getElementById('successAlert').style.display = 'block';
+
+        // Reset form
+        document.getElementById('inputName').value    = '';
+        document.getElementById('inputPhone').value   = '';
+        document.getElementById('inputEmail').value   = '';
+        document.getElementById('inputSubject').value = '';
+        document.getElementById('inputMessage').value = '';
+
+        // Scroll lên alert
+        document.getElementById('successAlert').scrollIntoView({ behavior: 'smooth' });
+
+        // Ẩn alert sau 5 giây
+        setTimeout(() => {
+            document.getElementById('successAlert').style.display = 'none';
+        }, 5000);
+    }
+</script>

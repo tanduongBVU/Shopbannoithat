@@ -142,5 +142,29 @@ namespace Shopbannoithat.Services
 
         private static IContainer CellStyle(IContainer container) =>
             container.Border(1).BorderColor(Colors.Grey.Medium).Padding(8);
+        public async Task SendAsync(string toEmail, string subject, string body)
+        {
+            var email = new MimeMessage();
+
+            email.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
+            email.To.Add(MailboxAddress.Parse(toEmail));
+            email.Subject = subject;
+
+            var builder = new BodyBuilder
+            {
+                HtmlBody = body
+            };
+
+            email.Body = builder.ToMessageBody();
+
+            using var smtp = new SmtpClient();
+            await smtp.ConnectAsync(_emailSettings.SmtpServer, _emailSettings.SmtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(_emailSettings.SenderEmail, _emailSettings.SenderPassword);
+            await smtp.SendAsync(email);
+            await smtp.DisconnectAsync(true);
+        }
+
+
+
     }
 }

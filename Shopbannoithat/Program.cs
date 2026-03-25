@@ -37,7 +37,7 @@ builder.Services.AddScoped<Shopbannoithat.Services.GeminiService>();
 // Email Service
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailService, EmailService>();
-
+builder.Services.AddSingleton<EmailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
