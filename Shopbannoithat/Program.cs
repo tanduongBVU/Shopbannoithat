@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
 using Shopbannoithat.Data;
 using Shopbannoithat.Models;
-using Microsoft.AspNetCore.Authentication.Google;
+using Shopbannoithat.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
@@ -33,6 +34,9 @@ builder.Services.AddSignalR();
 
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<Shopbannoithat.Services.GeminiService>();
+// Email Service
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 

@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Shopbannoithat.Data;
 using Shopbannoithat.Models;
+using Shopbannoithat.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Shopbannoithat.Controllers
 {
@@ -40,7 +43,7 @@ namespace Shopbannoithat.Controllers
 
         // Xác nhận đặt hàng
         [HttpPost]
-        public IActionResult PlaceOrder(Order order, string CouponCode)
+        public async Task<IActionResult> PlaceOrder(Order order, string CouponCode)
         {
 
             var email = HttpContext.Session.GetString("UserEmail");
@@ -181,6 +184,22 @@ namespace Shopbannoithat.Controllers
             _context.Carts.RemoveRange(cartItems);
 
             _context.SaveChanges();
+            // ================== GỬI HÓA ĐƠN QUA EMAIL (chỉ cho user Google) ==================
+            if (order.IsPaid || order.PaymentMethod == "BANK")   // Bạn có thể điều chỉnh điều kiện này
+            {
+                try
+                {
+                    // Hiện tại project của bạn dùng Session + UserEmail, chưa có cột Provider
+                    // Tạm thời gửi cho tất cả (sau này bạn thêm cột Provider vào bảng User thì mình chỉnh lại)
+                    var emailService = HttpContext.RequestServices.GetRequiredService<IEmailService>();
+                    await emailService.SendOrderInvoiceAsync(order);
+                }
+                catch (Exception ex)
+                {
+                    // Không để lỗi email làm hỏng quá trình đặt hàng
+                    Console.WriteLine($"Gửi email thất bại: {ex.Message}");
+                }
+            }
 
             return RedirectToAction("Success", new { id = order.Id });
         }
