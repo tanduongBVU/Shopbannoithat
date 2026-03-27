@@ -20,6 +20,13 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
         public IActionResult Index() /*Hiển thị danh sách các danh mục, bao gồm cả danh mục cha và con*/
         {
+            var role = HttpContext.Session.GetString("UserRole");
+
+            // chưa đăng nhập hoặc không phải Staff
+            if (string.IsNullOrEmpty(role) || role != "Admin")
+            {
+                return RedirectToAction("Login", "Auth", new { area = "" });
+            }
             var categories = _context.Categories /*truy cập bảng categoy trong database*/
                 .Include(c => c.Parent)  /*Lấy kèm danh mục cha*/
                 .Include(c => c.Children) /*Lấy kèm danh mục con*/
@@ -90,11 +97,25 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         public IActionResult Delete(int id) /*Xử lý xóa danh mục*/
         {
             var category = _context.Categories.Find(id);
-            if (category != null)
+
+            if (category == null)
             {
-                _context.Categories.Remove(category); /*Báo cho EF Core biết object "category" cần bị xóa khỏi bảng database*/
-                _context.SaveChanges();
+                return NotFound();
             }
+
+            // Kiểm tra xem danh mục này có danh mục con không
+            bool hasChildren = _context.Categories.Any(c => c.ParentId == id);
+
+            if (hasChildren)
+            {
+                return RedirectToAction("Index");
+            }
+
+            // Nếu không có con → cho phép xóa
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+
+            TempData["Success"] = "Xóa danh mục thành công.";
             return RedirectToAction("Index");
         }
     }

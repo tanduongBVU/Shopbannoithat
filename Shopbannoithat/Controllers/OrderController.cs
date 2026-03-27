@@ -90,6 +90,7 @@ namespace Shopbannoithat.Controllers
 
             foreach (var item in cartItems)
             {
+                // Trước - tìm variant
                 var variant = _context.ProductVariants.FirstOrDefault(v =>
                     v.ProductId == item.ProductId &&
                     v.SizeId == item.SizeId &&
@@ -97,8 +98,15 @@ namespace Shopbannoithat.Controllers
                     v.ColorId == item.ColorId
                 );
 
-                decimal price = variant?.Price ?? item.Product.Price ?? 0;
-                int stock = variant?.Stock ?? item.Product.Quantity;
+                // 🔥 THÊM: bắt buộc phải có variant
+                if (variant == null)
+                {
+                    TempData["Error"] = $"Sản phẩm '{item.Product.Name}' không tìm thấy biến thể phù hợp!";
+                    return RedirectToAction("Checkout");
+                }
+
+                decimal price = variant.Price; // ✅ không cần ?? nữa vì chắc chắn có variant
+                int stock = variant.Stock;
 
                 // CHECK TỒN KHO
                 if (stock < item.Quantity)
@@ -108,15 +116,8 @@ namespace Shopbannoithat.Controllers
                 }
 
                 // TRỪ KHO
-                if (variant != null)
-                {
-                    variant.Stock -= item.Quantity;
-                    item.Product.Quantity -= item.Quantity; // 🔥 TRỪ LUÔN PRODUCT
-                }
-                else
-                {
-                    item.Product.Quantity -= item.Quantity;
-                }
+                variant.Stock -= item.Quantity;
+                item.Product.Quantity -= item.Quantity;
 
                 total += price * item.Quantity;
 
@@ -124,7 +125,7 @@ namespace Shopbannoithat.Controllers
                 order.OrderDetails.Add(new OrderDetail
                 {
                     ProductId = item.ProductId,
-                    VariantId = variant?.Id,  // 🔹 quan trọng
+                    VariantId = variant.Id,  // ✅ không còn ?. vì chắc chắn có variant
                     Quantity = item.Quantity,
                     Price = price,
                     SizeId = item.SizeId,

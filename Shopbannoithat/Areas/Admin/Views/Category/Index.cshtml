@@ -221,7 +221,7 @@
 
                         <a asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id"
                            class="btn btn-danger btn-action"
-                           onclick="return confirm('Xóa sẽ ảnh hưởng danh mục con. Tiếp tục?')">
+                           onclick="return confirm('Bạn có chắc muốn xóa danh mục này? Nếu danh mục có danh mục con, hệ thống sẽ không cho phép xóa.')">
                             <i class="bi bi-trash"></i>
                         </a>
                     </td>

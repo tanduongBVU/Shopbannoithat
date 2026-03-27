@@ -17,6 +17,13 @@ namespace Shopbannoithat.Areas.Staff.Controllers
 
         public IActionResult Index()
         {
+            var role = HttpContext.Session.GetString("UserRole");
+
+            // chưa đăng nhập hoặc không phải Staff
+            if (string.IsNullOrEmpty(role) || role != "Staff")
+            {
+                return RedirectToAction("Login", "Auth", new { area = "" });
+            }
             var categories = _context.Categories
                 .Include(c => c.Parent)
                 .Include(c => c.Children)
@@ -86,11 +93,25 @@ namespace Shopbannoithat.Areas.Staff.Controllers
         public IActionResult Delete(int id)
         {
             var category = _context.Categories.Find(id);
-            if (category != null)
+
+            if (category == null)
             {
-                _context.Categories.Remove(category);
-                _context.SaveChanges();
+                return NotFound();
             }
+
+            // Kiểm tra xem danh mục này có danh mục con không
+            bool hasChildren = _context.Categories.Any(c => c.ParentId == id);
+
+            if (hasChildren)
+            {
+                return RedirectToAction("Index");
+            }
+
+            // Nếu không có con → cho phép xóa
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+
+            TempData["Success"] = "Xóa danh mục thành công.";
             return RedirectToAction("Index");
         }
     }

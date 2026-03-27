@@ -15,6 +15,7 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
+
             var role = HttpContext.Session.GetString("UserRole");
 
             if (string.IsNullOrEmpty(role) || role != "Admin")

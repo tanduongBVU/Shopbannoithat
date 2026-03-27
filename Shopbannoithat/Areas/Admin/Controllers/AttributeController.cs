@@ -11,6 +11,13 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
         public IActionResult Index() /*Hiển thị danh sách các thuộc tính*/
         {
+            var role = HttpContext.Session.GetString("UserRole");
+
+            // chưa đăng nhập hoặc không phải Staff
+            if (string.IsNullOrEmpty(role) || role != "Admin")
+            {
+                return RedirectToAction("Login", "Auth", new { area = "" });
+            }
             ViewBag.Sizes = _context.Sizes.ToList();
             ViewBag.Materials = _context.Materials.ToList();
             ViewBag.Colors = _context.Colors.ToList();

@@ -19,6 +19,13 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         // Trang chọn thời gian
         public IActionResult Index()
         {
+            var role = HttpContext.Session.GetString("UserRole");
+
+            // chưa đăng nhập hoặc không phải Staff
+            if (string.IsNullOrEmpty(role) || role != "Admin")
+            {
+                return RedirectToAction("Login", "Auth", new { area = "" });
+            }
             return View();
         }
 

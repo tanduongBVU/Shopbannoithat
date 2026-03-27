@@ -17,6 +17,13 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
         public IActionResult Index()
         {
+            var role = HttpContext.Session.GetString("UserRole");
+
+            // chưa đăng nhập hoặc không phải Staff
+            if (string.IsNullOrEmpty(role) || role != "Admin")
+            {
+                return RedirectToAction("Login", "Auth", new { area = "" });
+            }
             var products = _context.Products
         .Include(p => p.Category)
         .ThenInclude(c => c.Parent)
@@ -308,14 +315,15 @@ namespace Shopbannoithat.Areas.Admin.Controllers
 
             if (variantIdsToDelete.Any())
             {
+                // Xóa luôn OrderDetails có variant bị xóa (vì VariantId NOT NULL)
                 var affectedOrders = _context.OrderDetails
-                    .Where(od => od.VariantId != null && variantIdsToDelete.Contains(od.VariantId.Value))
+                    .Where(od => variantIdsToDelete.Contains(od.VariantId))
                     .ToList();
-                foreach (var od in affectedOrders)
-                    od.VariantId = null;
+
+                _context.OrderDetails.RemoveRange(affectedOrders); // ✅ xóa thay vì set null
                 _context.SaveChanges();
 
-                // Null cart items liên quan
+                // Xóa cart items liên quan
                 var affectedCarts = _context.Carts
                     .Where(c => c.ProductId == product.Id)
                     .ToList();
