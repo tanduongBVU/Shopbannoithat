@@ -182,8 +182,10 @@
                         @if (role == "Customer")
                         {
                             <li class="nav-item">
-                                <span class="nav-link text-light">
-                                    <i class="bi bi-person-circle"></i> @name
+                                <span class="nav-link text-light"
+                                      title="@email"
+                                      style="font-size:20px; cursor:pointer;">
+                                    <i class="bi bi-person-circle"></i>
                                 </span>
                             </li>
                         }
