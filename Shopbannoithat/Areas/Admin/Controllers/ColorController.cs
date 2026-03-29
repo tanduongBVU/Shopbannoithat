@@ -13,9 +13,26 @@ namespace Shopbannoithat.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Create(ProductColor color)  /*Thêm màu*/
         {
-            _context.Colors.Add(color); /*Thêm object "color" vào bảng Colors trong database*/
+            // Kiểm tra tên đã tồn tại
+            if (_context.Colors.Any(c => c.Name.ToLower() == color.Name.ToLower().Trim()))
+            {
+                TempData["ColorError"] = $"Màu '{color.Name}' đã tồn tại!";
+                return RedirectToAction("Index", "Attribute");
+            }
+
+            // Kiểm tra mã HEX đã tồn tại
+            if (_context.Colors.Any(c => c.HexCode.ToLower() == color.HexCode.ToLower().Trim()))
+            {
+                TempData["ColorError"] = $"Mã màu '{color.HexCode}' đã tồn tại!";
+                return RedirectToAction("Index", "Attribute");
+            }
+
+            color.Name = color.Name.Trim();
+            color.HexCode = color.HexCode.Trim();
+            _context.Colors.Add(color);
             _context.SaveChanges();
-            return RedirectToAction("Index", "Attribute");  /*chuyển sang action index của controller Attribute*/
+            TempData["ColorSuccess"] = "Thêm màu thành công!";
+            return RedirectToAction("Index", "Attribute");
         }
 
         public IActionResult Delete(int id)   /*Xóa màu*/

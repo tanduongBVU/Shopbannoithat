@@ -110,11 +110,18 @@
 
 <br />
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning text-center">
+        <i class="bi bi-cart-x me-2"></i>@TempData["Error"]
+    </div>
+}
 <a asp-controller="Product"
        asp-action="Index"
        class="btn btn-secondary">
     Tiếp tục mua sắm
 </a>
+
 
 <a asp-controller="Order"
        asp-action="Checkout"

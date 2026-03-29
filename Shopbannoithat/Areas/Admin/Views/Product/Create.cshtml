@@ -10,51 +10,57 @@
     @* NHẬP TÊN *@
     <div class="mb-3">
         <label class="form-label">Tên</label>
-        <input asp-for="Name" class="form-control" />
+        <input asp-for="Name" class="form-control" value="@Model?.Name" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-
-    @* <div class="mb-3">
-        <label class="form-label">Giá</label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div> *@
 
     @* NHẬP SỐ LƯỢNG *@
     <div class="mb-3">
         <label class="form-label">Số lượng</label>
-        <input asp-for="Quantity" class="form-control" />
+        <input asp-for="Quantity" class="form-control" value="@Model?.Quantity" />
         <span asp-validation-for="Quantity" class="text-danger"></span>
     </div>
 
-    @* CHỌN ẢNH SẢN PHẨM *@
+    @* CHỌN ẢNH *@
     <div class="mb-3">
         <label class="form-label">Ảnh sản phẩm</label>
-        <input type="file" name="imageFile" class="form-control" />
-
+        @if (!ViewData.ModelState.IsValid && Model?.Name != null)
+        {
+            <div class="alert alert-warning py-2" style="font-size:0.88rem;">
+                ⚠️ Vui lòng chọn lại ảnh sản phẩm
+            </div>
+        }
+        <div id="previewWrap" style="display:none; margin-bottom:8px;">
+            <img id="imgPreview" style="height:120px; border-radius:10px; border:1px solid #ddd; object-fit:cover;" />
+        </div>
+        <input type="file" name="imageFile" class="form-control"
+               accept="image/*" onchange="previewImage(this)" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
 
     @* NHẬP MÔ TẢ *@
     <div class="mb-3">
         <label class="form-label">Mô tả</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+        <textarea asp-for="Description" class="form-control">@Model?.Description</textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-    @* CHỌN DANH MỤC PHÒNG *@
+    @* CHỌN PHÒNG *@
     <div class="mb-3">
         <label class="form-label">Phòng</label>
         <select id="parentSelect" class="form-control" onchange="loadChildren(this.value)">
             <option value="">-- Chọn phòng --</option>
             @foreach (var p in ViewBag.Parents)
             {
-                <option value="@p.Id">@p.Name</option>
+                <option value="@p.Id"
+                        selected="@(Model?.Category?.ParentId == p.Id ? "selected" : null)">
+                    @p.Name
+                </option>
             }
         </select>
     </div>
 
-    @* CHỌN DANH MỤC LOẠI SẢN PHẨM (SẼ LOAD THEO PHÒNG Ở TRÊN) *@
+    @* CHỌN LOẠI SẢN PHẨM *@
     <div class="mb-3">
         <label class="form-label">Loại sản phẩm</label>
         <select asp-for="CategoryId" id="childSelect" class="form-control">
@@ -109,13 +115,7 @@
             + Thêm biến thể
         </button>
     </div>
-    @if (!ViewData.ModelState.IsValid)
-    {
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <div class="alert alert-danger">@error.ErrorMessage</div>
-        }
-    }
+  
     @* NÚT LƯU *@
     <button type="submit" class="btn btn-success">Lưu</button>
     @* NÚT QUAY LẠI *@
@@ -128,29 +128,98 @@
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 <script>
+    // ===== DỮ LIỆU TỪ SERVER =====
+    // Danh sách danh mục con dạng JSON để JS lọc theo phòng
     var allChildren = @Html.Raw(ViewBag.ChildrenJson);
 
-    function loadChildren(parentId) {
+    // CategoryId và ParentId đã chọn trước đó (dùng để khôi phục khi bị lỗi)
+    var savedCategoryId = @(Model?.CategoryId.HasValue == true ? Model.CategoryId.Value.ToString() : "null");
+    var savedParentId   = @Html.Raw(Model?.Category?.ParentId?.ToString() ?? "null");
+
+    // Danh sách biến thể đã nhập trước đó (dùng để khôi phục khi bị lỗi)
+    var savedVariants = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        Model?.Variants?.Select(v => new {
+            sizeId     = v.SizeId,
+            materialId = v.MaterialId,
+            colorId    = v.ColorId,
+            price      = v.Price,
+            stock      = v.Stock
+        }) ?? Enumerable.Empty<object>(),
+        new System.Text.Json.JsonSerializerOptions {
+            PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+        }
+    ));
+
+    // ===== LOAD DANH MỤC CON THEO PHÒNG =====
+    // Khi user chọn phòng, lọc danh mục con tương ứng và đổ vào select
+    function loadChildren(parentId, selectedId) {
         var select = document.getElementById('childSelect');
         select.innerHTML = '<option value="">-- Chọn loại --</option>';
         if (!parentId) return;
+
+        // Lọc danh mục con theo parentId
         var filtered = allChildren.filter(c => c.parentId == parentId);
         filtered.forEach(function(c) {
-            select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            // Nếu là danh mục đã chọn trước đó thì mark selected
+            var sel = (selectedId && c.id == selectedId) ? 'selected' : '';
+            select.innerHTML += `<option value="${c.id}" ${sel}>${c.name}</option>`;
         });
     }
 
+    // ===== KHÔI PHỤC DỮ LIỆU KHI TRANG LOAD LẠI SAU LỖI =====
+    window.addEventListener('load', function() {
+        // Khôi phục phòng và loại sản phẩm đã chọn
+        if (savedParentId) {
+            document.getElementById('parentSelect').value = savedParentId;
+            loadChildren(savedParentId, savedCategoryId);
+        }
+
+        // Khôi phục các biến thể đã nhập
+        if (savedVariants && savedVariants.length > 0) {
+            savedVariants.forEach(function(v) {
+                addVariant(v); // gọi hàm addVariant với dữ liệu cũ
+            });
+        }
+    });
+
+    // ===== PREVIEW ẢNH TRƯỚC KHI SUBMIT =====
+    // Khi user chọn file ảnh, hiển thị preview ngay lập tức
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imgPreview').src = e.target.result;
+                document.getElementById('previewWrap').style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // ===== DỮ LIỆU SIZE / MATERIAL / COLOR TỪ SERVER =====
     var variantIndex = 0;
     const sizes     = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Sizes));
     const materials = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Materials));
     const colors    = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.Colors));
 
-    function addVariant() {
-        let sizeOpts     = sizes.map(s     => `<option value="${s.Id}">${s.Name}</option>`).join('');
-        let materialOpts = materials.map(m => `<option value="${m.Id}">${m.Name}</option>`).join('');
-        let colorOpts    = colors.map(c    => `<option value="${c.Id}" data-hex="${c.HexCode}">${c.Name}</option>`).join('');
+    // ===== THÊM DÒNG BIẾN THỂ MỚI =====
+    // saved: object chứa dữ liệu cũ (nếu có) để khôi phục sau khi lỗi
+    function addVariant(saved) {
+        // Tạo option cho từng select, nếu có saved thì mark selected
+        let sizeOpts     = sizes.map(s =>
+            `<option value="${s.Id}" ${saved?.sizeId == s.Id ? 'selected' : ''}>${s.Name}</option>`
+        ).join('');
+
+        let materialOpts = materials.map(m =>
+            `<option value="${m.Id}" ${saved?.materialId == m.Id ? 'selected' : ''}>${m.Name}</option>`
+        ).join('');
+
+        let colorOpts    = colors.map(c =>
+            `<option value="${c.Id}" data-hex="${c.HexCode}" ${saved?.colorId == c.Id ? 'selected' : ''}>${c.Name}</option>`
+        ).join('');
 
         const i = variantIndex++;
+
+        // Chèn HTML dòng biến thể vào danh sách
         document.getElementById('variantList').insertAdjacentHTML('beforeend', `
             <div class="variant-row" style="display:grid;grid-template-columns:1fr 1fr 1fr 120px 100px 40px;gap:8px;margin-bottom:8px;align-items:center;">
                 <select name="Variants[${i}].SizeId" class="form-control form-control-sm">
@@ -162,14 +231,29 @@
                 <select name="Variants[${i}].ColorId" class="form-control form-control-sm color-select">
                     <option value="">-- Màu sắc --</option>${colorOpts}
                 </select>
-                <input name="Variants[${i}].Price" type="number" class="form-control form-control-sm" placeholder="Giá" required />
-                <input name="Variants[${i}].Stock" type="number" class="form-control form-control-sm" placeholder="Tồn kho" value="0" />
+                <input name="Variants[${i}].Price" type="number" class="form-control form-control-sm"
+                       placeholder="Giá" value="${saved?.price ?? ''}" />
+                <input name="Variants[${i}].Stock" type="number" class="form-control form-control-sm"
+                       placeholder="Tồn kho" value="${saved?.stock ?? 0}" />
                 <button type="button" onclick="this.closest('.variant-row').remove()"
                         style="background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:6px 10px;cursor:pointer;">✕</button>
             </div>`);
 
+        // Xử lý đổi màu nền select Color theo mã HEX
         setTimeout(() => {
             const sel = document.querySelector(`select[name="Variants[${i}].ColorId"]`);
+
+            // Nếu có saved colorId thì đổi màu nền ngay khi khôi phục
+            if (saved?.colorId) {
+                const opt = sel.querySelector(`option[value="${saved.colorId}"]`);
+                const hex = opt?.getAttribute('data-hex');
+                if (hex) {
+                    sel.style.background = hex;
+                    sel.style.color = '#fff';
+                }
+            }
+
+            // Khi user thay đổi màu thì cập nhật màu nền select
             sel.addEventListener('change', function() {
                 const selected = this.options[this.selectedIndex];
                 const hex = selected.getAttribute('data-hex');
@@ -179,16 +263,14 @@
         }, 0);
     }
 
-      let isSubmitting = false;
+    // ===== VALIDATE TRƯỚC KHI SUBMIT =====
+    let isSubmitting = false;
 
-    document.querySelector('form').addEventListener('submit', function (e) {
+    document.querySelector('form').addEventListener('submit', function(e) {
+        // Chặn submit 2 lần
+        if (isSubmitting) { e.preventDefault(); return; }
 
-        if (isSubmitting) {
-            e.preventDefault();
-            return;
-        }
-
-             // 🔥 THÊM: Kiểm tra có ít nhất 1 biến thể
+        // Kiểm tra phải có ít nhất 1 biến thể
         const variantRows = document.querySelectorAll('.variant-row');
         if (variantRows.length === 0) {
             alert("❌ Vui lòng thêm ít nhất một biến thể sản phẩm!");
@@ -196,28 +278,23 @@
             return;
         }
 
+        // Kiểm tra tổng tồn kho biến thể không vượt số lượng sản phẩm
         const productQty = parseInt(document.querySelector('[name="Quantity"]').value) || 0;
-        const variantStocks = document.querySelectorAll('input[name*=".Stock"]');
-
         let totalVariantStock = 0;
-
-        variantStocks.forEach(input => {
+        document.querySelectorAll('input[name*=".Stock"]').forEach(input => {
             totalVariantStock += parseInt(input.value) || 0;
         });
 
         if (totalVariantStock > productQty) {
             alert("❌ Tổng tồn kho biến thể không được lớn hơn sản phẩm gốc!");
             e.preventDefault();
-
-            // 🔥 QUAN TRỌNG: reset lại
-            isSubmitting = false;
+            isSubmitting = false; // reset để có thể submit lại
             return;
         }
 
-        // ✅ chỉ set true khi hợp lệ
+        // Hợp lệ → cho phép submit
         isSubmitting = true;
     });
-       
 </script>
 }
 

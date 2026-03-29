@@ -53,6 +53,28 @@ namespace Shopbannoithat.Areas.Admin.Controllers
                     .ToList();
                 return View(category);
             }
+
+            // Kiểm tra tên danh mục đã tồn tại chưa (cùng cấp)
+            bool isDuplicate = _context.Categories.Any(c =>
+                c.Name.ToLower() == category.Name.ToLower().Trim() &&
+                c.ParentId == category.ParentId // cùng cấp: cùng cha hoặc cùng là cấp 1
+            );
+
+            if (isDuplicate)
+            {
+                // Gắn lỗi vào form thay vì TempData
+                ModelState.AddModelError("Name",
+                    category.ParentId == null
+                    ? $"Phòng '{category.Name}' đã tồn tại!"
+                    : $"Danh mục '{category.Name}' đã tồn tại trong phòng này!");
+
+                ViewBag.Parents = _context.Categories
+                    .Where(c => c.ParentId == null)
+                    .ToList();
+                return View(category);
+            }
+
+            category.Name = category.Name.Trim();
             _context.Categories.Add(category);  /*thêm tt danh mục mói và tạm chưa thêm vào database*/
             _context.SaveChanges();  /*thực thi câu lệnh và lưu vào database*/
             return RedirectToAction("Index");  /*chuyển sang trang index*/

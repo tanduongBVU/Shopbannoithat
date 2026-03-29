@@ -53,6 +53,12 @@
     @* CHỌN ẢNH SẢN PHẨM MỚI *@
     <div class="mb-3">
         <label class="form-label">Ảnh sản phẩm</label>
+        @if (!ViewData.ModelState.IsValid && Model?.Name != null)
+        {
+            <div class="alert alert-warning py-2" style="font-size:0.88rem;">
+                ⚠️ Vui lòng chọn lại ảnh sản phẩm
+            </div>
+        }
         <input type="file" name="imageFile" class="form-control" />
         <span asp-validation-for="Image" class="text-danger"></span>
     </div>
@@ -113,14 +119,7 @@
         </button>
     </div>
 
-    @* HIỂN THỊ BẮT LỖI KHI NHẤN NÚT LƯU *@
-    @if (!ViewData.ModelState.IsValid)
-{
-    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-    {
-        <div class="alert alert-danger">@error.ErrorMessage</div>
-    }
-}
+    
     @* NÚT LƯU *@
     <button class="btn btn-success">Lưu</button>
     @* NÚT QUAY LẠI *@

@@ -5,6 +5,37 @@
     var colors = ViewBag.Colors as List<Shopbannoithat.Models.ProductColor>;
 }
 
+@if (TempData["SizeError"] != null || TempData["SizeSuccess"] != null ||
+     TempData["MaterialError"] != null || TempData["MaterialSuccess"] != null ||
+     TempData["ColorError"] != null || TempData["ColorSuccess"] != null)
+{
+    <div style="margin-bottom:16px;">
+        @if (TempData["SizeError"] != null)
+        {
+            <div class="alert alert-danger">⚠️ @TempData["SizeError"]</div>
+        }
+        @if (TempData["SizeSuccess"] != null)
+        {
+            <div class="alert alert-success">✅ @TempData["SizeSuccess"]</div>
+        }
+        @if (TempData["MaterialError"] != null)
+        {
+            <div class="alert alert-danger">⚠️ @TempData["MaterialError"]</div>
+        }
+        @if (TempData["MaterialSuccess"] != null)
+        {
+            <div class="alert alert-success">✅ @TempData["MaterialSuccess"]</div>
+        }
+        @if (TempData["ColorError"] != null)
+        {
+            <div class="alert alert-danger">⚠️ @TempData["ColorError"]</div>
+        }
+        @if (TempData["ColorSuccess"] != null)
+        {
+            <div class="alert alert-success">✅ @TempData["ColorSuccess"]</div>
+        }
+    </div>
+}
 <div style="padding:24px;">
     <h2 style="font-size:1.5rem; font-weight:700; margin-bottom:24px;">⚙️ Quản lý thuộc tính sản phẩm</h2>
 
@@ -159,3 +190,26 @@
         el.style.display = el.style.display === 'none' ? 'block' : 'none';
     }
 </script>
+
+
+<style>
+    .alert {
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #6ee7b7;
+    }
+</style>

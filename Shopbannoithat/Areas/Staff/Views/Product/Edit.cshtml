@@ -104,13 +104,7 @@
             + Thêm biến thể
         </button>
     </div>
-    @if (!ViewData.ModelState.IsValid)
-    {
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <div class="alert alert-danger">@error.ErrorMessage</div>
-        }
-    }
+   
 
     <button class="btn btn-success">Lưu</button>
     <a asp-area="Staff" asp-controller="Product" asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>

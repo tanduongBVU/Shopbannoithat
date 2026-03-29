@@ -15,37 +15,35 @@
 
     <h4 style="background-color:#6b4f3b;border-radius:8px;color: #fff;padding: 12px;text-align:center">Thông tin giao hàng</h4>
 
+    @{
+        var saved = ViewBag.SavedOrder as Shopbannoithat.Models.Order;
+    }
     <div class="mb-3">
         <label>Tên người nhận</label>
-        <input name="Name" class="form-control"/>
-        <span class="text-danger">
-            @Html.ValidationMessage("Name")
-        </span>
-
+        <input name="Name" class="form-control"
+               value="@(saved?.Name ?? "")" />
+        <span class="text-danger">@Html.ValidationMessage("Name")</span>
     </div>
 
     <div class="mb-3">
         <label>Tổ,Ấp:</label>
-        <input name="Address1" class="form-control"/>
-        <span class="text-danger">
-            @Html.ValidationMessage("Address1")
-        </span>
+        <input name="Address1" class="form-control"
+               value="@(saved?.Address1 ?? "")" />
+        <span class="text-danger">@Html.ValidationMessage("Address1")</span>
     </div>
 
     <div class="mb-3">
         <label>Xã/Phường:</label>
-        <input name="Address2" class="form-control" />
-        <span class="text-danger">
-            @Html.ValidationMessage("Address2")
-        </span>
+        <input name="Address2" class="form-control"
+               value="@(saved?.Address2 ?? "")" />
+        <span class="text-danger">@Html.ValidationMessage("Address2")</span>
     </div>
 
     <div class="mb-3">
         <label>Thành phố:</label>
-        <input name="City" class="form-control"  />
-        <span class="text-danger">
-            @Html.ValidationMessage("City")
-        </span>
+        <input name="City" class="form-control"
+               value="@(saved?.City ?? "")" />
+        <span class="text-danger">@Html.ValidationMessage("City")</span>
     </div>
 
     <div class="mb-3">
@@ -195,6 +193,7 @@
 
 
 </form>
+
 
 
 @* <style>

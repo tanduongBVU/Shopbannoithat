@@ -13,8 +13,17 @@ namespace Shopbannoithat.Areas.Staff.Controllers
         [HttpPost]
         public IActionResult Create(ProductMaterial material)
         {
+            // Kiểm tra tên đã tồn tại chưa
+            if (_context.Materials.Any(m => m.Name.ToLower() == material.Name.ToLower().Trim()))
+            {
+                TempData["MaterialError"] = $"Vật liệu '{material.Name}' đã tồn tại!";
+                return RedirectToAction("Index", "Attribute");
+            }
+
+            material.Name = material.Name.Trim();
             _context.Materials.Add(material);
             _context.SaveChanges();
+            TempData["MaterialSuccess"] = "Thêm vật liệu thành công!";
             return RedirectToAction("Index", "Attribute");
         }
 

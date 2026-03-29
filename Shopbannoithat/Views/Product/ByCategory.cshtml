@@ -108,26 +108,7 @@
                                            asp-route-id="@item.Id" class="btn-detail">
                                         Xem chi tiết
                                     </a>
-                                    @if (Context.Session.GetString("UserEmail") != null)
-                                    {
-                                        @if (item.Quantity > 0)
-                                        {
-                                            <a asp-controller="Cart" asp-action="Add"
-                                                   asp-route-id="@item.Id" class="btn-cart">
-                                                <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <button class="btn-cart btn-cart-disabled" disabled>Hết hàng</button>
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="Auth" asp-action="Login" class="btn-cart">
-                                            <i class="bi bi-cart-plus"></i> Thêm vào giỏ
-                                        </a>
-                                    }
+                                   
                                 </div>
                             </div>
                         </div>

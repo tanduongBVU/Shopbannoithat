@@ -13,8 +13,17 @@ namespace Shopbannoithat.Areas.Staff.Controllers
         [HttpPost]
         public IActionResult Create(ProductSize size)
         {
+            // Kiểm tra tên đã tồn tại chưa (không phân biệt hoa thường)
+            if (_context.Sizes.Any(s => s.Name.ToLower() == size.Name.ToLower().Trim()))
+            {
+                TempData["SizeError"] = $"Kích thước '{size.Name}' đã tồn tại!";
+                return RedirectToAction("Index", "Attribute");
+            }
+
+            size.Name = size.Name.Trim();
             _context.Sizes.Add(size);
             _context.SaveChanges();
+            TempData["SizeSuccess"] = "Thêm kích thước thành công!";
             return RedirectToAction("Index", "Attribute");
         }
 
